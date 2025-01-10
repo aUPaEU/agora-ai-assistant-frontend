@@ -1,0 +1,34 @@
+import { html } from "../utils/templateTags.util"
+
+export const LEFT_ARROW = html`
+    <svg width="24" height="24" viewBox="0 0 20 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18 34L2 18L18 2" stroke="#0080FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+
+export const RIGHT_ARROW = html`
+    <svg width="24" height="24" viewBox="0 0 20 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 34L18 18L2 2" stroke="#0080FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+
+export const DROPDOWN_ARROW = html`
+    <svg width="24" height="24" viewBox="0 0 36 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 2L18 18L34 2" stroke="#0080FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+
+export const ADD = html`
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 4V20" stroke="currentColor" stroke-width="2"  stroke-linejoin="round"/>
+    <path d="M4 12H20" stroke="currentColor" stroke-width="2"  stroke-linejoin="round"/>
+    </svg>
+`
+
+export const BOOST = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.9365 3.4896V1.6H16.7429V0H10.2921V1.6H11.0984V3.4928C8.66324 4.0648 6.46675 5.5048 5 7.5336L6.31032 8.4664C7.67698 6.58507 9.73496 5.31287 12.0394 4.9248C13.0182 4.75882 14.0183 4.75882 14.9971 4.9248C17.0667 5.26453 18.9468 6.32399 20.3009 7.91351C21.6549 9.50303 22.3946 11.5188 22.3873 13.6C22.3873 18.452 18.408 22.4 13.5175 22.4C12.1094 22.3985 10.7218 22.0653 9.46887 21.4279C8.21591 20.7905 7.13338 19.8671 6.31032 18.7336L5.00081 19.6664C5.97334 21.006 7.25252 22.0973 8.73313 22.8507C10.2137 23.6041 11.8535 23.998 13.5175 24C19.2974 24 24 19.3344 24 13.6C24 8.7288 20.6456 4.5856 15.9365 3.4896ZM12.7111 3.2344V1.6H14.3238V3.2344C13.7871 3.1929 13.2479 3.1929 12.7111 3.2344Z" fill="currentColor"/>
+    <path d="M0 12.7169H7.32115V14.4779H0V12.7169ZM1.62692 9.19486H8.94807V10.9559H1.62692V9.19486ZM1.62692 16.239H8.94807V18H1.62692V16.239ZM17.8498 8L14.8741 11.2209C14.5485 11.0487 14.1912 10.9581 13.8288 10.9559C12.4834 10.9559 11.3884 12.1411 11.3884 13.5974C11.3884 15.0538 12.4834 16.239 13.8288 16.239C15.1743 16.239 16.2692 15.0538 16.2692 13.5974C16.2692 13.1906 16.1773 12.8102 16.0252 12.466L19 9.24505L17.8498 8ZM13.8288 14.4779C13.3806 14.4779 13.0154 14.0826 13.0154 13.5974C13.0154 13.1123 13.3806 12.7169 13.8288 12.7169C14.277 12.7169 14.6423 13.1123 14.6423 13.5974C14.6423 14.0826 14.277 14.4779 13.8288 14.4779Z" fill="currentColor"/>
+    </svg>
+`
+

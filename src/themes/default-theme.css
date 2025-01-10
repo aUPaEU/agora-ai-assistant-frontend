@@ -1,0 +1,9 @@
+.default-theme {
+    --primary-color: white;
+
+    --bg-color: #EDEBEB;
+    
+    --text-primary-color: #363738;
+    --text-secondary-color: #838689;
+    --text-accent-color: #0080FF;
+}

@@ -1,0 +1,66 @@
+.agora-showcase-wrapper {
+    padding: 2.5rem;
+    box-sizing: border-box;
+
+    width: fit-content;
+    max-width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+
+    border: 1px solid var(--primary-color);
+    border-radius: 15pt;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    color: var(--text-primary-color);
+}
+
+.item-info {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 1rem;
+}
+
+.item-info div:first-child {
+    width: 100%;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-info p, h1 {
+    margin: 0;
+    padding: 0;
+}
+
+.item-info .icon {
+    color: var(--text-secondary-color);
+    align-self: end;
+}
+
+.item-info h1 {
+    font-size: 1.5rem;
+}
+
+.item-info p {
+    color: var(--text-secondary-color);
+    font-size: 1rem;
+}
+
+.item-link {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+}
