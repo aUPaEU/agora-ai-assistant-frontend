@@ -19,9 +19,15 @@ export const DROPDOWN_ARROW = html`
 `
 
 export const ADD = html`
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 4V20" stroke="currentColor" stroke-width="2"  stroke-linejoin="round"/>
     <path d="M4 12H20" stroke="currentColor" stroke-width="2"  stroke-linejoin="round"/>
+    </svg>
+`
+
+export const SUBTRACT = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
     </svg>
 `
 
@@ -32,3 +38,31 @@ export const BOOST = html`
     </svg>
 `
 
+export const CATALOGUE = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 6H20" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M4 18H20" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+`
+
+export const EYE = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 12C2 12 5.63636 5 12 5C18.3636 5 22 12 22 12C22 12 18.3636 19 12 19C5.63636 19 2 12 2 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+export const WEBSITE = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+    <path d="M3 8H21" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M7 6H7.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M11 6H11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+`
+
+export const SEND_MESSAGE = html`
+    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0.0152381 30.6667L32 16.6667L0.0152381 2.66669L0 13.5556L22.8571 16.6667L0 19.7778L0.0152381 30.6667Z" fill="currentColor"/>
+    </svg>
+`
