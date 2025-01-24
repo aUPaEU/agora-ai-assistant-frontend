@@ -1,9 +1,15 @@
+import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainState } from "plain-reactive"
-import { html } from "../../../utils/templateTags.util"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
 import { ITEM_TYPE } from "../../../constants/itemType.const"
+
+/* Utils */
+import { html } from "../../../utils/templateTags.util"
+
+/* Icons */
 import { ADD, SUBTRACT, CATALOGUE, BOOST, WEBSITE } from "../../../icons/icons"
-import { CONFIG } from "../../../../agora.config"
 
 class NavigatorItem extends PlainComponent {
     constructor() {
@@ -142,7 +148,6 @@ class NavigatorItem extends PlainComponent {
         if (!this.info.getState().showcase) return  
         window.location.href = this.info.getState().showcase
     }
-
 }
 
 export default window.customElements.define('agora-navigator-item', NavigatorItem)

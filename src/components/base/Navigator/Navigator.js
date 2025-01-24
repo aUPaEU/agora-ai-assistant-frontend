@@ -1,13 +1,21 @@
-import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
 import { ITEM_TYPE } from "../../../constants/itemType.const"
+
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
+
+/* Services */
 import * as api from "../../../services/api.service"
 
 class Navigator extends PlainComponent {
     constructor() {
         super('agora-navigator', `${PATHS.BASE_COMPONENTS}/Navigator/Navigator.css`)
+
+        this.signals = new PlainSignal(this)
 
         this.resultContext = new PlainContext('result', this, true)
         this.serviceContext = new PlainContext('service', this, false)
@@ -30,7 +38,7 @@ class Navigator extends PlainComponent {
 
         const servicesInResult = (serviceName) => {
             const results = this.resultContext.getData('data')
-            if (!results) return true
+            if (!results || results.length === 0) return true
 
             let response = false
             results.forEach(result => {
@@ -89,6 +97,8 @@ class Navigator extends PlainComponent {
 
     highlightItem(item) {
         // TODO: Highlight items based on the LLM result
+        // Now this is being managed from the result window, but 
+        // navigator should be the responsible component for this task
     }
 }
 

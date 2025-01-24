@@ -60,6 +60,7 @@ export const fetchElement = async (model, id, fields=null) => {
             ? `${COMMON_FIELDS.concat(fields)}` 
             : `${COMMON_FIELDS}`
         }`
+        
         const response = await fetch(url)
 
         if (!response.ok) {
@@ -67,7 +68,6 @@ export const fetchElement = async (model, id, fields=null) => {
         }
 
         const data = await response.json()
-        console.log("DATATATATA: ", data)
         return data
     }
 
