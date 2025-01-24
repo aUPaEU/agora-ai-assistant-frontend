@@ -1,0 +1,53 @@
+.agora-loader-wrapper {
+    width: fit-content;
+    height: fit-content;
+
+    display: grid;
+    place-content: center;
+}
+
+img {
+    animation-name: spin;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.fade-in {
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.fade-out {
+    animation-name: fade-out;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+ @keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+ }
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
