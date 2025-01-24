@@ -1,0 +1,8 @@
+- [ ] Implement a method to check if the image that is being fetched is not a placeholder.
+- [ ] Implement card layouts depending on the type of card.
+- [ ] Implement a method to detect which kind of card it is based on the fetched data.
+- [ ] Translate service highlight responsibility to the navigator component.
+- [ ] Improve responsiveness.
+- [x] Implement chat history autoloading at startup.
+- [x] Implemet a chat clear button.
+- [x] Solve pointer events issue when the Chat component is over some card and the ChatWindow is hidden. 
