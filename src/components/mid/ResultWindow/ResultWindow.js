@@ -1,11 +1,16 @@
-import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+import { CONFIG } from "../../../../agora.config"
+import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
 import { CARD_TYPE } from "../../../constants/cardType.const"
-import { CONFIG } from "../../../../agora.config"
 
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+
+/* Services */
 import * as api from "../../../services/api.service"
 
 class ResultWindow extends PlainComponent {
@@ -14,6 +19,8 @@ class ResultWindow extends PlainComponent {
 
         this.resultContext = new PlainContext('result', this, true)
         this.serviceContext = new PlainContext('service', this, true)
+
+        this.signals = new PlainSignal(this)
 
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
@@ -34,7 +41,7 @@ class ResultWindow extends PlainComponent {
                             const serviceName = result.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
                             return html`
                                 <!-- <span class="service-name">${result.service}</span> -->
-                                <div class="${serviceName}-wrapper"></div>
+                                <div class="${serviceName}-wrapper" data-name="${result.service}"></div>
                             `
                         }).join('')
                         : ``
@@ -54,6 +61,14 @@ class ResultWindow extends PlainComponent {
                 `
             }
         `
+    }
+
+    listeners() {
+        Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
+            serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
+            serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
+        })
+        
     }
 
     showResults() {
@@ -143,6 +158,34 @@ class ResultWindow extends PlainComponent {
             this.$('agora-base-loader').wrapper.classList.remove('fade-in')
             this.$('agora-base-loader').wrapper.classList.add('fade-out')
         }
+    }
+
+    highlightServiceOnHover(wrapper, state) {
+        const app = document.querySelector('agora-app')
+        const layout = app.$('agora-layout-v2')
+        const navigator = layout.$('agora-navigator')
+        const navigatorItems = navigator.$$('agora-navigator-item')
+
+        navigatorItems.forEach((item) => {
+            if (state) {
+                if (item.dataset.name === wrapper.dataset.name) {
+                    item.wrapper.classList.add('highlight')
+                }
+                else {
+                    item.wrapper.classList.remove('highlight')
+                }
+            }
+
+            else {
+                item.wrapper.classList.remove('highlight')
+            }
+        })
+    }
+
+    clear() {
+        console.log("All results have been cleared from the result window")
+        this.resultContext.setData({data: []})
+        this.builtResults.setState([])
     }
 
 }

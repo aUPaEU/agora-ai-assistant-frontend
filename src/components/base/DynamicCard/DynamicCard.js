@@ -8,10 +8,7 @@ class DynamicCard extends PlainComponent {
     constructor() {
         super('agora-dynamic-card', `${PATHS.BASE_COMPONENTS}/DynamicCard/DynamicCard.css`)
 
-        this.type = new PlainState(this.getAttribute('type'), this)
         this.data = new PlainState(null, this)
-
-        this.parentService = this.getAttribute('parent-service')
     }
 
     template() {
@@ -22,55 +19,14 @@ class DynamicCard extends PlainComponent {
 
     listeners() {
         this.wrapper.onclick = () => this.openInfo()
-        this.wrapper.onmouseenter = () => this.highlightServiceOnHover(true)
-        this.wrapper.onmouseleave = () => this.highlightServiceOnHover(false)
-    }
-
-    openInfo() {
-        const app = document.querySelector('agora-app')
-        const infoDialog = app.$('.card-info-dialog')
-        infoDialog.classList.add('fade-in')
-
-        infoDialog.querySelector('.card-info-image').src = `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? ''
-        infoDialog.querySelector('.card-info-name').innerHTML = this.data.getState().name ?? ''
-        infoDialog.querySelector('.card-info-lastname').innerHTML = this.data.getState().lastname ?? ''
-        infoDialog.querySelector('.card-info-summary').innerHTML = this.data.getState().summary ?? this.data.getState().description ?? ''
-        infoDialog.querySelector('.card-info-origin').innerHTML = this.data.getState().university_origin ? this.data.getState().university_origin[1] : ''
-        infoDialog.querySelector('.card-info-explore-button').dataset['url'] = this.getAttribute('href') ?? ''
-
-        infoDialog.showModal()
-        infoDialog.scrollTo(0, 0)
-    }
-
-    highlightServiceOnHover(state) {
-        const app = document.querySelector('agora-app')
-        const layout = app.$('agora-layout-v2')
-        const navigator = layout.$('agora-navigator')
-        const navigatorItems = navigator.$$('agora-navigator-item')
-
-        navigatorItems.forEach((item) => {
-            if (state) {
-                if (item.dataset.name === this.getAttribute('service')) {
-                    item.wrapper.classList.add('highlight')
-                }
-                else {
-                    item.wrapper.classList.remove('highlight')
-                }
-            }
-
-            else {
-                item.wrapper.classList.remove('highlight')
-            }
-        })
     }
 
     build() {
         this.data.setState(JSON.parse(this.dataset.data), false)
 
-        const image = this.data.getState().image
+        const image = true
             ? html`<img class="card-image" src="${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image"/>`
             : null
-
 
         const name = this.data.getState().name
             ? html`<span class="card-name">${this.data.getState().name}</span>`
@@ -132,6 +88,22 @@ class DynamicCard extends PlainComponent {
                 ${origin}
             `
         }
+    }
+
+    openInfo() {
+        const infoDialog = document.querySelector('agora-app').$('.card-info-dialog')
+
+        infoDialog.classList.add('fade-in')
+        
+        infoDialog.querySelector('.card-info-image').src = `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? ''
+        infoDialog.querySelector('.card-info-name').innerHTML = this.data.getState().name ?? ''
+        infoDialog.querySelector('.card-info-lastname').innerHTML = this.data.getState().lastname ?? ''
+        infoDialog.querySelector('.card-info-summary').innerHTML = this.data.getState().summary ?? this.data.getState().description ?? ''
+        infoDialog.querySelector('.card-info-origin').innerHTML = this.data.getState().university_origin ? this.data.getState().university_origin[1] : ''
+        infoDialog.querySelector('.card-info-explore-button').dataset['url'] = this.getAttribute('href') ?? ''
+
+        infoDialog.showModal()
+        infoDialog.scrollTo(0, 0)
     }
 }
 
