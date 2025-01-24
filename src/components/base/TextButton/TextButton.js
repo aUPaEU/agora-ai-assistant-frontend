@@ -23,26 +23,6 @@ class TextButton extends PlainComponent {
 
     listeners() {
         this.$('.button').onclick = () => this.onClick.getState()()
-        this.$('.button').onmouseenter = () => this.handleMouseEnter()
-        this.$('.button').onmouseleave = () => this.handleMouseLeave()
-    }
-
-    handleMouseEnter() {
-        /* gsap.to(this.$('.button'), {
-            duration: 0.3,
-            scale: 1.1,
-            boxShadow: "0px 4px 20px rgba(0, 255, 200, 0.6)",
-            ease: "power2.out",
-        }) */
-    }
-
-    handleMouseLeave() {
-        /* gsap.to(this.$('.button'), {
-            duration: 0.3,
-            scale: 1,
-            boxShadow: "0px 0px 0px rgba(0, 0, 0, 0)",
-            ease: "power2.out",
-        }) */
     }
 }
 
