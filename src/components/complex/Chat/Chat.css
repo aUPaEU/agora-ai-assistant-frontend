@@ -15,6 +15,10 @@ agora-chat-window {
     width: 100%;
 
     transition: 500ms;
+
+    animation-name: unfold;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
 }
 
 agora-chat-input {
@@ -25,5 +29,30 @@ agora-chat-input {
 }
 
 .folded agora-chat-window {
-    transform: translateX(200%);
+    animation-name: fold;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+    /* transform: translateX(200%); */
+}
+
+@keyframes unfold {
+    0% {
+        transform: translateX(200%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes fold {
+    0% {
+        transform: translateX(0);
+    }
+    99% {
+        transform: translateX(200%);
+    }
+    100% {
+        transform: translateX(200%);
+        display: none;
+    }
 }

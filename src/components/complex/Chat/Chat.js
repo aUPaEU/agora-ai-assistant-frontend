@@ -9,8 +9,11 @@ class Chat extends PlainComponent {
 
         this.resultContext = new PlainContext('result', this, false)
         this.chatContext = new PlainContext('chat', this, false)
+
         this.mockBotResponse = new PlainState(-1, this)
 
+        // We could add a condition to just fold the chat initially
+        // when there's no chat history.
         this.fold()
     }
 
@@ -19,14 +22,6 @@ class Chat extends PlainComponent {
             <agora-chat-window></agora-chat-window>
             <agora-chat-input></agora-chat-input>
         `
-    }
-
-    loadChat() {
-        // TODO: Load chat from local storage (chatContext)
-    }
-
-    clearChat() {
-        // TODO: Clear chat from local storage (chatContext)
     }
 
     unfold() {
@@ -46,6 +41,7 @@ class Chat extends PlainComponent {
 
         this.$('agora-chat-window').loading.setState(true)
         this.$('agora-chat-window').addMessage(message, 'user')
+
         this.storeMessageInContext(message, 'user')
 
         /* 

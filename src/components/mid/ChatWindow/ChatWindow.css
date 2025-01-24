@@ -17,6 +17,8 @@
 
     overflow-x: hidden;
     overflow-y: auto;
+
+    position: relative;
 }
 
 .agora-chat-window-wrapper::-webkit-scrollbar {
@@ -35,7 +37,6 @@
     border: 3px solid transparent;
     background-clip: content-box;
 }
-
 
 .chat-container {
     display: flex;
@@ -57,4 +58,77 @@ agora-chat-loader {
     /* position: absolute;
     bottom: 1rem;
     left: 1rem; */
+}
+
+/* ICONS */
+.clear-chat-button {
+    cursor: pointer;
+
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+
+    border-radius: 100pt;
+
+    height: fit-content;
+    width: fit-content;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+
+    transition: 300ms;
+}
+
+.clear-chat-button::before {
+    display: none;
+    content: '';
+}
+
+.clear-chat-button:hover {
+    padding-left: 1rem;
+
+    width: fit-content;
+
+    background-color: rgb(223, 223, 223);
+    box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.clear-chat-button:hover > svg {
+    color: var(--text-secondary-color);
+}
+
+.clear-chat-button:hover::before {
+    display: flex;
+    content: 'New chat';
+
+    color: var(--text-tertiary-color);
+
+    animation-name: fade-in;
+    animation-duration: 300ms;
+    animation-fill-mode: forwards;
+}
+
+.clear-chat-button > svg {
+    color: var(--text-tertiary-color);
+}
+
+.fade-in {
+    animation-name: fade-in;
+    animation-duration: 300ms;
+    animation-fill-mode: forwards;
+}
+
+/* ANIMATIONS */
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
