@@ -1,0 +1,106 @@
+.agora-layout-v1-wrapper {
+    padding: 15%;
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 100vh;
+
+    display: grid;
+    grid-template-areas: 
+    "a a a b"
+    "c c c c"
+    "d d d d";
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+/* GRID AREAS */
+.a {
+    grid-area: a;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: red;
+}
+
+.b {
+    grid-area: b;
+}
+
+.c {
+    grid-area: c;
+
+    width: 100%;
+    height: 100%;
+}
+
+.d {
+    grid-area: d;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: green;
+}
+
+/* GREETINGS */
+.greetings {
+    width: fit-content;
+    background: linear-gradient(45deg, #000000, #660080, #3340BF, #0080FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.greetings em {
+    font-style: normal;
+}
+
+.greetings-description {
+    max-width: 50%;
+
+    color: var(--text-secondary-color);
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+/* AGORA LOGO */
+.logo {
+    justify-self: end;
+    width: fit-content;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: end;
+}
+
+.agora-name {
+    align-self: start;
+
+    margin-bottom: -0.5rem;
+    z-index: 10;
+
+    color: var(--text-secondary-color);
+    font-size: 1.5rem;
+}
+
+.alliance-name {
+    padding: 0.5rem;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+
+    color: var(--text-accent-color);
+    font-size: 48px;
+    font-weight: bold;
+
+    display: grid;
+    place-content: center;
+
+    background-color: var(--primary-color);
+}
