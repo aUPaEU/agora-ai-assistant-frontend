@@ -1,51 +1,90 @@
-import { PlainComponent, PlainState } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
 import { PATHS } from "./constants/paths.const"
 import { html } from "./utils/templateTags.util"
 import { gsap } from "gsap"
 
 import './components/base/Navbar/Navbar'
+import './components/base/Navigator/Navigator'
+import './components/base/NavigatorItem/NavigatorItem'
 import './components/base/Showcase/Showcase'
+import './components/base/Greetings/Greetings'
+
+/* Buttons */
 import './components/base/TextButton/TextButton'
+
+/* Chat */
+import './components/complex/Chat/Chat'
+import './components/mid/ChatWindow/ChatWindow'
+import './components/base/ChatBubble/ChatBubble'
+import './components/base/ChatInput/ChatInput'
+
+/* Layouts */
+import './components/layout/v1/v1'
+import './components/layout/v2/v2'
+
+/* Spinners */
+import './components/base/ChatLoader/ChatLoader'
+import './components/base/BaseLoader/BaseLoader'
+
+/* Results */
+import './components/mid/ResultWindow/ResultWindow'
+import './components/base/DynamicCard/DynamicCard'
 
 class App extends PlainComponent {
     constructor() {
         super('agora-app', `${PATHS.SRC}/App.css`)
+
+        this.companyContext = new PlainContext('company', this, false)
+        this.resultContext = new PlainContext('result', this, false)
+        this.chatContext = new PlainContext('chat', this, false)
 
         this.layout = new PlainState('main', this)
     }
 
     template() {
         return html`
-            <agora-navbar></agora-navbar>
+            <!-- <agora-navigator></agora-navigator> -->
+            <!-- <agora-navbar></agora-navbar> -->
+            <!-- <agora-layout-v1></agora-layout-v1> -->
+            
+            <agora-layout-v2></agora-layout-v2>
 
-            <main class="layout">
-                <!-- Greetings -->
-                <div class="greetings a">
-                    <span>Hi there, <em>John</em></span><br>
-                    <span>How could I help you?</span>
-                    <p class="greetings-description">
-                        You can navigate directly through our acceleration services 
-                        or ask our assistant to guide you through the process of finding resources.
-                    </p>
+            <dialog class="card-info-dialog">
+                <div class="card-info-dialog-wrapper">
+                    <div class="card-info-image-container">
+                        <img class="card-info-image" src="">
+                    </div>
+                    <div class="card-info-content">
+                        <span class="card-info-origin"></span>
+                        <span class="card-info-name"></span>
+                        <span class="card-info-lastname"></span>
+                        <span class="card-info-summary"></span>
+                    </div>
+                    <div class="card-info-actions">
+                        <button class="card-info-explore-button">Explore</button>
+                    </div>
                 </div>
-                <div class="logo b">
-                    <span class="agora-name">Agora</span>
-                    <span class="alliance-name">Unite!</span>
-                </div>
-                <div class="showcase c">
-                    <agora-showcase></agora-showcase>
-                </div>
-                <div class="greetings d"></div>
-            </main>
+            </dialog>
         `
     }
 
     listeners() {
+        this.$('.card-info-dialog').onclick = (e) => this.closeInfoDialog(e)
+        this.$('.card-info-dialog').onanimationend = () => this.$('.card-info-dialog').classList.remove('fade-in')
+        this.$('.card-info-explore-button').onclick = () => window.open(this.$('.card-info-explore-button').dataset.url, '_blank')
+
         this.wrapper.onclick = (e) => {
             if (e.target.tagName !== 'AGORA-NAVBAR') {
                 const navbar = this.$('agora-navbar')
+                if (!navbar) return
                 navbar.foldAllSubmenus()
             }
+        }
+    }
+
+    closeInfoDialog(e) {
+        if (e.target.tagName !== 'BUTTON') {
+            this.$('.card-info-dialog').close()
         }
     }
 }
