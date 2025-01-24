@@ -1,0 +1,60 @@
+.agora-chat-window-wrapper {
+    padding: 1rem;
+    padding-block: 1.5rem;
+    box-sizing: border-box;
+
+    width: 100%;
+    min-height: 400px;
+    height: fit-content;
+    max-height: 800px;
+
+    border: 1px solid var(--primary-color);
+    border-radius: 15pt;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.agora-chat-window-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+.agora-chat-window-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+    margin-block: 1.5rem;
+}
+
+.agora-chat-window-wrapper::-webkit-scrollbar-thumb {
+    width: 6px;
+    background-color: rgb(from var(--text-secondary-color) r g b / 0.5);
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 1.5rem;
+}
+
+agora-chat-bubble[author="user"] {
+    align-self: flex-end;
+}
+
+agora-chat-bubble[author="bot"] {
+    align-self: flex-start;
+}
+
+agora-chat-loader {
+    /* position: absolute;
+    bottom: 1rem;
+    left: 1rem; */
+}

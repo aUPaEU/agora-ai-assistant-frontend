@@ -1,0 +1,48 @@
+.agora-chat-loader-wrapper {
+    padding-inline: 0.5rem;
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.circle {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+    background-color: var(--text-accent-color);
+
+    animation-name: bounce;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.a {
+    animation-delay: 0.1s;
+}
+
+.b {
+    animation-delay: 0.2s;
+}
+
+.c {
+    animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+        opacity: 0.5;
+    }
+}
+        

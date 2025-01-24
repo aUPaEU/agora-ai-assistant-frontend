@@ -1,0 +1,71 @@
+.agora-chat-bubble-wrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.agora-chat-bubble-wrapper:has(.bot) {
+    justify-content: start;
+}
+
+.agora-chat-bubble-wrapper:has(.user) {
+    justify-content: end;
+}
+
+.little-bubble {
+    width: 1rem;
+    height: 1rem;
+
+    background-color: var(--primary-color);
+
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    border-radius: 15pt;
+}
+
+.bubble {
+    padding: 1rem;
+    box-sizing: border-box;
+
+    max-width: 250px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 0.5rem;
+
+    background-color: var(--primary-color);
+
+    border-radius: 15pt;
+
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.bubble-content {
+    width: 100%;
+    height: 100%;
+
+    color: var(--text-primary-color);
+    font-size: 0.8rem;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word; 
+
+    z-index: 10;
+}
+
+.time {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.separator {
+    flex: 1;
+}
+
+.bubble-time {
+    color: var(--text-secondary-color);
+    font-size: 0.7rem;
+}
