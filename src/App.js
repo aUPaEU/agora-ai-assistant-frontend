@@ -1,4 +1,4 @@
-import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
 import { PATHS } from "./constants/paths.const"
 import { html } from "./utils/templateTags.util"
 import { gsap } from "gsap"
@@ -80,6 +80,15 @@ class App extends PlainComponent {
                 navbar.foldAllSubmenus()
             }
         }
+    }
+
+    connectors() {
+        const chatWindow = this.$('agora-layout-v2').$('agora-chat').$('agora-chat-window')
+        const resultWindow = this.$('agora-layout-v2').$('agora-result-window')
+        const navigator = this.$('agora-layout-v2').$('agora-navigator')
+
+        resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
+        navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
     }
 
     closeInfoDialog(e) {
