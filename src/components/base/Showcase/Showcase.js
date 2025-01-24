@@ -112,7 +112,7 @@ class Showcase extends PlainComponent {
     }
 
     async fetchData() {
-        const items = await api.fetchAccelerationServices()
+        const items = await api.fetchAccelerationServicesV1()
         const flattenedData = this.flattenData(items)
         this.data.setState(flattenedData, false)
         this.loading.setState(false)
