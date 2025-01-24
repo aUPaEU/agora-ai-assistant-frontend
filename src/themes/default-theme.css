@@ -2,8 +2,18 @@
     --primary-color: white;
 
     --bg-color: #EDEBEB;
+    --bg-secondary-color: #D2E1EF;
     
     --text-primary-color: #363738;
-    --text-secondary-color: #838689;
+    --text-secondary-color: #5A5A63;
+    --text-tertiary-color: #92929e;
     --text-accent-color: #0080FF;
+
+    --acceleration-service-color: #0080FF;
+    --service-color: #3bcaee;
+    --catalogue-color: #47dab5;
+    --showcase-color: #c3df77;
+
+    --card-primary-color: #D2E1EF;
+    --card-hover-color: #98b1c9;
 }
