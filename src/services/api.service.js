@@ -55,11 +55,10 @@ export const fetchElement = async (model, id, fields=null) => {
         'university_origin'
     ]
 
+    const FIELDS = [...new Set(COMMON_FIELDS.concat(fields))]
+
     try {
-        const url = `${CONFIG.host}/catalogue-api/v1/ai/${model}/${id}?fields=${fields 
-            ? `${COMMON_FIELDS.concat(fields)}` 
-            : `${COMMON_FIELDS}`
-        }`
+        const url = `${CONFIG.host}/catalogue-api/v1/ai/${model}/${id}?fields=${FIELDS}`
         
         const response = await fetch(url)
 
