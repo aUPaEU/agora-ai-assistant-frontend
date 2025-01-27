@@ -41,6 +41,24 @@
     box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
 }
 
+.bubble.user {
+    border-top-right-radius: 0;
+    background-color: rgb(from var(--text-accent-color) r g b / 0.25);
+}
+
+.bubble.bot {
+    border-top-left-radius: 0;
+}
+
+.bubble.user + .little-bubble {
+    background-color: rgb(from var(--text-accent-color) r g b / 0.25);
+    border: 1px dashed var(--text-accent-color);
+}
+
+.little-bubble:has(+ .bubble.bot) {
+    border: 1px dashed var(--text-accent-color);
+}
+
 .bubble-content {
     width: 100%;
     height: 100%;

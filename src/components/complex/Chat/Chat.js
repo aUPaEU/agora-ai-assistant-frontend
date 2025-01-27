@@ -1,7 +1,13 @@
 import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
-import { LLM_CHAT_HISTORY } from "../../../data/mock.data"
+
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
+
+/* Mock data */
+import { LLM_CHAT_HISTORY } from "../../../data/mock.data"
 
 class Chat extends PlainComponent {
     constructor() {
@@ -12,9 +18,7 @@ class Chat extends PlainComponent {
 
         this.mockBotResponse = new PlainState(-1, this)
 
-        // We could add a condition to just fold the chat initially
-        // when there's no chat history.
-        this.fold()
+        if (this.chatHistoryIsEmpty()) this.fold()
     }
 
     template() {
@@ -107,6 +111,10 @@ class Chat extends PlainComponent {
         }
     }
 
+    chatHistoryIsEmpty() {
+        if (!this.chatContext.getData('history')) return true
+        return this.chatContext.getData('history').length === 0
+    }
 }
 
 export default window.customElements.define('agora-chat', Chat)

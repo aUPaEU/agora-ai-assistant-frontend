@@ -1,5 +1,10 @@
+import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainContext } from "plain-reactive"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
+
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
 
 class Greetings extends PlainComponent {
@@ -21,7 +26,7 @@ class Greetings extends PlainComponent {
                 <span>Welcome to</span> 
                 <div class="logo">
                     <span class="agora-name">Agora</span>
-                    <span class="alliance-name">Unite!</span>
+                    <span class="alliance-name">${CONFIG.name}</span>
                 </div>
             </div>
             <span>How could I help you?</span>

@@ -49,6 +49,7 @@ class App extends PlainComponent {
             
             <agora-layout-v2></agora-layout-v2>
 
+            <!-- Element Info Dialog -->
             <dialog class="card-info-dialog">
                 <div class="card-info-dialog-wrapper">
                     <div class="card-info-image-container">
@@ -65,6 +66,7 @@ class App extends PlainComponent {
                     </div>
                 </div>
             </dialog>
+            <!-- This element could be encapsulated in a component -->
         `
     }
 
@@ -83,10 +85,12 @@ class App extends PlainComponent {
     }
 
     connectors() {
+        // App Components
         const chatWindow = this.$('agora-layout-v2').$('agora-chat').$('agora-chat-window')
         const resultWindow = this.$('agora-layout-v2').$('agora-result-window')
         const navigator = this.$('agora-layout-v2').$('agora-navigator')
 
+        // Connections between components
         resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
         navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
     }

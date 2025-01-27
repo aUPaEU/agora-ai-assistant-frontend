@@ -104,7 +104,7 @@ agora-chat-loader {
 
 .clear-chat-button:hover::before {
     display: flex;
-    content: 'New chat';
+    content: 'Reset chat';
 
     color: var(--text-tertiary-color);
 

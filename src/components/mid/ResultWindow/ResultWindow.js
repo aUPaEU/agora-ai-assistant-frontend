@@ -36,12 +36,12 @@ class ResultWindow extends PlainComponent {
             <!-- Cards -->
             <div class="card-wrapper">
                 ${
+                    
                     this.resultContext.getData('data') 
-                        ? this.resultContext.getData('data').map((result) => {
-                            const serviceName = result.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
+                        ? [...new Set(this.resultContext.getData('data').map(result => result.service))].map((result) => {
+                            const serviceName = result.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
                             return html`
-                                <!-- <span class="service-name">${result.service}</span> -->
-                                <div class="${serviceName}-wrapper" data-name="${result.service}"></div>
+                                <div class="${serviceName}-wrapper" data-name="${result}"></div>
                             `
                         }).join('')
                         : ``
@@ -64,11 +64,22 @@ class ResultWindow extends PlainComponent {
     }
 
     listeners() {
+        // Observers
+        /* const resizeObserver = new ResizeObserver(() => {
+            if (
+                content.scrollWidth > container.clientWidth || 
+                content.scrollHeight > container.clientHeight
+              ) {
+                content.classList.add("overflowing");
+              } else {
+                content.classList.remove("overflowing");
+              }
+        }) */
+
         Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
             serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
             serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
         })
-        
     }
 
     showResults() {
@@ -89,8 +100,7 @@ class ResultWindow extends PlainComponent {
 
         results.forEach((result) => {
             result.element_ids.forEach(async (element) => {
-                console.log(result.model, element)
-                const response = await api.fetchElement(result.model, element)
+                const response = await api.fetchElement(result.model, element, result.featured_fields)
                 if (!response.id) return
 
                 const newCard = {
@@ -98,6 +108,7 @@ class ResultWindow extends PlainComponent {
                     id: `element-${response.id}`,
                     model: result.model,
                     service: result.service,
+                    featured_fields: result.featured_fields,
                     dataset: JSON.stringify(response, stringifyReplacer)
                 }
 
@@ -122,8 +133,6 @@ class ResultWindow extends PlainComponent {
             })
 
         })
-
-        console.log(this.builtResults.getState())
     }
 
     addCard(card) {
@@ -135,7 +144,6 @@ class ResultWindow extends PlainComponent {
                 }
             })
         })
-        console.log(availableWebsites)
 
         const newCard = document.createElement('agora-dynamic-card')
         newCard.id = card.id
@@ -144,6 +152,7 @@ class ResultWindow extends PlainComponent {
         newCard.setAttribute('model', card.model)
         newCard.setAttribute('service', card.service)
         newCard.setAttribute('data-data', card.dataset)
+        newCard.setAttribute('featured-fields', card.featured_fields)
         newCard.classList.add('fade-in')
 
         const serviceName = card.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
@@ -183,7 +192,6 @@ class ResultWindow extends PlainComponent {
     }
 
     clear() {
-        console.log("All results have been cleared from the result window")
         this.resultContext.setData({data: []})
         this.builtResults.setState([])
     }

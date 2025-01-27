@@ -6,10 +6,13 @@
     /* height: 100vh; */
 
     position: relative;
+
+    overflow: hidden;
 }
 
 .main {
     margin-top: 2rem;
+    box-sizing: border-box;
     
     height: 100%;
 
@@ -30,9 +33,12 @@ agora-navigator {
 
 agora-result-window {
     width: 100%;
-    height: 100%;
+    height: auto;
+    min-height: 50vh;
     
     transition: 300ms;
+
+    overflow: visible;
 }
 
 .results {
@@ -59,9 +65,30 @@ agora-result-window {
     z-index: 20;
 }
 
+/* OVERFLOW FADES */
+.left-fade {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    width: 25%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--bg-color));
+
+    z-index: 1;
+}
+
 /* FAKE HEADER */
 .fake-header {
     position: fixed;
     top: 0;
     left: 0;
+
+    z-index: 1000;
 }

@@ -20,6 +20,10 @@
     transition: 300ms;
 }
 
+.agora-dynamic-card-wrapper > * {
+    user-select: none;
+}
+
 .agora-dynamic-card-wrapper:hover {
     transform: translateY(-10%);
 

@@ -48,6 +48,18 @@ class DynamicCard extends PlainComponent {
             ? html`<span class="card-origin">${this.data.getState().university_origin[1]}</span>`
             : null
 
+        const additional = null
+        
+        /* const additional = this.parseAdditionalFields().length > 0
+            ? html`
+                <div class="additional-fields">
+                    ${this.parseAdditionalFields().map(field => html`
+                        <span class="card-additional-field card-summary">${this.data.getState()[field]}</span>
+                    `).join('')}
+                </div>
+            `
+            : null */
+
         return html`
             ${image}
             <div class="card-content">
@@ -58,36 +70,9 @@ class DynamicCard extends PlainComponent {
                 ${summary}
                 ${description}
                 <div class="fill-space"></div>
+                <!-- ${additional} -->
             </div>
         `
-
-        // Additional field will be a field (or more) selected by the LLM to be displayed
-        // because its information is considered relevant to the user
-        const additional = this.data.getState().additional
-            ? html`<span>Adadditional field</span>`
-            : html`<span>No additional field</span>`
-
-        // ITEM CARD
-        if (this.type.getState() === CARD_TYPE.ITEM) {
-            return html`
-                ${image}
-                ${name}
-                ${description}
-                ${additional}
-                ${origin}
-            `
-        }
-
-        // AVATAR CARD
-        else if (this.type.getState() === CARD_TYPE.AVATAR) {
-            return html`
-                ${image}
-                ${name}
-                ${lastname}
-                ${description}
-                ${origin}
-            `
-        }
     }
 
     openInfo() {
@@ -102,8 +87,51 @@ class DynamicCard extends PlainComponent {
         infoDialog.querySelector('.card-info-origin').innerHTML = this.data.getState().university_origin ? this.data.getState().university_origin[1] : ''
         infoDialog.querySelector('.card-info-explore-button').dataset['url'] = this.getAttribute('href') ?? ''
 
+        this.displayAdditionalFieldsInDialog(infoDialog)
+
         infoDialog.showModal()
         infoDialog.scrollTo(0, 0)
+    }
+
+    displayAdditionalFieldsInDialog(dialog) {
+        const additionalFields = this.parseAdditionalFields()
+
+        // Delete the container for the additional fields if it exists and there's no additional fields
+        if (additionalFields.length === 0) {
+            if (dialog.querySelector('.card-info-additional-fields')) {
+                dialog.querySelector('.card-info-additional-fields').remove()
+                return 
+            }
+        }
+
+        // Create a container for the additional fields if it does not exist and there's any additional field
+        if (!dialog.querySelector('.card-info-additional-fields')) {
+            const additionalFieldsContainer = document.createElement('div')
+            additionalFieldsContainer.classList.add('card-info-additional-fields')
+            dialog.querySelector('.card-info-content').appendChild(additionalFieldsContainer)
+        } else {
+            dialog.querySelector('.card-info-additional-fields').innerHTML = ''
+        }
+
+        // Map the additional fields and add them to the container
+        additionalFields.forEach(field => {
+            if (!this.data.getState()[field]) return
+            
+            let fieldName = field.replace(/_/g, ' ')
+            fieldName = fieldName.toUpperCase()
+
+            const additionalField = html`
+                <div class="additional-field">
+                    <span class="field-name">${fieldName}</span>
+                    <span class="field-value">${this.data.getState()[field]}</span>
+                </div>
+            `
+            dialog.querySelector('.card-info-additional-fields').innerHTML += additionalField
+        })
+    }
+
+    parseAdditionalFields() {
+        return this.getAttribute('featured-fields').split(',')
     }
 }
 

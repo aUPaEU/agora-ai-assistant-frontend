@@ -10,16 +10,13 @@ class LayoutV2 extends PlainComponent {
     template() {
         return html`
             <img class="fake-header" src="public/assets/images/fake-header.png"/>
+            <!-- <div class="left-fade"></div> -->
             <main class="main">
                 <agora-navigator></agora-navigator>
                 <agora-result-window></agora-result-window>
             </main>
             <agora-chat class="chat"></agora-chat>
         `
-    }
-
-    queryLLM() {
-        console.log('queryLLM')
     }
 }
 
