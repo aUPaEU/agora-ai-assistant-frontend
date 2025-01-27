@@ -3,6 +3,12 @@
 - [ ] Implement a method to detect which kind of card it is based on the fetched data.
 - [ ] Translate service highlight responsibility to the navigator component.
 - [ ] Improve responsiveness.
+- [ ] Implement an API call to fetch company data from agora.config.js.
+- [ ] Order results by service name before fetching them.
 - [x] Implement chat history autoloading at startup.
 - [x] Implemet a chat clear button.
 - [x] Solve pointer events issue when the Chat component is over some card and the ChatWindow is hidden. 
+- [x] Unfold chat window on load automatically when there is a chat history.
+- [x] Implement company context (it's loaded from the config file).
+- [ ] Perhaps, bot responses could have a key called 'explanation' and this text could be displayed in a tooltip when hovering result containers.
+- [ ] Add selectable default prompts to the chat window.
