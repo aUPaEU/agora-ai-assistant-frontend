@@ -74,3 +74,40 @@ export const fetchElement = async (model, id, fields=null) => {
         throw error
     }
 }
+
+export const sendMessage = async (message, models, history) => {
+    /* const mockModels = [
+        {
+            'model': 'civis.student.course',
+            'description': 'Find courses and programs at the University of Cividale Ugo Foscolo',
+        }
+    ] */
+
+    const payload = {
+        "user_input": message,
+        "models": models,
+        "history_messages": history
+    }
+
+    try {
+        const url = `${CONFIG.host}/ai_assistant_app/send_message/openai`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+
+        if (!response.ok) {
+            throw new Error('Something went wrong while sending message')
+        }
+
+        const data = await response.json()
+        return data
+    }
+
+    catch (error) {
+        throw error
+    }
+}
