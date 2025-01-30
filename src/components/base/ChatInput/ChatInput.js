@@ -13,7 +13,7 @@ class ChatInput extends PlainComponent {
             <input type="text" placeholder="Type your message...">
             <!-- <button class="send-button">${SEND_MESSAGE}</button> -->
             <button class="send-button">
-                <img src="public/assets/images/aupaeu-logo.png" alt="Agora">
+                <img src="${PATHS.PUBLIC}/assets/images/aupaeu-logo.png" alt="Agora">
             </button>
         `
     }
