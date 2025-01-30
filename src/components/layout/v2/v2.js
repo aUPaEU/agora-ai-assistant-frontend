@@ -12,7 +12,9 @@ class LayoutV2 extends PlainComponent {
             <img class="fake-header" src="public/assets/images/fake-header.png"/>
             <!-- <div class="left-fade"></div> -->
             <main class="main">
-                <agora-navigator></agora-navigator>
+                <div class="navigator-wrapper">
+                    <agora-navigator></agora-navigator>
+                </div>
                 <agora-result-window></agora-result-window>
             </main>
             <agora-chat class="chat"></agora-chat>

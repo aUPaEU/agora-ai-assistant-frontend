@@ -2,6 +2,8 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    padding-block: 2rem;
+    box-sizing: border-box;
 
     display: flex;
     flex-direction: column;

@@ -12,6 +12,9 @@ class DynamicCard extends PlainComponent {
     }
 
     template() {
+        this.highlightIfFeatured()
+        this.hideIfNotFeatured()
+
         return html`
             ${this.build()}
         `
@@ -19,6 +22,7 @@ class DynamicCard extends PlainComponent {
 
     listeners() {
         this.wrapper.onclick = () => this.openInfo()
+        this.$('.card-image').onload = () => this.replaceImageIfItsPlaceholder()
     }
 
     build() {
@@ -48,18 +52,6 @@ class DynamicCard extends PlainComponent {
             ? html`<span class="card-origin">${this.data.getState().university_origin[1]}</span>`
             : null
 
-        const additional = null
-        
-        /* const additional = this.parseAdditionalFields().length > 0
-            ? html`
-                <div class="additional-fields">
-                    ${this.parseAdditionalFields().map(field => html`
-                        <span class="card-additional-field card-summary">${this.data.getState()[field]}</span>
-                    `).join('')}
-                </div>
-            `
-            : null */
-
         return html`
             ${image}
             <div class="card-content">
@@ -70,7 +62,7 @@ class DynamicCard extends PlainComponent {
                 ${summary}
                 ${description}
                 <div class="fill-space"></div>
-                <!-- ${additional} -->
+                ${this.wrapper.classList.contains('featured') ? html`<span title="This element is recommended by AIDA" class="featured-badge"></span>` : ``}
             </div>
         `
     }
@@ -79,12 +71,16 @@ class DynamicCard extends PlainComponent {
         const infoDialog = document.querySelector('agora-app').$('.card-info-dialog')
 
         infoDialog.classList.add('fade-in')
+        infoDialog.classList.remove('no-image')
+        if (this.wrapper.classList.contains('no-image')) {
+            infoDialog.classList.add('no-image')
+        }
         
         infoDialog.querySelector('.card-info-image').src = `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? ''
-        infoDialog.querySelector('.card-info-name').innerHTML = this.data.getState().name ?? ''
+        infoDialog.querySelector('.card-info-name').textContent = this.data.getState().name ?? ''
         infoDialog.querySelector('.card-info-lastname').innerHTML = this.data.getState().lastname ?? ''
         infoDialog.querySelector('.card-info-summary').innerHTML = this.data.getState().summary ?? this.data.getState().description ?? ''
-        infoDialog.querySelector('.card-info-origin').innerHTML = this.data.getState().university_origin ? this.data.getState().university_origin[1] : ''
+        infoDialog.querySelector('.card-info-origin').textContent = this.data.getState().university_origin ? this.data.getState().university_origin[1] : ''
         infoDialog.querySelector('.card-info-explore-button').dataset['url'] = this.getAttribute('href') ?? ''
 
         this.displayAdditionalFieldsInDialog(infoDialog)
@@ -133,6 +129,45 @@ class DynamicCard extends PlainComponent {
     parseAdditionalFields() {
         return this.getAttribute('featured-fields').split(',')
     }
+    
+    async replaceImageIfItsPlaceholder() {
+        // TODO: This method have to be more solid. The conditions to see if it's a placeholder are these:
+        /* 
+            File Extension = png
+            Image Size = 256x256
+            Content Length = 6078
+        */
+        // To get all this data, we should fetch the image with HEAD method so they don't get loaded twice,
+        // but in order to fetch theme from the script, we need to enable CORS headers in the server.
+        // So this is a temporary solution.
+        
+        const image = this.$('.card-image')
+
+        if (image.naturalWidth === 256 && image.naturalHeight === 256) {
+            this.wrapper.classList.add('no-image')
+
+            const defaultImage = document.createElement('div')
+            defaultImage.classList.add('card-image')
+            defaultImage.classList.add('default-image')
+            
+            image.remove()
+            this.wrapper.insertBefore(defaultImage, this.wrapper.firstChild)
+        }
+    }
+
+    highlightIfFeatured() {
+        if (this.hasAttribute('featured')) {
+            this.wrapper.classList.add('featured')
+        }
+    }
+
+    hideIfNotFeatured() {
+        if (!this.hasAttribute('featured')) {
+            this.wrapper.style.display = 'none'
+        }
+    }
+
+    showNotFeatured() {}
 }
 
 export default window.customElements.define('agora-dynamic-card', DynamicCard)

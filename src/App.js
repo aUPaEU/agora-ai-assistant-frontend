@@ -1,8 +1,16 @@
 import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
-import { PATHS } from "./constants/paths.const"
-import { html } from "./utils/templateTags.util"
-import { gsap } from "gsap"
 
+/* Constants */
+import { PATHS } from "./constants/paths.const"
+
+/* Utils */
+import { html } from "./utils/templateTags.util"
+import { extractObjectsWithMatchingKey } from "./utils/objectHelper.util"
+
+/* Services */
+import * as api from "./services/api.service"
+
+/* Components */
 import './components/base/Navbar/Navbar'
 import './components/base/Navigator/Navigator'
 import './components/base/NavigatorItem/NavigatorItem'

@@ -17,6 +17,12 @@ class ChatWindow extends PlainComponent {
 
         this.loading = new PlainState(false, this)
         this.messages = new PlainState([], this)
+        this.defaultPrompts = [
+            'Show me infrastructures',
+            'How can you help me?',
+            'I\'m looking for projects',
+            'I want the latest featured projects'
+        ]
 
         this.signals = new PlainSignal(this)
         this.signals.register('results-updated')
@@ -26,6 +32,19 @@ class ChatWindow extends PlainComponent {
 
     template() {
         return html`
+            <div 
+                class="actions-wrapper"
+                style="${this.messages.getState().length > 0 ? '' : 'display: none;'}"
+            >
+                <!-- Clear chat button -->
+                    <div class="clear-chat-button ${this.messages.getState().length === 1 ? 'fade-in' : ''}">
+                    ${CLEAR_CHAT}
+                </div>
+            </div>
+
+            
+
+            <!-- Chat container -->
             <div class="chat-container">
                 ${this.messages.getState().map((message) => html`
                     <agora-chat-bubble 
@@ -37,17 +56,31 @@ class ChatWindow extends PlainComponent {
                 `).join('')}
                 ${this.loading.getState() ? html`<agora-chat-loader></agora-chat-loader>` : ``}
             </div>
+            
+            <!-- Default prompts -->
             <div 
-                class="clear-chat-button ${this.messages.getState().length === 1 ? 'fade-in' : ''}" 
-                style="${this.messages.getState().length > 0 ? '' : 'display: none;'}"
+                class="default-prompt-wrapper"
+                style="${this.messages.getState().length > 0 ? 'display: none;' : ''}"
             >
-                ${CLEAR_CHAT}
+                ${this.defaultPrompts.map(prompt => html`
+                    <span class="prompt">${prompt}</span>
+                `).join('')}
             </div>
+
+            
         `
     }
 
     listeners() {
         this.$('.clear-chat-button').onclick = () => this.clear()
+
+        this.$$('.prompt').forEach(prompt => {
+            prompt.onclick = () => this.addPrompt(prompt.innerText)
+        })
+    }
+
+    addPrompt(prompt) {
+        this.parentComponent.sendMessage(prompt)
     }
 
     addMessage(message, author) {
@@ -62,8 +95,9 @@ class ChatWindow extends PlainComponent {
     }
 
     scrollToBottom() {
-        this.wrapper.scrollTo({
-            top: this.wrapper.scrollHeight,
+        console.log("Scrolling to bottom")
+        this.$('.chat-container').scrollTo({
+            top: this.$('.chat-container').scrollHeight,
             behavior: 'smooth'
         })
     }

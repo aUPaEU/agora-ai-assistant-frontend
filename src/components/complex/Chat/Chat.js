@@ -5,6 +5,10 @@ import { PATHS } from "../../../constants/paths.const"
 
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
+import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+
+/* Services */
+import * as api from "../../../services/api.service"
 
 /* Mock data */
 import { LLM_CHAT_HISTORY } from "../../../data/mock.data"
@@ -15,10 +19,11 @@ class Chat extends PlainComponent {
 
         this.resultContext = new PlainContext('result', this, false)
         this.chatContext = new PlainContext('chat', this, false)
+        this.serviceContext = new PlainContext('service', this, false)
 
         this.mockBotResponse = new PlainState(-1, this)
 
-        if (this.chatHistoryIsEmpty()) this.fold()
+        if (!this.chatHistoryIsEmpty()) this.unfold()
     }
 
     template() {
@@ -40,32 +45,54 @@ class Chat extends PlainComponent {
         this.wrapper.classList.toggle('folded')
     }
 
-    sendMessage(message) {
-        const botResponses = LLM_CHAT_HISTORY
+    formatChatHistoryForLLM() {
+        const chatHistory = this.chatContext.getData('history')
 
-        this.$('agora-chat-window').loading.setState(true)
-        this.$('agora-chat-window').addMessage(message, 'user')
+        if (!chatHistory) return []
 
-        this.storeMessageInContext(message, 'user')
+        const chunkSize = 2
 
-        /* 
+        let history = []
 
-        // CLIENT REQUEST STRUCTURE (QUERY LLM)
-        {
-            agora_models: [
-                {
-                    parent_service: 'Student Catalogue',
-                    parent_service_description: '........',
-                    model_name: 'student.course',
-                    model_description: "model_description + catalogue_description"
-                }
-            ],
-            chat_history: chat_history (truncated to last N messages),
-            user_input: "......."
+        for (let i = 0; i < chatHistory.length; i += 2) {
+            const chunk = chatHistory.slice(i, i + chunkSize)
+            history.push({
+                "user": chunk[0].content,
+                "assistant": chunk[1].content,
+            })
         }
 
-        */
+        return history
+    }
 
+    async sendMessage(message) {
+        const availableModels = extractObjectsWithMatchingKey(
+            this.serviceContext.getData('services'),
+            'model'
+        ).map(model => {
+            const featuredElementIds = this.resultContext.getData('data') ? this.resultContext.getData('data').find(result => {
+                return result.model === model.model 
+            }) : null
+
+            return {
+                "model": model.model,
+                "description": "This is the model description",
+                "featured_element_ids": featuredElementIds ? featuredElementIds.featured_element_ids : []
+            }
+        })
+
+        const formattedChatHistory = this.formatChatHistoryForLLM()
+
+        this.$('agora-chat-window').addMessage(message, 'user')
+        this.storeMessageInContext(message, 'user')
+        this.setLoading(true)
+
+        const botResponse = await api.sendMessage(message, availableModels, formattedChatHistory)
+
+        this.handleBotResponse(botResponse.result)
+        
+        // This is for testing purposes with a mock response
+        /* const botResponses = LLM_CHAT_HISTORY
         setTimeout(() => {
             if (this.mockBotResponse.getState() < botResponses.length - 1) {
                 this.mockBotResponse.setState(
@@ -75,26 +102,56 @@ class Chat extends PlainComponent {
             }
 
             this.handleBotResponse(botResponses[this.mockBotResponse.getState()])
-        }, 1500)
+        }, 1500) */
         
     }
 
+    setLoading(state) {
+        this.$('agora-chat-window').loading.setState(state)
+        this.$('agora-chat-input').$('input').classList.toggle('blocked', state)
+        this.$('agora-chat-input').$('input').disabled = state
+        this.$('agora-chat-input').$('input').setAttribute('placeholder', state ? 'Waiting for response...' : 'Type your message...')
+    }
+
     handleBotResponse(response) {
-        this.$('agora-chat-window').loading.setState(false)
+        console.log("RESPONSE", response)
+        if (!response.message) return 
+
         this.$('agora-chat-window').addMessage(response.message, 'bot')
+        this.setLoading(false)
 
         this.storeMessageInContext(response.message, 'bot')
 
         // Check if the response contains results
         // If it does, set the result context
         if (response.result) {
-            // We set the result in the context
-            this.resultContext.setData({data: response.result}, true)
+            console.log("1. Response contains results")
+            const results = response.result.filter(result => {
+                return result.element_ids.length > 0
+            })
 
-            // We build the cards dynamically
-            // We get the data from resultWindow component and we process it there
-            // First we make all the api calls to retrieve the data we need (while this is happening, resultWindow still shows the loading spinner)
-            // Once all the data is retrieved, we display it in the resultWindow
+            console.log("2. Filtered results", results)
+
+            if (results.length > 0) {
+                console.log("3. Results are not empty")
+
+                const serviceModels = [...new Set(this.serviceContext.getData('services').map((service) => {
+                    return {
+                        "service": service.fields.name,
+                        "models": extractObjectsWithMatchingKey(service, 'model').map(model => model.model)
+                    }
+                }))]
+    
+                console.log("serviceModels", serviceModels)
+
+                results.forEach(result => {
+                    const resultService = serviceModels.find(service => service.models.includes(result.model)).service
+                    result.service = resultService
+                })
+
+                this.resultContext.setData({data: response.result}, true)
+                return 
+            }
         }
     }
 

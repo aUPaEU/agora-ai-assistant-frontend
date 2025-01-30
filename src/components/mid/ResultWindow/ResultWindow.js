@@ -33,15 +33,23 @@ class ResultWindow extends PlainComponent {
             : this.hideResults()
 
         return html`
+            <!-- Fades -->
+            <div class="right-fade"></div>
+            <div class="left-fade"></div>
+
             <!-- Cards -->
             <div class="card-wrapper">
                 ${
                     
                     this.resultContext.getData('data') 
-                        ? [...new Set(this.resultContext.getData('data').map(result => result.service))].map((result) => {
+                        ? [...new Set(
+                            this.resultContext.getData('data')
+                                .sort((a, b) => a.service.localeCompare(b.service))
+                                .map(result => result.service)
+                        )].map((result) => {
                             const serviceName = result.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
                             return html`
-                                <div class="${serviceName}-wrapper" data-name="${result}"></div>
+                                <div class="${serviceName}-wrapper" data-name="${result}"><div class="movable-wrapper"></div></div>
                             `
                         }).join('')
                         : ``
@@ -64,22 +72,39 @@ class ResultWindow extends PlainComponent {
     }
 
     listeners() {
-        // Observers
-        /* const resizeObserver = new ResizeObserver(() => {
-            if (
-                content.scrollWidth > container.clientWidth || 
-                content.scrollHeight > container.clientHeight
-              ) {
-                content.classList.add("overflowing");
-              } else {
-                content.classList.remove("overflowing");
-              }
-        }) */
-
         Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
             serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
             serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
         })
+
+        this.$$('.movable-wrapper').forEach(wrapper => {
+            wrapper.onscroll = () => this.handleCardWrapperScroll(wrapper)
+        })
+    }
+
+    handleCardWrapperScroll(wrapper) {
+        const scrollLeft = wrapper.scrollLeft
+        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth
+
+        if (scrollLeft < 10) {
+            // Set wrapper::before opacity to 1
+            wrapper.classList.remove('scroll-left-active')
+        }
+
+        if (scrollLeft > 10) {
+            // Set wrapper::before opacity to 0
+            wrapper.classList.add('scroll-left-active')
+        }
+
+        if (maxScroll - scrollLeft < 10) {
+            // Set wrapper::after opacity to 1
+            wrapper.classList.remove('scroll-right-active')
+        }
+
+        if (maxScroll - scrollLeft > 10) {
+            // Set wrapper::after opacity to 0
+            wrapper.classList.add('scroll-right-active')
+        }
     }
 
     showResults() {
@@ -98,7 +123,9 @@ class ResultWindow extends PlainComponent {
         // and we set it in the builtResults state
         const results = this.resultContext.getData('data')
 
-        results.forEach((result) => {
+        results
+        .sort((a, b) => a.service.localeCompare(b.service))
+        .forEach((result) => {
             result.element_ids.forEach(async (element) => {
                 const response = await api.fetchElement(result.model, element, result.featured_fields)
                 if (!response.id) return
@@ -136,6 +163,8 @@ class ResultWindow extends PlainComponent {
     }
 
     addCard(card) {
+        const featuredCards = extractObjectsWithMatchingKey(this.resultContext.getData('data'), 'featured_element_ids')[0].featured_element_ids
+
         const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
         availableWebsites.forEach(item => {
             item.websites.forEach(website => {
@@ -155,9 +184,15 @@ class ResultWindow extends PlainComponent {
         newCard.setAttribute('featured-fields', card.featured_fields)
         newCard.classList.add('fade-in')
 
+        if (featuredCards.includes(Number(card.id.split('-')[1]))) {
+            newCard.setAttribute('featured', true)
+        }
+
         const serviceName = card.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
-        const serviceWrapper = this.$(`.${serviceName}-wrapper`)
+        const serviceWrapper = this.$(`.${serviceName}-wrapper > .movable-wrapper`)
         serviceWrapper.appendChild(newCard)
+
+        this.handleCardWrapperScroll(serviceWrapper)
     }
 
     setLoading(state) {

@@ -20,6 +20,25 @@
     transition: 300ms;
 }
 
+/* .no-image {
+    height: 150px;
+    width: 275px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-image .card-content {
+    position: inherit;
+
+    height: 100%;
+    width: 100%;
+
+    justify-content: center;
+} */
+
 .agora-dynamic-card-wrapper > * {
     user-select: none;
 }
@@ -35,6 +54,14 @@
     width: 100%;
     height: 40%;
     object-fit: cover;
+}
+
+.default-image {
+    background-image: 
+        radial-gradient(ellipse at top, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
+        radial-gradient(ellipse at bottom,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff),
+        radial-gradient(ellipse at left, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
+        radial-gradient(ellipse at right,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff);
 }
 
 .card-content {
@@ -104,6 +131,21 @@
 .card-origin {
     color: var(--text-tertiary-color);
     font-size: 0.7rem;
+}
+
+/* HIGHLIGHT */
+.featured-badge {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    
+    height: 20px;
+    width: 20px;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('public/assets/images/aupaeu-logo.png');
 }
 
 

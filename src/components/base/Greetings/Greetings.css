@@ -18,6 +18,10 @@
 
     font-size: 40px;
     font-weight: bold;
+
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
 }
 
 .greetings em {
@@ -98,5 +102,20 @@
     100% {
         opacity: 0;
         transform: translateX(200%);
+    }
+}
+
+.fade-in {
+    animation-name: fade-in;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }

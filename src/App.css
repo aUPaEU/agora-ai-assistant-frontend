@@ -104,9 +104,15 @@ agora-navbar {
     z-index: -1;
 }
 
+.no-image .card-info-image-container {
+    display: none;
+}
+
 .card-info-content {
     padding: 2rem;
     box-sizing: border-box;
+
+    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -148,7 +154,7 @@ agora-navbar {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .additional-field {
@@ -157,15 +163,20 @@ agora-navbar {
     display: flex;
     justify-content: space-between;
     align-self: flex-start;
+    gap: 1rem;
 }
 
 .field-name {
+    flex: 2;
+
     font-size: 0.9rem;
     font-weight: bold;
     color: var(--text-secondary-color);
 }
 
 .field-value {
+    flex: 6;
+
     font-size: 0.8rem;
     color: var(--text-tertiary-color);
 }

@@ -1,6 +1,7 @@
 import { PlainComponent, PlainState } from "plain-reactive"
 import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"
+import { marked } from "marked"
 
 class ChatBubble extends PlainComponent {
     constructor() {
@@ -14,7 +15,7 @@ class ChatBubble extends PlainComponent {
         return html`
             ${this.author.getState() === 'bot' ? html`<div class="little-bubble"></div>` : ``}
             <div class="bubble ${this.author.getState()}">
-                <span class="bubble-content">${this.textContent}</span>
+                <span class="bubble-content">${this.innerHTML}</span>
                 <div class="time">
                     <span class="separator"></span>
                     <span class="bubble-time">${this.time.getState()}</span>
