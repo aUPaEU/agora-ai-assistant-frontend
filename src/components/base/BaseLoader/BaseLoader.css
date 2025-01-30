@@ -6,7 +6,10 @@
     place-content: center;
 }
 
-img {
+svg {
+    width: 85px;
+    height: 85px;
+
     animation-name: spin;
     animation-duration: 1s;
     animation-iteration-count: infinite;

@@ -4,6 +4,9 @@ import { CARD_TYPE } from "../../../constants/cardType.const"
 import { CONFIG } from "../../../../agora.config"
 import { html } from "../../../utils/templateTags.util"
 
+/* Icons */
+import { AUPAEU_LOGO } from "../../../icons/icons"
+
 class DynamicCard extends PlainComponent {
     constructor() {
         super('agora-dynamic-card', `${PATHS.BASE_COMPONENTS}/DynamicCard/DynamicCard.css`)
@@ -65,10 +68,9 @@ class DynamicCard extends PlainComponent {
                 ${
                     this.wrapper.classList.contains('featured') 
                         ? html`
-                            <span 
-                                title="This element is recommended by AIDA" 
-                                style="background-image: url('${PATHS.PUBLIC}/assets/images/aupaeu-logo.png')"
-                                class="featured-badge"></span>` 
+                            <span title="This element is recommended by AIDA" class="featured-badge">
+                                ${AUPAEU_LOGO}
+                            </span>` 
                         : ``
                 }
             </div>

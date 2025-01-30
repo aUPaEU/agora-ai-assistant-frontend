@@ -1,7 +1,7 @@
 import { PlainComponent, PlainState } from "plain-reactive"
 import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"
-import { SEND_MESSAGE } from "../../../icons/icons"
+import { SEND_MESSAGE, AUPAEU_LOGO } from "../../../icons/icons"
 
 class ChatInput extends PlainComponent {
     constructor() {
@@ -13,7 +13,7 @@ class ChatInput extends PlainComponent {
             <input type="text" placeholder="Type your message...">
             <!-- <button class="send-button">${SEND_MESSAGE}</button> -->
             <button class="send-button">
-                <img src="${PATHS.PUBLIC}/assets/images/aupaeu-logo.png" alt="Agora">
+                ${AUPAEU_LOGO}
             </button>
         `
     }

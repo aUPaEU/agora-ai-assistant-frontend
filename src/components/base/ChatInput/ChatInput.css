@@ -29,6 +29,7 @@ input {
     transition: 300ms;
 }
 
+/* AUPAEU BUTTON */
 .send-button {
     padding: 0;
     box-sizing: border-box;
@@ -73,26 +74,12 @@ input {
     transition: 300ms;
 }
 
-.send-button svg {
-    position: relative;
-    z-index: 10;
-
-    color: var(--text-primary-color);
-    /* margin-left: 4px; */
-
-    transition: 300ms;
-}
-
-.send-button:hover svg {
-    color: var(--primary-color);
-}
-
 .send-button:hover::before {
     transform: translateX(0);
     opacity: 1;
 }
 
-.send-button img {
+.send-button svg {
     position: relative;
     z-index: 10;
     
@@ -100,7 +87,7 @@ input {
     height: 70%;
 }
 
-.send-button:hover img {
+.send-button:hover svg {
   animation-name: spin;
   animation-duration: 300ms;
   animation-timing-function: ease-in-out;
