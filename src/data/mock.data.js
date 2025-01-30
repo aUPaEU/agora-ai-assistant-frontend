@@ -496,7 +496,7 @@ export const LLM_CHAT_HISTORY = [
             {
                 service: 'Student Catalogue',
                 model: 'student.course',
-                element_ids: [4],
+                element_ids: [4, 5, 6, 7],
                 featured_fields: [
                     'university_origin',
                     'start_date',
@@ -508,9 +508,7 @@ export const LLM_CHAT_HISTORY = [
                 model: 'student.mooc',
                 element_ids: [3],
                 featured_fields: [
-                    'university_origin',
-                    'start_date',
-                    'end_date'
+                    'university_origin'
                 ]
             },
             {
@@ -522,8 +520,16 @@ export const LLM_CHAT_HISTORY = [
                     'start_date',
                     'end_date'
                 ]
+            },
+            {
+                service: 'Faculty & Staff Community Platform',
+                model: 'languagetandem.profile',
+                element_ids: [24],
+                featured_fields: [
+                    'position_university',
+                    'language',
+                ]
             }
-            
         ]
     },
     {
