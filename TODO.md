@@ -1,14 +1,21 @@
-- [ ] Implement a method to check if the image that is being fetched is not a placeholder.
+- [-] Add markdown library to display formatted bot responses.
+- [-] Correct autoscroll down on the chat window.
+- [-] Implement a system to resend the message if the bot response is not received or there's an error. WHile avoiding sending new messages.
+- [-] Implement a method to check if the image that is being fetched is not a placeholder.
+
 - [ ] Implement card layouts depending on the type of card.
 - [ ] Implement a method to detect which kind of card it is based on the fetched data.
 - [ ] Translate service highlight responsibility to the navigator component.
 - [ ] Improve responsiveness.
 - [ ] Implement an API call to fetch company data from agora.config.js.
-- [ ] Order results by service name before fetching them.
+- [ ] Perhaps, bot responses could have a key called 'explanation' and this text could be displayed in a tooltip when hovering result containers.
+
+- [x] Order results by service name before fetching them.
 - [x] Implement chat history autoloading at startup.
 - [x] Implemet a chat clear button.
 - [x] Solve pointer events issue when the Chat component is over some card and the ChatWindow is hidden. 
 - [x] Unfold chat window on load automatically when there is a chat history.
 - [x] Implement company context (it's loaded from the config file).
-- [ ] Perhaps, bot responses could have a key called 'explanation' and this text could be displayed in a tooltip when hovering result containers.
-- [ ] Add selectable default prompts to the chat window.
+- [x] Make navigator sticky and scrollable.
+- [x] Correct 'clear chat' button positioning.
+- [x] Add selectable default prompts to the chat window.
