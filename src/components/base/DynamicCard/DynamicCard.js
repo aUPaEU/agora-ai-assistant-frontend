@@ -62,7 +62,15 @@ class DynamicCard extends PlainComponent {
                 ${summary}
                 ${description}
                 <div class="fill-space"></div>
-                ${this.wrapper.classList.contains('featured') ? html`<span title="This element is recommended by AIDA" class="featured-badge"></span>` : ``}
+                ${
+                    this.wrapper.classList.contains('featured') 
+                        ? html`
+                            <span 
+                                title="This element is recommended by AIDA" 
+                                style="background-image: url('${PATHS.PUBLIC}/assets/images/aupaeu-logo.png')"
+                                class="featured-badge"></span>` 
+                        : ``
+                }
             </div>
         `
     }

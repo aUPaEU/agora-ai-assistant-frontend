@@ -12,7 +12,7 @@ class BaseLoader extends PlainComponent {
             <img 
                 width=${this.getAttribute('width')} 
                 height=${this.getAttribute('height')} 
-                src="public/assets/images/aupaeu-logo.png" 
+                src="${PATHS.PUBLIC}/assets/images/agora-logo.png"
                 alt="Agora"
             >
         `
