@@ -72,6 +72,20 @@
     z-index: 10;
 }
 
+/* MARKDOWN */
+.bubble-content > p {
+    padding: 0;
+    margin: 0;
+}
+
+.bubble-content li {
+    padding-block: 0.2rem;
+}
+
+.bubble-content li::marker {
+    font-weight: bold;
+}
+
 .time {
     width: 100%;
 
