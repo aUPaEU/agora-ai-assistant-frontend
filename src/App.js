@@ -1,14 +1,10 @@
-import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext} from "plain-reactive"
 
 /* Constants */
 import { PATHS } from "./constants/paths.const"
 
 /* Utils */
 import { html } from "./utils/templateTags.util"
-import { extractObjectsWithMatchingKey } from "./utils/objectHelper.util"
-
-/* Services */
-import * as api from "./services/api.service"
 
 /* Components */
 import './components/base/Navbar/Navbar'
