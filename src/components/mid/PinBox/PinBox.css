@@ -1,0 +1,54 @@
+.agora-pin-box-wrapper {
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    transform: translateX(-90% );
+
+    padding: 2rem;
+    box-sizing: border-box;
+
+    width: 400px;
+    height: 400px;
+
+    border: solid 1px var(--primary-color);
+    border-left: none;
+    border-radius: 10pt;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    /* display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 1rem; */
+
+    background-color: rgb(from var(--primary-color) r g b / 0.3);
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    z-index: 5;
+
+    transition: 400ms;
+}
+
+.agora-pin-box-wrapper:hover {
+    transform: translateX(0);
+}
+
+/* ICON */
+.pin-icon {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.25rem;
+    
+    display: grid;
+    place-content: center;
+
+    width: 30px;
+    height: 30px;
+}
+
+.pin-icon svg {
+    color: var(--text-accent-color);
+}
