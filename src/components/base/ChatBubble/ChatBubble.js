@@ -15,14 +15,30 @@ class ChatBubble extends PlainComponent {
         return html`
             ${this.author.getState() === 'bot' ? html`<div class="little-bubble"></div>` : ``}
             <div class="bubble ${this.author.getState()}">
-                <span class="bubble-content">${this.innerHTML}</span>
+                <span class="bubble-content">${this.formatMarkdown(this.textContent)}</span>
                 <div class="time">
                     <span class="separator"></span>
-                    <span class="bubble-time">${this.time.getState()}</span>
+                    <span class="bubble-time">${this.formatTime(this.time.getState())}</span>
                 </div>
             </div>
             ${this.author.getState() === 'user' ? html`<div class="little-bubble"></div>` : ``}
         `
+    }
+
+    formatTime(time) { 
+        const hours = time.split(':')[0]
+        const minutes = time.split(':')[1]
+        const ampm = time.split(' ')[1]
+        return `${hours}:${minutes} ${ampm.toLowerCase()}`
+    }
+
+    formatMarkdown(html) {
+        marked.setOptions({
+            gfm: true,  // Enable GitHub-Flavored Markdown
+            breaks: true // Treat line breaks as actual `<br>` (optional)
+          });
+
+        return marked.parse(html.trim())
     }
 }
 
