@@ -94,9 +94,11 @@ class ResultWindow extends PlainComponent {
         })
 
         // Unfolds the card wrapper when the user clicks on the show more button (not featured results)
-        this.$('.show-more').onclick = (e) => this.$('.show-more').classList.contains('folded') 
-            ? this.unfoldCardWrapper(e) 
-            : this.foldCardWrapper(e)
+        if (this.$('.show-more')) {
+            this.$('.show-more').onclick = (e) => this.$('.show-more').classList.contains('folded') 
+                ? this.unfoldCardWrapper(e) 
+                : this.foldCardWrapper(e)
+        }
     }
 
     unfoldCardWrapper(e) {
@@ -201,6 +203,8 @@ class ResultWindow extends PlainComponent {
                             setTimeout(() => {
                                 this.isLoading.setState(false, false)
                                 this.setLoading(false)
+                                this.$('.show-more').style.display = 'grid'
+                                this.$('.show-more').classList.add('opacity-fade-in')
                             }, 500)
                     }
                 }, timerDelay)
@@ -290,7 +294,6 @@ class ResultWindow extends PlainComponent {
         this.resultContext.setData({data: []})
         this.builtResults.setState([])
     }
-
 }
 
 export default window.customElements.define('agora-result-window', ResultWindow)
