@@ -173,7 +173,7 @@ class DynamicCard extends PlainComponent {
 
     hideIfNotFeatured() {
         if (!this.hasAttribute('featured')) {
-            this.wrapper.style.display = 'none'
+            this.style.display = 'none'
         }
     }
 

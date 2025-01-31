@@ -23,7 +23,7 @@ class Chat extends PlainComponent {
 
         this.mockBotResponse = new PlainState(-1, this)
 
-        if (!this.chatHistoryIsEmpty()) this.unfold()
+        if (this.chatHistoryIsEmpty()) this.fold()
     }
 
     template() {

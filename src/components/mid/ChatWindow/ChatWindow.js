@@ -91,15 +91,17 @@ class ChatWindow extends PlainComponent {
         }
 
         this.messages.setState([...this.messages.getState(), newMessage])
-        this.scrollToBottom()
+        this.scrollToBottom(true)
     }
 
-    scrollToBottom() {
-        console.log("Scrolling to bottom")
-        this.$('.chat-container').scrollTo({
-            top: this.$('.chat-container').scrollHeight,
-            behavior: 'smooth'
-        })
+    scrollToBottom(smooth) {
+        setTimeout(() => {
+            const container = this.$('.chat-container');
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior: smooth ? 'smooth' : 'auto'
+            })
+        }, 100)
     }
 
     load() {
@@ -107,6 +109,8 @@ class ChatWindow extends PlainComponent {
         if (!chatHistory) return
 
         this.messages.setState(chatHistory, false)
+
+        this.scrollToBottom(false)
     }
 
     clear() {
