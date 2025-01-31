@@ -61,6 +61,8 @@ agora-base-loader {
     background-color: rgb(from var(--primary-color) r g b / 0.3);
     backdrop-filter: blur(10px);
 
+    position: relative;
+
     transition: 300ms;
 }
 
@@ -176,6 +178,49 @@ agora-dynamic-card {
     border-radius: 10px;
     border: 3px solid transparent;
     background-clip: content-box;
+}
+
+/* SHOW MORE */
+.show-more {
+    cursor: pointer;
+
+    height: 40px;
+    aspect-ratio: 1;
+
+    display: grid;
+    place-content: center;
+
+    position: absolute;
+    top: 0;
+    right: -3.5rem;
+
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    border: 1px solid var(--primary-color);
+    border-radius: 100pt;
+
+    background-color: var(--bg-color);
+    backdrop-filter: blur(10px);
+    filter: brightness(1);
+
+    color: var(--text-tertiary-color);
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    transition: 300ms;
+
+    z-index: 10;
+}
+
+.show-more:hover {
+    color: var(--text-secondary-color);
+
+    filter: brightness(1.2);
+}
+
+.show-more svg {
+    pointer-events: none;
 }
 
 /* ANIMATIONS */

@@ -10,6 +10,9 @@ import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 
+/* Icons */
+import { SUBTRACT } from "../../../icons/icons"
+
 /* Services */
 import * as api from "../../../services/api.service"
 
@@ -33,6 +36,7 @@ class ResultWindow extends PlainComponent {
             : this.hideResults()
 
         return html`
+            
             <!-- Fades -->
             <div class="right-fade"></div>
             <div class="left-fade"></div>
@@ -49,7 +53,13 @@ class ResultWindow extends PlainComponent {
                         )].map((result) => {
                             const serviceName = result.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
                             return html`
-                                <div class="${serviceName}-wrapper" data-name="${result}"><div class="movable-wrapper"></div></div>
+                                <div class="${serviceName}-wrapper" data-name="${result}">
+                                    <!-- Scrollable wrapper -->
+                                    <div class="movable-wrapper"></div>
+
+                                    <!-- Show more results -->
+                                    <div class="show-more folded">+${this.countResults(result).notFeaturedElementIds}</div>
+                                </div>
                             `
                         }).join('')
                         : ``
@@ -72,14 +82,51 @@ class ResultWindow extends PlainComponent {
     }
 
     listeners() {
+        // Manages the service highlightning in the navigator when the user hovers over an item
         Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
             serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
             serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
         })
-
+        
+        // Manage lateral fades in the scrollable wrapper when the user scrolls
         this.$$('.movable-wrapper').forEach(wrapper => {
             wrapper.onscroll = () => this.handleCardWrapperScroll(wrapper)
         })
+
+        // Unfolds the card wrapper when the user clicks on the show more button (not featured results)
+        this.$('.show-more').onclick = (e) => this.$('.show-more').classList.contains('folded') 
+            ? this.unfoldCardWrapper(e) 
+            : this.foldCardWrapper(e)
+    }
+
+    unfoldCardWrapper(e) {
+        const showMoreButton = e.target
+        showMoreButton.classList.remove('folded')
+        showMoreButton.innerHTML = SUBTRACT
+
+        const wrapper = this.$('.show-more').parentElement.querySelector('.movable-wrapper')
+        Array.from(wrapper.children).forEach(card => {
+            if (!card.hasAttribute('featured')) {
+                card.style.display = 'block'
+            }
+        })
+
+        this.handleCardWrapperScroll(wrapper)
+    }
+
+    foldCardWrapper(e) {
+        const showMoreButton = e.target
+        showMoreButton.classList.add('folded')
+        showMoreButton.innerHTML = `+${this.countResults(showMoreButton.parentElement.dataset.name).notFeaturedElementIds}`
+
+        const wrapper = this.$('.show-more').parentElement.querySelector('.movable-wrapper')
+        Array.from(wrapper.children).forEach(card => {
+            if (!card.hasAttribute('featured')) {
+                card.style.display = 'none'
+            }
+        })
+
+        this.handleCardWrapperScroll(wrapper)
     }
 
     handleCardWrapperScroll(wrapper) {
@@ -224,6 +271,19 @@ class ResultWindow extends PlainComponent {
                 item.wrapper.classList.remove('highlight')
             }
         })
+    }
+
+    countResults(service) {
+        const results = this.resultContext.getData('data').find(result => result.service === service)
+        const numElementIds = results.element_ids.length
+        const numFeaturedElementIds = results.featured_element_ids.length
+        const notFeaturedElementIds = numElementIds - numFeaturedElementIds
+
+        return {
+            numElementIds,
+            numFeaturedElementIds,
+            notFeaturedElementIds
+        }
     }
 
     clear() {
