@@ -32,6 +32,7 @@ import './components/base/BaseLoader/BaseLoader'
 
 /* Results */
 import './components/mid/ResultWindow/ResultWindow'
+import './components/mid/PinBox/PinBox'
 import './components/base/DynamicCard/DynamicCard'
 
 class App extends PlainComponent {
