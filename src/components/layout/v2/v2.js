@@ -10,7 +10,6 @@ class LayoutV2 extends PlainComponent {
     template() {
         return html`
             <img class="fake-header" src="public/assets/images/fake-header.png"/>
-            <!-- <div class="left-fade"></div> -->
             <main class="main">
                 <div class="navigator-wrapper">
                     <agora-navigator></agora-navigator>
@@ -18,6 +17,7 @@ class LayoutV2 extends PlainComponent {
                 <agora-result-window></agora-result-window>
             </main>
             <agora-chat class="chat"></agora-chat>
+            <agora-pin-box></agora-pin-box>
         `
     }
 }
