@@ -1,9 +1,9 @@
-- [-] Add markdown library to display formatted bot responses.
 - [-] Correct autoscroll down on the chat window.
 - [-] Implement a system to resend the message if the bot response is not received or there's an error. WHile avoiding sending new messages.
 - [-] Implement a method to check if the image that is being fetched is not a placeholder.
 - [-] Implement the UI within DEV environment.
 
+- [ ] Avoid rendering greetings if there was previous results.
 - [ ] Implement card layouts depending on the type of card.
 - [ ] Implement a method to detect which kind of card it is based on the fetched data.
 - [ ] Translate service highlight responsibility to the navigator component.
@@ -21,3 +21,5 @@
 - [x] Correct 'clear chat' button positioning.
 - [x] Add selectable default prompts to the chat window.
 - [x] Add featured identifier to featured elements.
+- [X] Add markdown library to display formatted bot responses.
+- [x] Add a fold-unfold button to display or hide the not featured results.
