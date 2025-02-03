@@ -23,14 +23,15 @@ class PinBox extends PlainComponent {
     template() {
         return html`
             <div class="pin-icon ${this.unfolded.getState() ? 'unfolded' : ''}">${BOOKMARK}</div>
-            <div class="card-wrapper">
+            <div class="card-wrapper ${this.data.getState() && this.data.getState().length > 0 ? '' : 'no-cards'}">
                 ${
-                    this.data.getState()
+                    this.data.getState() && this.data.getState().length > 0
                         ? this.data.getState().map(pin => html`
                         <agora-pin-card data-data='${JSON.stringify(pin, stringifyReplacer)}'></agora-pin-card>
                         `).join('')
                         : ``
                 }
+                <div class="drop-placeholder">Drop and save your items here</div>
             </div>
         `
     }

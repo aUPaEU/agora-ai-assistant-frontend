@@ -1,4 +1,4 @@
-.agora-app-wrapper {
+.agora-app-wrapper {    
     overflow-x: hidden;
     
     height: 100%;
@@ -228,12 +228,96 @@ agora-navbar {
     outline: none;
 }
 
+/* CAROUSEL */
+.carousel-controls {
+    position: fixed;
+    right: 50%;
+    margin-top: 1rem;
+    box-sizing: border-box;
+    transform: translateX(50%);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+
+    width: fit-content;
+    height: fit-content;
+
+    z-index: 10;
+
+    transition: 300ms;
+}
+
+.carousel-controls .prev-control, .carousel-controls .next-control {
+    cursor: pointer;
+
+    height: 50px;
+    width: 50px;
+
+    display: grid;
+    place-content: center;
+
+    border-radius: 100pt;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+
+    color: var(--text-accent-color);
+
+    transition: 300ms;
+}
+
+.carousel-controls .prev-control:hover, .carousel-controls .next-control:hover {
+    background-color: var(--primary-color);
+}
+
 /* ANIMATIONS */
+.fade-left {
+    animation-name: fade-left;
+    animation-duration: 500ms;
+}
+
+@keyframes fade-left {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-1000px);
+    }
+}
+
+.fade-right {
+    animation-name: fade-right;
+    animation-duration: 500ms;
+}
+
+@keyframes fade-right {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(1000px);
+    }
+}
+
+.fade-in {
+    animation-name: fade-in;
+    animation-duration: 500ms;
+}
+
 @keyframes fade-in {
     0% {
         opacity: 0;
+        transform: translateY(100%);
     }
     100% {
         opacity: 1;
+        transform: translateY(0);
     }
 }

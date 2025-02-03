@@ -73,6 +73,8 @@ class PinCard extends PlainComponent {
 
     openInfo() {
         const infoDialog = document.querySelector('agora-app').$('.card-info-dialog')
+        const carouselControls = document.querySelector('agora-app').$('.carousel-controls')
+        carouselControls.style.display = 'none'
 
         infoDialog.classList.add('fade-in')
         infoDialog.classList.remove('no-image')

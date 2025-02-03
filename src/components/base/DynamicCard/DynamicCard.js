@@ -29,7 +29,7 @@ class DynamicCard extends PlainComponent {
         this.wrapper.ondragstart = (e) => this.handleDrag(e)
         this.wrapper.ondragend = (e) => this.handleDrop(e)
 
-        this.wrapper.onclick = () => this.openInfo()
+        this.wrapper.onclick = () => this.openInfoDialog()
         this.$('.card-image').onload = () => this.replaceImageIfItsPlaceholder()
     }
 
@@ -82,63 +82,21 @@ class DynamicCard extends PlainComponent {
         `
     }
 
-    openInfo() {
-        const infoDialog = document.querySelector('agora-app').$('.card-info-dialog')
-
-        infoDialog.classList.add('fade-in')
-        infoDialog.classList.remove('no-image')
-        if (this.wrapper.classList.contains('no-image')) {
-            infoDialog.classList.add('no-image')
-        }
-        
-        infoDialog.querySelector('.card-info-image').src = `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? ''
-        infoDialog.querySelector('.card-info-name').textContent = this.data.getState().name ?? ''
-        infoDialog.querySelector('.card-info-lastname').innerHTML = this.data.getState().lastname ?? ''
-        infoDialog.querySelector('.card-info-summary').innerHTML = this.data.getState().summary ?? this.data.getState().description ?? ''
-        infoDialog.querySelector('.card-info-origin').textContent = this.data.getState().university_origin ? this.data.getState().university_origin[1] : ''
-        infoDialog.querySelector('.card-info-explore-button').dataset['url'] = this.getAttribute('href') ?? ''
-
-        this.displayAdditionalFieldsInDialog(infoDialog)
-
-        infoDialog.showModal()
-        infoDialog.scrollTo(0, 0)
-    }
-
-    displayAdditionalFieldsInDialog(dialog) {
-        const additionalFields = this.parseAdditionalFields()
-
-        // Delete the container for the additional fields if it exists and there's no additional fields
-        if (additionalFields.length === 0) {
-            if (dialog.querySelector('.card-info-additional-fields')) {
-                dialog.querySelector('.card-info-additional-fields').remove()
-                return 
-            }
+    openInfoDialog() {
+        const app = document.querySelector('agora-app')
+        const payload = {
+            src: `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? '',
+            name: this.data.getState().name ?? '',
+            lastname: this.data.getState().lastname ?? '',
+            summary: this.data.getState().summary ?? this.data.getState().description ?? '',
+            university_origin: this.data.getState().university_origin ? this.data.getState().university_origin[1] : '',
+            href: this.getAttribute('href') ?? '',
+            additional_fields: this.parseAdditionalFields(),
+            data: this.data.getState(),
+            has_image: !this.wrapper.classList.contains('no-image')
         }
 
-        // Create a container for the additional fields if it does not exist and there's any additional field
-        if (!dialog.querySelector('.card-info-additional-fields')) {
-            const additionalFieldsContainer = document.createElement('div')
-            additionalFieldsContainer.classList.add('card-info-additional-fields')
-            dialog.querySelector('.card-info-content').appendChild(additionalFieldsContainer)
-        } else {
-            dialog.querySelector('.card-info-additional-fields').innerHTML = ''
-        }
-
-        // Map the additional fields and add them to the container
-        additionalFields.forEach(field => {
-            if (!this.data.getState()[field]) return
-            
-            let fieldName = field.replace(/_/g, ' ')
-            fieldName = fieldName.toUpperCase()
-
-            const additionalField = html`
-                <div class="additional-field">
-                    <span class="field-name">${fieldName}</span>
-                    <span class="field-value">${this.data.getState()[field]}</span>
-                </div>
-            `
-            dialog.querySelector('.card-info-additional-fields').innerHTML += additionalField
-        })
+        app.openInfoDialog(payload)
     }
 
     parseAdditionalFields() {
