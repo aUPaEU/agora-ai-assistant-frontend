@@ -1,3 +1,5 @@
+- [-] Implement left and right arrows to navigate throught the info dialog as a carousel.
+
 - [-] Correct autoscroll down on the chat window.
 - [-] Implement a system to resend the message if the bot response is not received or there's an error. WHile avoiding sending new messages.
 - [-] Implement a method to check if the image that is being fetched is not a placeholder.
