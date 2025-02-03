@@ -4,9 +4,6 @@
     left: 0;
     transform: translateX(-90% );
 
-    padding: 2rem;
-    box-sizing: border-box;
-
     width: 400px;
     height: 400px;
 
@@ -16,18 +13,14 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 
-    /* display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
-    gap: 1rem; */
-
     background-color: rgb(from var(--primary-color) r g b / 0.3);
     backdrop-filter: blur(10px);
 
     box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
 
     z-index: 5;
+
+    overflow: visible;
 
     transition: 400ms;
 }
@@ -36,9 +29,71 @@
     transform: translateX(0);
 }
 
+.agora-pin-box-wrapper:has(> .pin-icon.unfolded) {
+    transform: translateX(0);
+}
+
+.agora-pin-box-wrapper::before {
+    pointer-events: none;
+    opacity: 0;
+
+    content: 'Drop here';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: grid;
+    place-content: center;
+
+    color: var(--text-tertiary-color);
+
+    width: 90%;
+    height: 90%;
+
+    border: 2px dashed rgba(0, 0, 0, 0.1);
+    border-radius: 10pt;
+
+    background-color: rgba(0, 0, 0, 0.05);
+
+    transition: 300ms;
+}
+
+/* CARDS */
+.card-wrapper {
+    padding: 1.25rem;
+    box-sizing: border-box;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+agora-pin-card {
+    width: 100%;
+}
+
+/* DRAG AND DROP */
+.agora-pin-box-wrapper.dragover {
+    transform: translateX(0);
+}
+
+.agora-pin-box-wrapper.dragover::before {
+    opacity: 1;
+}
+
 /* ICON */
 .pin-icon {
-    position: absolute;
+    cursor: pointer;
+    position: fixed;
     top: 0.5rem;
     right: 0.25rem;
     
@@ -47,8 +102,33 @@
 
     width: 30px;
     height: 30px;
+
+    transition: 300ms;
 }
 
 .pin-icon svg {
     color: var(--text-accent-color);
+    
+}
+
+.pin-icon.unfolded svg {
+    fill: var(--text-accent-color);
+}
+
+/* SCROLLBAR */
+.card-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+.card-wrapper::-webkit-scrollbar-track {
+    margin-block: 0.5rem;
+    background: transparent;
+}
+
+.card-wrapper::-webkit-scrollbar-thumb {
+    width: 6px;
+    background-color: rgb(from var(--text-secondary-color) r g b / 0.5);
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
 }

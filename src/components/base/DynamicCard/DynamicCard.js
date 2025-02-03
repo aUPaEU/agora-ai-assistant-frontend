@@ -12,6 +12,8 @@ class DynamicCard extends PlainComponent {
         super('agora-dynamic-card', `${PATHS.BASE_COMPONENTS}/DynamicCard/DynamicCard.css`)
 
         this.data = new PlainState(null, this)
+
+        this.enableDrag()
     }
 
     template() {
@@ -24,6 +26,9 @@ class DynamicCard extends PlainComponent {
     }
 
     listeners() {
+        this.wrapper.ondragstart = (e) => this.handleDrag(e)
+        this.wrapper.ondragend = (e) => this.handleDrop(e)
+
         this.wrapper.onclick = () => this.openInfo()
         this.$('.card-image').onload = () => this.replaceImageIfItsPlaceholder()
     }
@@ -177,7 +182,23 @@ class DynamicCard extends PlainComponent {
         }
     }
 
-    showNotFeatured() {}
+    enableDrag() {
+        this.wrapper.draggable = true
+    }
+
+    handleDrag(e) {
+        this.wrapper.classList.add('ondrag')
+        e.dataTransfer.setData("data", JSON.stringify(this.data.getState()))
+        e.dataTransfer.setData("id", this.id)
+        e.dataTransfer.setData("model", this.getAttribute('model'))
+        e.dataTransfer.setData("href", this.getAttribute('href'))
+        e.dataTransfer.setData("featured-fields", this.getAttribute('featured-fields'))
+        e.dataTransfer.setData("featured", this.hasAttribute('featured'))
+    }
+
+    handleDrop(e) {
+        this.wrapper.classList.remove('ondrag')
+    }
 }
 
 export default window.customElements.define('agora-dynamic-card', DynamicCard)

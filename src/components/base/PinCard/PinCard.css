@@ -1,0 +1,95 @@
+.agora-pin-card-wrapper {
+    padding: 1rem;
+    padding-left: 0;
+    box-sizing: border-box;
+
+    height: 50px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+
+    border-radius: 5pt;
+
+    background-color: var(--primary-color);
+
+    box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.15);
+
+    overflow: hidden;
+
+    transition: 300ms;
+}
+
+.name {
+    margin-left: -1rem;
+
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: var(--text-primary-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* ICONS */
+.icon-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.delete-icon, .info-icon {
+    cursor: pointer;
+
+    display: grid;
+    place-content: center;
+
+    color: var(--text-tertiary-color);
+
+    transition: 300ms;
+}
+
+.info-icon:hover {
+    color: var(--text-accent-color);
+}
+
+.delete-icon:hover {
+    color: brown;
+}
+
+/* IMAGE */
+.image-wrapper {
+    height: 50px;
+    aspect-ratio: 1/1;
+
+    display: grid;
+    place-content: center;
+}
+
+.image {
+    height: 35px;
+    aspect-ratio: 1/1;
+
+    border-radius: 100pt;
+}
+
+.default-image {
+    height: 35px;
+    aspect-ratio: 1/1;
+
+    border-radius: 100pt;
+
+    background-image: 
+        radial-gradient(ellipse at top, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
+        radial-gradient(ellipse at bottom,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff),
+        radial-gradient(ellipse at left, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
+        radial-gradient(ellipse at right,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff);
+}
