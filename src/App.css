@@ -177,6 +177,9 @@ agora-navbar {
 .field-value {
     flex: 6;
 
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     font-size: 0.8rem;
     color: var(--text-tertiary-color);
 }

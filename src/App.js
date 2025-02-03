@@ -34,6 +34,7 @@ import './components/base/BaseLoader/BaseLoader'
 import './components/mid/ResultWindow/ResultWindow'
 import './components/mid/PinBox/PinBox'
 import './components/base/DynamicCard/DynamicCard'
+import './components/base/PinCard/PinCard'
 
 class App extends PlainComponent {
     constructor() {
