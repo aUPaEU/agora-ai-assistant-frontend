@@ -166,7 +166,7 @@ agora-dynamic-card {
 
 /* SCROLLBARS */
 .movable-wrapper::-webkit-scrollbar {
-    width: 10px;
+    height: 10px;
 }
 
 .movable-wrapper::-webkit-scrollbar-track {
