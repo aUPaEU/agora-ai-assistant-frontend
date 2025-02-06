@@ -76,13 +76,6 @@ export const fetchElement = async (model, id, fields=null) => {
 }
 
 export const sendMessage = async (message, models, history) => {
-    /* const mockModels = [
-        {
-            'model': 'civis.student.course',
-            'description': 'Find courses and programs at the University of Cividale Ugo Foscolo',
-        }
-    ] */
-
     const payload = {
         "user_input": message,
         "models": models,
