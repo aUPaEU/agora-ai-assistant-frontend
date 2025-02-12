@@ -104,3 +104,24 @@ export const sendMessage = async (message, models, history) => {
         throw error
     }
 }
+
+export const search = async (query, models = [], fieldRelevance = {}, filters = {}) => {
+    const url = `${CONFIG.host}/elastic/search?query=${query}&models=${models.join()}`
+
+    try {
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error('Something went wrong while making the search')
+        }
+
+        const data = await response.json()
+        return data
+    }
+
+    catch(error) {
+        throw error
+    }
+
+    
+}
