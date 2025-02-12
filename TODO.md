@@ -1,10 +1,12 @@
 - [-] Implement left and right arrows to navigate throught the info dialog as a carousel.
+- [-] Encapsulate the info dialog carousel in a component.
 
 - [-] Correct autoscroll down on the chat window.
 - [-] Implement a system to resend the message if the bot response is not received or there's an error. WHile avoiding sending new messages.
 - [-] Implement a method to check if the image that is being fetched is not a placeholder.
 - [-] Implement the UI within DEV environment.
 
+- [ ] Open info dialog through the app component when clicking on a pin card.
 - [ ] Avoid rendering greetings if there was previous results.
 - [ ] Implement card layouts depending on the type of card.
 - [ ] Implement a method to detect which kind of card it is based on the fetched data.
