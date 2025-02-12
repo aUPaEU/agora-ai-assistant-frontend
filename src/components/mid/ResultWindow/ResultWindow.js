@@ -24,6 +24,7 @@ class ResultWindow extends PlainComponent {
         this.serviceContext = new PlainContext('service', this, true)
 
         this.signals = new PlainSignal(this)
+        this.signals.register('cards-fetched') // This signal is used to send the data of a card to the carousel component
 
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
@@ -36,7 +37,6 @@ class ResultWindow extends PlainComponent {
             : this.hideResults()
 
         return html`
-            
             <!-- Fades -->
             <div class="right-fade"></div>
             <div class="left-fade"></div>
@@ -44,7 +44,6 @@ class ResultWindow extends PlainComponent {
             <!-- Cards -->
             <div class="card-wrapper">
                 ${
-                    
                     this.resultContext.getData('data') 
                         ? [...new Set(
                             this.resultContext.getData('data')
@@ -67,7 +66,7 @@ class ResultWindow extends PlainComponent {
             </div>
 
             <!-- Greetings -->
-            <agora-greetings class=${results ? "hidden" : ''}></agora-greetings>
+            <agora-greetings ${this.builtResults.getState().length > 0 ? 'hidden' : ''}></agora-greetings>
             
             <!-- Loader -->
             ${this.isLoading.getState() 
@@ -99,6 +98,93 @@ class ResultWindow extends PlainComponent {
                 ? this.unfoldCardWrapper(e) 
                 : this.foldCardWrapper(e)
         }
+    }
+
+    async loadCards(records = []) {
+        const greetings = this.$('agora-greetings')
+        greetings.hide()
+
+        this.wrapper.classList.add('showing-results')
+        this.isLoading.setState(true, false)
+
+        // If no records are passed, we fetch them from the server
+        if (records.length === 0) records = await this.fetchRecords()
+
+        // We build the containers to allocate the cards
+        this.buildCardContainers(records)
+
+        // We render the cards
+        await this.renderCards(records)
+
+        // Finish loading
+        setTimeout(() => {
+            this.isLoading.setState(false, false)
+            this.setLoading(false)
+            if (this.$('.show-more')) {
+                this.$('.show-more').style.display = 'grid'
+                this.$('.show-more').classList.add('opacity-fade-in')
+            }
+        }, 500)
+    }
+
+    async fetchRecords() {
+        const records = []
+
+        const results = this.resultContext.getData('data')
+        if (!results) return []
+
+        results
+        .sort((a, b) => a.service.localeCompare(b.service))
+        .forEach((result) => {
+            result.element_ids.forEach(async (element) => {
+                const record = await api.fetchElement(result.model, element, result.featured_fields)
+                if (record.id) records.push(record)
+            })
+        })
+
+        return records
+    }
+
+    async renderCards(records) {
+        let timerDelay = 1000
+
+        records.forEach(async (record) => {
+            const newCard = this.createCardObject(record)
+            
+            const parsedCard = {...newCard, dataset: record.data}
+            const updatedBuiltResults = this.builtResults.getState()
+            updatedBuiltResults.push(parsedCard)
+            this.builtResults.setState(updatedBuiltResults, false)
+
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    this.addCard(newCard)
+                    this.signals.emit('cards-fetched')
+                    resolve()
+                }, timerDelay)
+            })
+
+            timerDelay += 500
+        })
+    }
+
+    createCardObject(record) {
+        return {
+            type: CARD_TYPE.ITEM,
+            id: `element-${record.id}`,
+            model: record.model,
+            service: record.service,
+            featured_fields: record.featured_fields || [],
+            dataset: JSON.stringify(record.data, stringifyReplacer)
+        }
+    }
+
+    async showAIResults() {
+        await this.loadCards()
+    }
+
+    async showSearchResults(records) {
+        await this.loadCards(records)
     }
 
     unfoldCardWrapper(e) {
@@ -157,16 +243,48 @@ class ResultWindow extends PlainComponent {
     }
 
     showResults() {
+        if (!CONFIG.enabled_ai) return 
         this.wrapper.classList.add('showing-results')
         this.isLoading.setState(true, false)
-        this.fetchResults()
+        
+        this.fetchResults() 
     }
 
     hideResults() {
         this.wrapper.classList.remove('showing-results')
     }
 
+    buildCardContainers(records) {
+        const cardWrapper = this.$('.card-wrapper')
+        cardWrapper.innerHTML = ''
+
+        new Set(records.map(record => record.service)).forEach(service => {
+            const serviceWrapper = document.createElement('div')
+            serviceWrapper.classList.add(`${service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')}-wrapper`)
+            serviceWrapper.classList.add('show-more')
+            serviceWrapper.dataset.name = service
+            serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
+            serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
+
+            const movableWrapper = document.createElement('div')
+            movableWrapper.classList.add('movable-wrapper')
+            movableWrapper.onscroll = () => this.handleCardWrapperScroll(movableWrapper)
+
+            serviceWrapper.appendChild(movableWrapper)
+
+            const showMoreButton = document.createElement('span')
+            showMoreButton.innerHTML = `+0`
+            showMoreButton.classList.add('show-more')
+            showMoreButton.classList.add('folded')
+            serviceWrapper.appendChild(showMoreButton)
+
+            cardWrapper.appendChild(serviceWrapper)
+        })
+    }
+
+    // Old function
     async fetchResults() {
+        console.log("FETCHING RESULTS")
         let timerDelay = 1000
         // We get the data for each item from the resultContext
         // and we set it in the builtResults state
@@ -179,6 +297,8 @@ class ResultWindow extends PlainComponent {
                 const response = await api.fetchElement(result.model, element, result.featured_fields)
                 if (!response.id) return
 
+                console.log("This is the format of the response we need", response)
+
                 const newCard = {
                     type: CARD_TYPE.ITEM,
                     id: `element-${response.id}`,
@@ -188,12 +308,19 @@ class ResultWindow extends PlainComponent {
                     dataset: JSON.stringify(response, stringifyReplacer)
                 }
 
+                const parsedCard = {...newCard, dataset: response}
+                const updatedBuiltResults = this.builtResults.getState()
+                updatedBuiltResults.push(parsedCard)
+                this.builtResults.setState(updatedBuiltResults, false)
+
                 timerDelay += 500
 
                 // This timeout is used to add the card to the DOM after a delay 
                 // Just for aesthetic and animation purposes
                 setTimeout(() => {
                     this.addCard(newCard)
+                    this.signals.emit('cards-fetched')
+                    console.log("CARDS FETCHED SIGNAL EMITTED")
 
                     if (
                         result === results.at(-1) && 
@@ -209,12 +336,18 @@ class ResultWindow extends PlainComponent {
                     }
                 }, timerDelay)
             })
-
         })
+        
     }
 
     addCard(card) {
-        const featuredCards = extractObjectsWithMatchingKey(this.resultContext.getData('data'), 'featured_element_ids')[0].featured_element_ids
+        let featuredCards = this.resultContext.getData('data')
+            ? extractObjectsWithMatchingKey(this.resultContext.getData('data'), 'featured_element_ids')
+            : []
+
+        featuredCards = featuredCards[0]
+            ? featuredCards[0].featured_element_ids
+            : []
 
         const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
         availableWebsites.forEach(item => {
@@ -238,6 +371,8 @@ class ResultWindow extends PlainComponent {
         if (featuredCards.includes(Number(card.id.split('-')[1]))) {
             newCard.setAttribute('featured', true)
         }
+
+        // newCard.setAttribute('featured', true)
 
         const serviceName = card.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
         const serviceWrapper = this.$(`.${serviceName}-wrapper > .movable-wrapper`)
