@@ -1,0 +1,203 @@
+.agora-searchbar-wrapper {
+    width: fit-content;
+    height: 50px;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    border-radius: 10pt;
+    border-top-right-radius: 0;
+
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    transition: 300ms;
+
+    position: relative;
+}
+
+/* SEARCHBAR INPUT */
+.searchbar-input {
+    appearance: none;
+
+    outline: none;
+    border: none;
+
+    width: 600px;
+
+    padding: 1rem;
+    padding-inline: 1.5rem;
+    padding-left: calc(1rem + 30px);
+    box-sizing: border-box;
+
+    border-radius: 10pt;
+    border-top-right-radius: 0;
+
+    flex: 1;
+    height: 100%;
+
+    transition: 300ms;
+
+    z-index: 10;
+}
+
+.searchbar-input.folded {
+    width: 200px;
+
+    padding-left: 1rem;
+}
+
+/* SEARCHBAR BUTTON */
+.searchbar-button {
+    cursor: pointer;
+
+    height: 50px;
+    width: 50px;
+
+    border: none;
+
+    display: grid;
+    place-content: center;
+
+    background-color: transparent;
+
+    position: relative;
+
+    transition: 300ms;
+}
+
+.searchbar-button::before {
+    box-sizing: border-box;
+
+    content: "";
+    width: calc(100% + 50px);
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    border-top-right-radius: 10pt;
+    border-bottom-right-radius: 10pt;
+
+    border: 1px solid var(--primary-color);
+
+    background-color: var(--bg-color);
+
+    transition: 300ms;
+}
+
+.searchbar-button svg {
+    color: var(--text-primary-color);
+    z-index: 20;
+
+    transition: 300ms;
+}
+
+.searchbar-button:hover svg {
+    color: var(--text-accent-color);
+}
+
+/* AUPAEU LOGO */
+.agora-logo {
+    pointer-events: none;
+
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+
+    display: grid;
+    place-content: center;
+
+    height: 100%;
+
+    opacity: 1;
+
+    z-index: 15;
+
+    transition: 300ms;
+}
+
+.agora-logo svg {
+    height: 30px;
+    width: 30px;
+}
+
+.folded + .agora-logo {
+    opacity: 0;
+}
+
+/* SOURCE SELECT */
+.source-select {
+    position: absolute;
+    top: -1rem;
+    right: 0;
+
+    transform: translateY(-100%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 0.5rem;
+
+    overflow: hidden;
+}
+
+.source-select.folded .source-option{
+    transform: translateY(1000%);
+}
+
+.source-option {
+    cursor: pointer;
+    width: 100%;
+
+    padding: 0.5rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
+
+    border-right: 3px solid transparent;
+
+    color: var(--text-tertiary-color);
+
+    text-align: right;
+
+    transition: transform 0.8s ease-in-out, color 0.3s ease-in-out, border-right 0.3s ease-in-out;
+}
+
+.source-option:hover {
+    color: var(--text-primary-color);
+    border-right: 3px solid var(--text-tertiary-color);
+}
+
+.source-option.selected {
+    color: var(--text-accent-color);
+    border-right: 3px solid var(--text-accent-color);
+}
+
+/* UNFOLD BUTTON */
+.source-select-unfold-button {
+    cursor: pointer;
+
+    position: absolute;
+    top: -1rem;
+    right: 200px;
+
+    transform: translateY(-100%);
+
+    width: 24px;
+    height: 24px;
+
+    display: grid;
+    place-content: center;
+
+    color: var(--text-secondary-color);
+
+    transition: 300ms;
+    transition-delay: 0.1s;
+}
+
+.source-select.folded + .source-select-unfold-button {
+    right: 16px;
+    transition-delay: 0.6s;
+}

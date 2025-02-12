@@ -15,8 +15,8 @@ class Greetings extends PlainComponent {
     }
 
     template() {
-        const results = this.resultContext.getData('data')
-        results && results.length > 0 
+        console.log(this.getAttribute('hidden') ? 'hidden' : 'not hidden')
+        this.getAttribute('hidden')
             ? this.wrapper.classList.add('hidden')
             : this.wrapper.classList.remove('hidden')
         
@@ -35,6 +35,14 @@ class Greetings extends PlainComponent {
                 or ask our assistant to guide you through the process of finding the right resources.
             </p>
         `
+    }
+
+    hide() {
+        this.wrapper.classList.add('hidden')
+    }
+
+    unhide() {
+        this.wrapper.classList.remove('hidden')
     }
 }
 

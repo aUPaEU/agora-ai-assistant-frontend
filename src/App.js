@@ -25,6 +25,9 @@ import './components/mid/ChatWindow/ChatWindow'
 import './components/base/ChatBubble/ChatBubble'
 import './components/base/ChatInput/ChatInput'
 
+/* Searchbar */
+import './components/base/Searchbar/Searchbar'
+
 /* Layouts */
 import './components/layout/v1/v1'
 import './components/layout/v2/v2'
@@ -34,10 +37,12 @@ import './components/base/ChatLoader/ChatLoader'
 import './components/base/BaseLoader/BaseLoader'
 
 /* Results */
-import './components/mid/ResultWindow/ResultWindow'
-import './components/mid/PinBox/PinBox'
 import './components/base/DynamicCard/DynamicCard'
 import './components/base/PinCard/PinCard'
+import './components/mid/ResultWindow/ResultWindow'
+import './components/mid/CardInfoCarousel/CardInfoCarousel'
+import './components/mid/PinBox/PinBox'
+import { CONFIG } from "../agora.config"
 
 class App extends PlainComponent {
     constructor() {
@@ -48,6 +53,8 @@ class App extends PlainComponent {
         this.chatContext = new PlainContext('chat', this, false)
 
         this.layout = new PlainState('main', this)
+
+        /* this.test() */
     }
 
     template() {
@@ -84,6 +91,17 @@ class App extends PlainComponent {
         `
     }
 
+    async test() {
+        const response = await fetch('http://localhost:8000/ai_assistant_app/health')
+        const data = await response.json()
+        console.log("ODOO AI BACKEND: ", data)
+
+        //const response2 = await fetch('http://localhost:2000/health')
+        const response2 = await fetch('http://localhost:2000/es?query=infrastructure%20research%20active&field_relevance=name:3,description:2,url:1')
+        const data2 = await response2.json()
+        console.log("AI BACKEND: ", data2)
+    }
+
     listeners() {
         this.$('.card-info-dialog').onclick = (e) => this.closeInfoDialog(e)
         this.$('.card-info-dialog').onanimationend = () => this.$('.card-info-dialog').classList.remove('fade-in')
@@ -103,16 +121,32 @@ class App extends PlainComponent {
 
     connectors() {
         // App Components
-        const chatWindow = this.$('agora-layout-v2').$('agora-chat').$('agora-chat-window')
+        const chatWindow = CONFIG.enabled_ai ? this.$('agora-layout-v2').$('agora-chat').$('agora-chat-window') : null
         const resultWindow = this.$('agora-layout-v2').$('agora-result-window')
+        const searchbar = CONFIG.enabled_ai ? null : this.$('agora-layout-v2').$('agora-searchbar')
         const navigator = this.$('agora-layout-v2').$('agora-navigator')
+        const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
 
         // Connections between components
-        resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
-        navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
+        if (resultWindow && chatWindow)
+            resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
+
+        if (resultWindow && searchbar)
+            resultWindow.signals.connect(searchbar, 'search-results-updated', (records) => resultWindow.showSearchResults(records))
+
+        if (navigator && chatWindow)
+            navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
+        
+        if (carousel && chatWindow)
+            carousel.signals.connect(resultWindow, 'cards-fetched', () => carousel.setData(resultWindow.builtResults.getState()))
     }
 
     openInfoDialog(payload) {
+        const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
+        console.log("CARD ID TO DISPLAY:", payload.id)
+
+        carousel.show(payload.id, payload.href, payload.has_image)
+        return
         const infoDialog = this.$('.card-info-dialog')
         const carouselControls = this.$('.carousel-controls')
         carouselControls.style.display = 'flex'

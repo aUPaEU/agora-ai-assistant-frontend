@@ -130,7 +130,7 @@ class Chat extends PlainComponent {
                 return result.element_ids.length > 0
             })
 
-            console.log("2. Filtered results", results)
+            console.log("2. Filtered (not empty) results are:", results)
 
             if (results.length > 0) {
                 console.log("3. Results are not empty")

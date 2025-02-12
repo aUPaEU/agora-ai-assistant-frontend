@@ -1,6 +1,5 @@
 import { PlainComponent, PlainState } from "plain-reactive"
 import { PATHS } from "../../../constants/paths.const"
-import { CARD_TYPE } from "../../../constants/cardType.const"
 import { CONFIG } from "../../../../agora.config"
 import { html } from "../../../utils/templateTags.util"
 
@@ -85,6 +84,7 @@ class DynamicCard extends PlainComponent {
     openInfoDialog() {
         const app = document.querySelector('agora-app')
         const payload = {
+            id: this.data.getState().id,
             src: `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? '',
             name: this.data.getState().name ?? '',
             lastname: this.data.getState().lastname ?? '',

@@ -1,5 +1,10 @@
+import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
+
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
 
 class LayoutV2 extends PlainComponent {
@@ -16,8 +21,13 @@ class LayoutV2 extends PlainComponent {
                 </div>
                 <agora-result-window></agora-result-window>
             </main>
-            <agora-chat class="chat"></agora-chat>
+            ${
+                CONFIG.enabled_ai 
+                ? html`<agora-chat class="chat"></agora-chat>`
+                : html`<agora-searchbar class="searchbar"></agora-searchbar>`
+            }
             <agora-pin-box></agora-pin-box>
+            <agora-card-info-carousel></agora-card-info-carousel>
         `
     }
 }

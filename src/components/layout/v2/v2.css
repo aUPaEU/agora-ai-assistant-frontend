@@ -66,6 +66,16 @@ agora-result-window {
     z-index: 20;
 }
 
+.searchbar {
+    width: fit-content;
+
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+
+    z-index: 20;
+}
+
 /* FAKE HEADER */
 .fake-header {
     position: fixed;
