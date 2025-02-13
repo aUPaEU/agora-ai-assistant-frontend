@@ -28,13 +28,29 @@ class ResultWindow extends PlainComponent {
 
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
+
+        CONFIG.enabled_ai ? null : this.clear()
     }
 
     template() {
-        const results = this.resultContext.getData('data')
+        /* const results = this.resultContext.getData('data')
         results && results.length > 0
             ? this.showResults()
-            : this.hideResults()
+            : this.hideResults() */
+
+        const services = this.resultContext.getData('data') 
+            ? [...new Set(this.resultContext.getData('data').map(result => result.service))].sort()
+            : []
+
+        const data = (() => {
+            return services.map(service => {
+                const items = this.resultContext.getData('data').filter(result => result.service === service)
+                return {
+                    service: service,
+                    items: items
+                }
+            })
+        })()
 
         return html`
             <!-- Fades -->
@@ -44,7 +60,7 @@ class ResultWindow extends PlainComponent {
             <!-- Cards -->
             <div class="card-wrapper">
                 ${
-                    this.resultContext.getData('data') 
+                    /* this.resultContext.getData('data') 
                         ? [...new Set(
                             this.resultContext.getData('data')
                                 .sort((a, b) => a.service.localeCompare(b.service))
@@ -61,12 +77,42 @@ class ResultWindow extends PlainComponent {
                                 </div>
                             `
                         }).join('')
-                        : ``
+                        : `` */
+
+                        data.map(item => {
+                            const serviceName = item.service.toLowerCase().replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '').replace(/  /g, '-').replace(/ /g, '-')
+                            return html`
+                                <div class="${serviceName}-wrapper" data-name="${item.service}">
+                                    <div class="movable-wrapper">
+                                        ${
+                                            item.items.map(record => {
+                                                const card = this.createCardObject(record)
+                                                return html`
+                                                    <agora-dynamic-card 
+                                                        id="${card.id}"
+                                                        class="fade-in"
+                                                        href="${`${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`}"
+                                                        type="${card.type}"
+                                                        model="${card.model}"
+                                                        service="${card.service}"
+                                                        data-data='${card.dataset}'
+                                                        featured-fields="${card.featured_fields}"
+                                                        featured="${card.featured}"
+                                                        absolute-score="${card.score.absolute}"
+                                                        relative-score="${card.score.relative}"
+                                                    ></agora-dynamic-card>
+                                                `
+                                            }).join('')
+                                        }
+                                    </div>
+                                </div>
+                            `
+                        }).join('')
                 }
             </div>
 
             <!-- Greetings -->
-            <agora-greetings ${this.builtResults.getState().length > 0 ? 'hidden' : ''}></agora-greetings>
+            <agora-greetings class="hidden" hidden="true"></agora-greetings>
             
             <!-- Loader -->
             ${this.isLoading.getState() 
@@ -85,6 +131,8 @@ class ResultWindow extends PlainComponent {
         Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
             serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
             serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
+
+            this.handleCardWrapperScroll(serviceWrapper.querySelector('.movable-wrapper'))
         })
         
         // Manage lateral fades in the scrollable wrapper when the user scrolls
@@ -100,91 +148,31 @@ class ResultWindow extends PlainComponent {
         }
     }
 
-    async loadCards(records = []) {
-        const greetings = this.$('agora-greetings')
-        greetings.hide()
-
-        this.wrapper.classList.add('showing-results')
-        this.isLoading.setState(true, false)
-
-        // If no records are passed, we fetch them from the server
-        if (records.length === 0) records = await this.fetchRecords()
-
-        // We build the containers to allocate the cards
-        this.buildCardContainers(records)
-
-        // We render the cards
-        await this.renderCards(records)
-
-        // Finish loading
-        setTimeout(() => {
-            this.isLoading.setState(false, false)
-            this.setLoading(false)
-            if (this.$('.show-more')) {
-                this.$('.show-more').style.display = 'grid'
-                this.$('.show-more').classList.add('opacity-fade-in')
-            }
-        }, 500)
-    }
-
-    async fetchRecords() {
-        const records = []
-
-        const results = this.resultContext.getData('data')
-        if (!results) return []
-
-        results
-        .sort((a, b) => a.service.localeCompare(b.service))
-        .forEach((result) => {
-            result.element_ids.forEach(async (element) => {
-                const record = await api.fetchElement(result.model, element, result.featured_fields)
-                if (record.id) records.push(record)
-            })
-        })
-
-        return records
-    }
-
-    async renderCards(records) {
-        let timerDelay = 1000
-
-        records.forEach(async (record) => {
-            const newCard = this.createCardObject(record)
-            
-            const parsedCard = {...newCard, dataset: record.data}
-            const updatedBuiltResults = this.builtResults.getState()
-            updatedBuiltResults.push(parsedCard)
-            this.builtResults.setState(updatedBuiltResults, false)
-
-            await new Promise(resolve => {
-                setTimeout(() => {
-                    this.addCard(newCard)
-                    this.signals.emit('cards-fetched')
-                    resolve()
-                }, timerDelay)
-            })
-
-            timerDelay += 500
-        })
-    }
-
     createCardObject(record) {
-        return {
+        const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
+
+        const data = {
             type: CARD_TYPE.ITEM,
-            id: `element-${record.id}`,
+            id: `element-${record.data.id}`,
             model: record.model,
             service: record.service,
             featured_fields: record.featured_fields || [],
-            dataset: JSON.stringify(record.data, stringifyReplacer)
+            dataset: JSON.stringify(record.data, stringifyReplacer),
+            score: {
+                absolute: record.score.absolute || 1,
+                relative: record.score.relative || 1
+            }
         }
-    }
 
-    async showAIResults() {
-        await this.loadCards()
-    }
+        availableWebsites.forEach(item => {
+            item.websites.forEach(website => {
+                if (website.model === data.model) {
+                    data.view_id = website.view_id
+                }
+            })
+        })
 
-    async showSearchResults(records) {
-        await this.loadCards(records)
+        return data
     }
 
     unfoldCardWrapper(e) {
@@ -243,7 +231,7 @@ class ResultWindow extends PlainComponent {
     }
 
     showResults() {
-        if (!CONFIG.enabled_ai) return 
+        /* if (!CONFIG.enabled_ai) return  */
         this.wrapper.classList.add('showing-results')
         this.isLoading.setState(true, false)
         
@@ -254,35 +242,7 @@ class ResultWindow extends PlainComponent {
         this.wrapper.classList.remove('showing-results')
     }
 
-    buildCardContainers(records) {
-        const cardWrapper = this.$('.card-wrapper')
-        cardWrapper.innerHTML = ''
-
-        new Set(records.map(record => record.service)).forEach(service => {
-            const serviceWrapper = document.createElement('div')
-            serviceWrapper.classList.add(`${service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')}-wrapper`)
-            serviceWrapper.classList.add('show-more')
-            serviceWrapper.dataset.name = service
-            serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
-            serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
-
-            const movableWrapper = document.createElement('div')
-            movableWrapper.classList.add('movable-wrapper')
-            movableWrapper.onscroll = () => this.handleCardWrapperScroll(movableWrapper)
-
-            serviceWrapper.appendChild(movableWrapper)
-
-            const showMoreButton = document.createElement('span')
-            showMoreButton.innerHTML = `+0`
-            showMoreButton.classList.add('show-more')
-            showMoreButton.classList.add('folded')
-            serviceWrapper.appendChild(showMoreButton)
-
-            cardWrapper.appendChild(serviceWrapper)
-        })
-    }
-
-    // Old function
+    // Old function (This fetch could be done in elasticsearch aswell)
     async fetchResults() {
         console.log("FETCHING RESULTS")
         let timerDelay = 1000
@@ -426,7 +386,7 @@ class ResultWindow extends PlainComponent {
     }
 
     clear() {
-        this.resultContext.setData({data: []})
+        this.resultContext.setData({data: [], grouped: []})
         this.builtResults.setState([])
     }
 }

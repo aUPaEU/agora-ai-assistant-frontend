@@ -138,6 +138,11 @@
     font-size: 0.7rem;
 }
 
+.score {
+    color: var(--text-tertiary-color);
+    font-size: 0.8rem;
+}
+
 /* HIGHLIGHT */
 .featured-badge {
     position: absolute;

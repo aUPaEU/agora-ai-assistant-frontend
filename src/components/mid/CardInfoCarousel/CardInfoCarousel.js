@@ -1,4 +1,5 @@
-import { PlainComponent, PlainState, PlainSignal } from "plain-reactive"
+import { CONFIG } from "../../../../agora.config"
+import { PlainComponent, PlainState, PlainSignal, PlainContext } from "plain-reactive"
 
 /* Constants */
 import { PATHS } from "../../../constants/paths.const"
@@ -13,7 +14,9 @@ class CardInfoCarousel extends PlainComponent {
     constructor() {
         super('agora-card-info-carousel', `${PATHS.MID_COMPONENTS}/CardInfoCarousel/CardInfoCarousel.css`)
 
-        this.data = new PlainState(null, this)
+        this.resultContext = new PlainContext('result', this, true)
+
+        this.groupData = new PlainState(null, this) // We'll use this to store all the cards in a group so we can display them in the carousel and be able to scroll through them
         this.displayedCardId = new PlainState(null, this)
 
         this.signals = new PlainSignal(this)
@@ -57,9 +60,24 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     show(id, detailUrl, hasImage) {
+        const services = this.resultContext.getData('data') 
+            ? [...new Set(this.resultContext.getData('data').map(result => result.service))].sort()
+            : []
+
+        const data = (() => {
+            return services.map(service => {
+                const items = this.resultContext.getData('data').filter(result => result.service === service)
+                return {
+                    service: service,
+                    items: items
+                }
+            })
+        })()
+
+        // We make the dialog visible
         this.style.display = 'block'
 
-        const cardData = this.data.getState().find(card => Number(card.dataset.id) === Number(id))
+        const cardData = this.resultContext.getData('data').find(card => Number(card.data.id) === Number(id))
         console.log("CARD DATA:", cardData)
         
         this.$('.card-info-wrapper').classList.add('fade-in')
@@ -71,14 +89,14 @@ class CardInfoCarousel extends PlainComponent {
         }
 
         // Fill the card info
-        this.$('.card-info-image').src = cardData.dataset.image ?? ''
-        this.$('.card-info-name').textContent = cardData.dataset.name ?? ''
-        this.$('.card-info-lastname').innerHTML = cardData.dataset.lastname ?? ''
-        this.$('.card-info-summary').innerHTML = cardData.dataset.summary ?? cardData.dataset.description ?? ''
-        this.$('.card-info-origin').textContent = cardData.dataset.origin ?? ''
+        this.$('.card-info-image').src = `${CONFIG.host}/web/image?model=${cardData.model}&id=${cardData.data.id}&field=image` ?? ''
+        this.$('.card-info-name').textContent = cardData.data.name ?? ''
+        this.$('.card-info-lastname').innerHTML = cardData.data.lastname ?? ''
+        this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? ''
+        this.$('.card-info-origin').textContent = cardData.data.origin ?? ''
         this.$('.card-info-explore-button').dataset['url'] = detailUrl ?? ''
 
-        this.displayAdditionalFields(cardData.dataset, cardData.featured_fields)
+        //this.displayAdditionalFields(cardData.data, cardData.featured_fields)
 
         this.$('.card-info-content').scrollTo(0, 0)
         this.wrapper.style.display = 'flex'

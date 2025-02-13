@@ -201,3 +201,14 @@
     right: 16px;
     transition-delay: 0.6s;
 }
+
+/* TRESHOLD */
+.treshold {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+
+    width: 200px;
+
+    z-index: 100000000;
+}

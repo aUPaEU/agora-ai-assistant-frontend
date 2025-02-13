@@ -36,16 +36,15 @@ class Navigator extends PlainComponent {
             <p>${this.error.getState()}</p>
         `
 
+        const services = this.resultContext.getData('data') 
+            ? [...new Set(this.resultContext.getData('data').map(result => result.service))]
+            : []
+
         const servicesInResult = (serviceName) => {
             const results = this.resultContext.getData('data')
             if (!results || results.length === 0) return true
 
-            let response = false
-            results.forEach(result => {
-                if (result.service === serviceName) response = true
-            })
-
-            return response
+            return services.includes(serviceName)
         }
 
         return html`
@@ -53,7 +52,8 @@ class Navigator extends PlainComponent {
                 ${Object.entries(this.items.getState()).map(
                     ([index, data]) => {
                         return html`
-                            <agora-navigator-item class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'}"
+                            <agora-navigator-item 
+                                class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'}"
                                 data-name='${data.fields.name}'
                                 data-info='${JSON.stringify(data.fields, stringifyReplacer)}'
                                 data-type='${ITEM_TYPE.ACCELERATION_SERVICE}'>
@@ -95,10 +95,11 @@ class Navigator extends PlainComponent {
         }
     }
 
-    highlightItem(item) {
-        // TODO: Highlight items based on the LLM result
-        // Now this is being managed from the result window, but 
-        // navigator should be the responsible component for this task
+    initialDisplay() {
+        Array.from(this.$('.menu').children).forEach(item => {
+            console.log("ITEM", item)
+            item.classList.remove('not-in-result')
+        })
     }
 }
 

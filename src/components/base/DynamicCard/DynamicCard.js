@@ -1,6 +1,10 @@
-import { PlainComponent, PlainState } from "plain-reactive"
-import { PATHS } from "../../../constants/paths.const"
 import { CONFIG } from "../../../../agora.config"
+import { PlainComponent, PlainState } from "plain-reactive"
+
+/* Constants */
+import { PATHS } from "../../../constants/paths.const"
+
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
@@ -77,6 +81,7 @@ class DynamicCard extends PlainComponent {
                             </span>` 
                         : ``
                 }
+                <span class="score" title="(A)bsolute and (R)elative (to the group) scores">A: ${this.getAttribute('absolute-score')}, R: ${this.getAttribute('relative-score')}</span>
             </div>
         `
     }
