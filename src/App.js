@@ -53,8 +53,6 @@ class App extends PlainComponent {
         this.chatContext = new PlainContext('chat', this, false)
 
         this.layout = new PlainState('main', this)
-
-        /* this.test() */
     }
 
     template() {
@@ -91,17 +89,6 @@ class App extends PlainComponent {
         `
     }
 
-    async test() {
-        const response = await fetch('http://localhost:8000/ai_assistant_app/health')
-        const data = await response.json()
-        console.log("ODOO AI BACKEND: ", data)
-
-        //const response2 = await fetch('http://localhost:2000/health')
-        const response2 = await fetch('http://localhost:2000/es?query=infrastructure%20research%20active&field_relevance=name:3,description:2,url:1')
-        const data2 = await response2.json()
-        console.log("AI BACKEND: ", data2)
-    }
-
     listeners() {
         this.$('.card-info-dialog').onclick = (e) => this.closeInfoDialog(e)
         this.$('.card-info-dialog').onanimationend = () => this.$('.card-info-dialog').classList.remove('fade-in')
@@ -131,14 +118,14 @@ class App extends PlainComponent {
         if (resultWindow && chatWindow)
             resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
 
-        if (resultWindow && searchbar)
-            resultWindow.signals.connect(searchbar, 'search-results-updated', (records) => resultWindow.showSearchResults(records))
-
         if (navigator && chatWindow)
             navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
         
         if (carousel && chatWindow)
             carousel.signals.connect(resultWindow, 'cards-fetched', () => carousel.setData(resultWindow.builtResults.getState()))
+    
+        if (carousel && searchbar)
+            carousel.signals.connect(searchbar, 'results-updated', (records) => carousel.setData(records))
     }
 
     openInfoDialog(payload) {
