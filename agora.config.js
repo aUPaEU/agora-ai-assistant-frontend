@@ -14,7 +14,7 @@ export const ENV = {
         "name": "Unite!",
         "host": "https://agora.unite-university.eu",
         "company_id": 1,
-        "enabled_ai": true,
+        "enabled_ai": false,
         "ai_host": "http://localhost:2000"
     },
 
@@ -27,4 +27,4 @@ export const ENV = {
     }
 }
 
-export const CONFIG = ENV.CIVIS_DEV
+export const CONFIG = ENV.UNITE
