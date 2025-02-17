@@ -130,32 +130,9 @@ class App extends PlainComponent {
 
     openInfoDialog(payload) {
         const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
-        console.log("CARD ID TO DISPLAY:", payload.id)
 
         carousel.show(payload.id, payload.href, payload.has_image)
         return
-        const infoDialog = this.$('.card-info-dialog')
-        const carouselControls = this.$('.carousel-controls')
-        carouselControls.style.display = 'flex'
-
-        infoDialog.classList.add('fade-in')
-        infoDialog.classList.remove('no-image')
-
-        if (!payload.has_image) {
-            infoDialog.classList.add('no-image')
-        }
-        
-        infoDialog.querySelector('.card-info-image').src = payload.src
-        infoDialog.querySelector('.card-info-name').textContent = payload.name
-        infoDialog.querySelector('.card-info-lastname').innerHTML = payload.lastname
-        infoDialog.querySelector('.card-info-summary').innerHTML = payload.summary
-        infoDialog.querySelector('.card-info-origin').textContent = payload.university_origin
-        infoDialog.querySelector('.card-info-explore-button').dataset['url'] = payload.href
-
-        this.displayAdditionalFieldsInDialog(infoDialog, payload)
-
-        infoDialog.showModal()
-        infoDialog.scrollTo(0, 0)
     }
 
     displayAdditionalFieldsInDialog(dialog, payload) {
