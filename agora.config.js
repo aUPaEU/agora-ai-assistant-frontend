@@ -22,9 +22,9 @@ export const ENV = {
         "name": "CIVIS",
         "host": "https://aupaeu-dev.widening.eu",
         "company_id": 1,
-        "enabled_ai": true,
+        "enabled_ai": false,
         "ai_host": "http://localhost:2000"
     }
 }
 
-export const CONFIG = ENV.UNITE
+export const CONFIG = ENV.CIVIS_DEV
