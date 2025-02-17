@@ -15,7 +15,6 @@ class Greetings extends PlainComponent {
     }
 
     template() {
-        console.log(this.getAttribute('hidden') ? 'hidden' : 'not hidden')
         this.getAttribute('hidden')
             ? this.wrapper.classList.add('hidden')
             : this.wrapper.classList.remove('hidden')
