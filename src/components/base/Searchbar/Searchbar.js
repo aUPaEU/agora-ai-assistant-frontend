@@ -121,7 +121,7 @@ class Searchbar extends PlainComponent {
         return {
           model: result.model,
           service: result.service,
-          featured_fields: result.featured_fields || [],
+          featured_fields: result.featured_fields || ['web_link', 'url', 'website'],
           featured: result.featured || false, 
           data: result.data,
           score: {
@@ -152,6 +152,8 @@ class Searchbar extends PlainComponent {
       grouped: groupedData,
       data: filteredResults
     }, true)
+
+    this.signals.emit('results-updated', groupedData)
   }
 
   getMaxScore(results) {
