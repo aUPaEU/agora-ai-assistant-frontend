@@ -189,6 +189,7 @@
 
 .card-info-explore-button {
     cursor: pointer;
+    user-select: none;
 
     padding: 1rem;
     padding-inline: 3.5rem;
@@ -249,6 +250,12 @@
 
 .controls-wrapper .prev-control:hover, .controls-wrapper .next-control:hover {
     background-color: var(--primary-color);
+}
+
+/* STATES */
+.hidden {
+    pointer-events: none;
+    opacity: 0;
 }
 
 /* ANIMATIONS */
