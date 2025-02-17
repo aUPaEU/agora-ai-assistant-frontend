@@ -57,8 +57,12 @@ class ResultWindow extends PlainComponent {
             <div class="right-fade"></div>
             <div class="left-fade"></div>
 
+            <!-- Result counter -->
+            <!-- TODO -->
+
             <!-- Cards -->
             <div class="card-wrapper">
+
                 ${
                     /* this.resultContext.getData('data') 
                         ? [...new Set(
@@ -84,6 +88,8 @@ class ResultWindow extends PlainComponent {
                             return html`
                                 <div class="${serviceName}-wrapper" data-name="${item.service}">
                                     <div class="movable-wrapper">
+                                        <div class="autoscroll-left"></div>
+                                        <div class="autoscroll-right"></div>
                                         ${
                                             item.items.map(record => {
                                                 const card = this.createCardObject(record)
@@ -132,9 +138,29 @@ class ResultWindow extends PlainComponent {
             serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
             serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
 
+            // Handle scroll visuals
             this.handleCardWrapperScroll(serviceWrapper.querySelector('.movable-wrapper'))
+
+            // Handle autoscroll
+            let leftScrollInterval;
+            let rightScrollInterval;
+
+            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-left').addEventListener('mouseenter', () => {
+                leftScrollInterval = setInterval(() => {
+                    serviceWrapper.querySelector('.movable-wrapper').scrollLeft -= 2
+                }, 0.1)
+            })
+
+            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-right').addEventListener('mouseenter', () => {
+                rightScrollInterval = setInterval(() => {
+                    serviceWrapper.querySelector('.movable-wrapper').scrollLeft += 2
+                }, 0.1)
+            })
+
+            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-left').onmouseleave = () => clearInterval(leftScrollInterval)
+            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-right').onmouseleave = () => clearInterval(rightScrollInterval)
         })
-        
+
         // Manage lateral fades in the scrollable wrapper when the user scrolls
         this.$$('.movable-wrapper').forEach(wrapper => {
             wrapper.onscroll = () => this.handleCardWrapperScroll(wrapper)
