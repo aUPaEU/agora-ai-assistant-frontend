@@ -84,3 +84,8 @@ agora-result-window {
 
     z-index: 1000;
 }
+
+agora-card-info-carousel {
+    position: fixed;
+    z-index: 1000;
+}
