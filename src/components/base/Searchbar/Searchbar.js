@@ -24,7 +24,7 @@ class Searchbar extends PlainComponent {
 
     this.resultContext = new PlainContext('result', this, false)
     this.serviceContext = new PlainContext('service', this, false)
-    this.searchHistoryContext = new PlainContext('searchHistory', this, false) // We'll use this to autocomplete queries
+    this.searchContext = new PlainContext('search', this, false) // We'll use this to autocomplete queries
 
     this.signals = new PlainSignal(this)
     this.signals.register('results-updated')
@@ -97,7 +97,15 @@ class Searchbar extends PlainComponent {
 
   handleResponse(response) {
     // If the response is empty, we return
-    if (response.results.length === 0) return
+    if (response.results.length === 0) {
+      // Update the result context with the new results
+      this.resultContext.setData({
+        grouped: groupedData,
+        data: filteredResults
+      }, true)
+      
+      return
+    }
 
     // We get an array to store all the models of each service
     // This is used to map the results to the correct service afterwards
@@ -207,7 +215,13 @@ class Searchbar extends PlainComponent {
   }
 
   storeQueryInContext(query) {
-    // TODO
+    // History and Current
+    const queryHistory = this.searchContext.getData('history') || []
+
+    this.searchContext.setData({
+      history: [...queryHistory, query],
+      current: query.split(' '),
+    }, false)
   }
 
   autocomplete(e) {

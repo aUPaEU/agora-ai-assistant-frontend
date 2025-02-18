@@ -15,6 +15,7 @@ class CardInfoCarousel extends PlainComponent {
         super('agora-card-info-carousel', `${PATHS.MID_COMPONENTS}/CardInfoCarousel/CardInfoCarousel.css`)
 
         this.resultContext = new PlainContext('result', this, true)
+        this.searchContext = new PlainContext('search', this, true)
 
         this.groupedData = new PlainState(null, this) // We'll use this to store all the cards in a group so we can display them in the carousel and be able to scroll through them
         this.displayedCardId = new PlainState(null, this)
@@ -66,11 +67,13 @@ class CardInfoCarousel extends PlainComponent {
         this.displayedCardId.setState(id, false)
 
         const cardData = this.resultContext.getData('data').find(card => Number(card.data.id) === Number(id))
+        console.log("CARD DATA",cardData)
         
         this.updateVisibility(hasImage)
         this.updateCardConent(cardData, detailUrl)
         this.displayAdditionalFields(cardData.data, cardData.featured_fields)
         this.updateNavigationControls()
+        this.highlightSearchTerms()
     }
 
     updateVisibility(hasImage) {
@@ -110,6 +113,8 @@ class CardInfoCarousel extends PlainComponent {
         const cardIndex = currentService.items.findIndex(item => Number(item.data.id) === Number(cardData.data.id))
 
         if (cardIndex === currentService.items.length - 1) return
+
+        console.log("CARD DATA",cardData)
 
         this.displayedCardId.setState(currentService.items[cardIndex + 1].data.id, false)
         this.show(this.displayedCardId.getState(), cardData.data.detail_url, cardData.data.image_url)
@@ -190,6 +195,31 @@ class CardInfoCarousel extends PlainComponent {
             `
             this.$('.card-info-additional-fields').innerHTML += additionalField
         })
+    }
+
+    highlightSearchTerms() {
+       /*  const searchTerms = this.searchContext.getData('current') || []
+
+        this.$('.card-info-content').innerHTML = this.$('.card-info-content').innerHTML
+            .replaceAll(searchTerms.join(' '), `<span class="highlight">${searchTerms.join(' ')}</span>`) */
+        const searchTerms = this.searchContext.getData('current') || []
+        let content = this.$('.card-info-content').innerHTML
+        
+        searchTerms.forEach(term => {
+            const termLength = term.length
+            const minMatchLength = Math.ceil(termLength / 2) // At least half of the word
+            const regex = new RegExp(`\\b\\w*${term}\\w*\\b`, 'gi')
+            
+            content = content.replace(regex, match => {
+                // Only highlight if the match contains at least half of the search term
+                if (match.toLowerCase().includes(term.toLowerCase())) {
+                    return `<span class="highlight">${match}</span>`
+                }
+                return match
+            })
+        })
+        
+        this.$('.card-info-content').innerHTML = content
     }
 
     handleAnimation(e, direction) {
