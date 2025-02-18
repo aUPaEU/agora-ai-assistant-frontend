@@ -258,6 +258,16 @@
     opacity: 0;
 }
 
+.highlight {
+    padding: 0.25rem;
+    box-sizing: border-box;
+
+    color: var(--text-accent-color);
+    font-weight: bold;
+
+    background-color: rgb(from var(--text-accent-color) r g b / 0.1);
+}
+
 /* ANIMATIONS */
 .fade-left {
     animation-name: fade-left;
