@@ -129,6 +129,11 @@
     word-wrap: break-word;   
 }
 
+.card-summary > p {
+    margin: 0px 0px 0px;
+    padding-top: 10px;
+}
+
 .fill-space {
     flex: 1;
 }
