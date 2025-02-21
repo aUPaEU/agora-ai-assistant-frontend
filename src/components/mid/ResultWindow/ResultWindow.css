@@ -164,29 +164,6 @@ agora-dynamic-card {
     opacity: 1;
 }
 
-/* AUTOSCROLL AREAS */
-.autoscroll-left {
-    cursor: url(public/assets/cursors/cursor-left.svg) 20 20, auto;
-    position: fixed;
-    top: 0;
-    left: -1rem;
-    height: 100%;
-    width: 50px;
-    
-    z-index: 50000;
-}
-
-.autoscroll-right {
-    cursor: url(public/assets/cursors/cursor-right.svg) 20 20, auto;
-    position: fixed;
-    top: 0;
-    right: -1rem;
-    height: 100%;
-    width: 50px;
-    
-    z-index: 50000;
-}
-
 /* SCROLLBARS */
 .movable-wrapper::-webkit-scrollbar {
     height: 10px;

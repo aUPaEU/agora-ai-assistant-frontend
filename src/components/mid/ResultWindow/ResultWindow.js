@@ -9,6 +9,7 @@ import { CARD_TYPE } from "../../../constants/cardType.const"
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+import { clamp } from "../../../utils/mathHelper.util"
 
 /* Icons */
 import { SUBTRACT } from "../../../icons/icons"
@@ -29,15 +30,16 @@ class ResultWindow extends PlainComponent {
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
 
+        this.scrollInterval = null
+        this.currentScrollSpeed = 0
+        this.scrollTreshold = 0.2
+        this.scrollSpeed = 0.25
+        this.speedMultiplier = 6
+
         CONFIG.enabled_ai ? null : this.clear()
     }
 
     template() {
-        /* const results = this.resultContext.getData('data')
-        results && results.length > 0
-            ? this.showResults()
-            : this.hideResults() */
-
         const services = this.resultContext.getData('data') 
             ? [...new Set(this.resultContext.getData('data').map(result => result.service))].sort()
             : []
@@ -62,58 +64,36 @@ class ResultWindow extends PlainComponent {
 
             <!-- Cards -->
             <div class="card-wrapper">
-
                 ${
-                    /* this.resultContext.getData('data') 
-                        ? [...new Set(
-                            this.resultContext.getData('data')
-                                .sort((a, b) => a.service.localeCompare(b.service))
-                                .map(result => result.service)
-                        )].map((result) => {
-                            const serviceName = result.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
-                            return html`
-                                <div class="${serviceName}-wrapper" data-name="${result}">
-                                    <!-- Scrollable wrapper -->
-                                    <div class="movable-wrapper"></div>
-
-                                    <!-- Show more results -->
-                                    <div class="show-more folded">+${this.countResults(result).notFeaturedElementIds}</div>
+                    data.map(item => {
+                        const serviceName = item.service.toLowerCase().replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '').replace(/  /g, '-').replace(/ /g, '-')
+                        return html`
+                            <div class="${serviceName}-wrapper" data-name="${item.service}">
+                                <div class="movable-wrapper">
+                                    ${
+                                        item.items.map(record => {
+                                            const card = this.createCardObject(record)
+                                            return html`
+                                                <agora-dynamic-card 
+                                                    id="${card.id}"
+                                                    class="fade-in"
+                                                    href="${`${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`}"
+                                                    type="${card.type}"
+                                                    model="${card.model}"
+                                                    service="${card.service}"
+                                                    data-data='${card.dataset}'
+                                                    featured-fields="${card.featured_fields}"
+                                                    featured="${card.featured}"
+                                                    absolute-score="${card.score.absolute}"
+                                                    relative-score="${card.score.relative}"
+                                                ></agora-dynamic-card>
+                                            `
+                                        }).join('')
+                                    }
                                 </div>
-                            `
-                        }).join('')
-                        : `` */
-
-                        data.map(item => {
-                            const serviceName = item.service.toLowerCase().replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '').replace(/  /g, '-').replace(/ /g, '-')
-                            return html`
-                                <div class="${serviceName}-wrapper" data-name="${item.service}">
-                                    <div class="movable-wrapper">
-                                        <div class="autoscroll-left"></div>
-                                        <div class="autoscroll-right"></div>
-                                        ${
-                                            item.items.map(record => {
-                                                const card = this.createCardObject(record)
-                                                return html`
-                                                    <agora-dynamic-card 
-                                                        id="${card.id}"
-                                                        class="fade-in"
-                                                        href="${`${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`}"
-                                                        type="${card.type}"
-                                                        model="${card.model}"
-                                                        service="${card.service}"
-                                                        data-data='${card.dataset}'
-                                                        featured-fields="${card.featured_fields}"
-                                                        featured="${card.featured}"
-                                                        absolute-score="${card.score.absolute}"
-                                                        relative-score="${card.score.relative}"
-                                                    ></agora-dynamic-card>
-                                                `
-                                            }).join('')
-                                        }
-                                    </div>
-                                </div>
-                            `
-                        }).join('')
+                            </div>
+                        `
+                    }).join('')
                 }
             </div>
 
@@ -135,30 +115,31 @@ class ResultWindow extends PlainComponent {
     listeners() {
         // Manages the service highlightning in the navigator when the user hovers over an item
         Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
-            serviceWrapper.onmouseenter = () => this.highlightServiceOnHover(serviceWrapper, true)
-            serviceWrapper.onmouseleave = () => this.highlightServiceOnHover(serviceWrapper, false)
+            const boundHandleCursorScroll = (e) => this.handleCursorScroll(e, serviceWrapper)
+            const movableWrapper = serviceWrapper.querySelector('.movable-wrapper')
+
+            serviceWrapper.onmouseenter = () => {
+                document.addEventListener('mousemove', boundHandleCursorScroll)
+                this.highlightServiceOnHover(serviceWrapper, true)
+
+                // Start a single interval when the mouse enters
+                this.scrollInterval = setInterval(() => {
+                    if (this.currentScrollSpeed !== 0) {
+                        movableWrapper.scrollLeft += this.currentScrollSpeed
+                    }
+                }, 0.01)
+            }
+            serviceWrapper.onmouseleave = () => {
+                clearInterval(this.scrollInterval)
+                this.scrollInterval = null
+                this.currentScrollSpeed = 0
+
+                document.removeEventListener('mousemove', boundHandleCursorScroll)
+                this.highlightServiceOnHover(serviceWrapper, false)
+            }
 
             // Handle scroll visuals
             this.handleCardWrapperScroll(serviceWrapper.querySelector('.movable-wrapper'))
-
-            // Handle autoscroll
-            let leftScrollInterval;
-            let rightScrollInterval;
-
-            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-left').addEventListener('mouseenter', () => {
-                leftScrollInterval = setInterval(() => {
-                    serviceWrapper.querySelector('.movable-wrapper').scrollLeft -= 2
-                }, 0.1)
-            })
-
-            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-right').addEventListener('mouseenter', () => {
-                rightScrollInterval = setInterval(() => {
-                    serviceWrapper.querySelector('.movable-wrapper').scrollLeft += 2
-                }, 0.1)
-            })
-
-            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-left').onmouseleave = () => clearInterval(leftScrollInterval)
-            serviceWrapper.querySelector('.movable-wrapper > .autoscroll-right').onmouseleave = () => clearInterval(rightScrollInterval)
         })
 
         // Manage lateral fades in the scrollable wrapper when the user scrolls
@@ -174,6 +155,12 @@ class ResultWindow extends PlainComponent {
         }
     }
 
+    clear() {
+        this.resultContext.setData({data: [], grouped: []})
+        this.builtResults.setState([])
+    }
+
+    /* Card Creation & Management */
     createCardObject(record) {
         const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
 
@@ -201,71 +188,45 @@ class ResultWindow extends PlainComponent {
         return data
     }
 
-    unfoldCardWrapper(e) {
-        const showMoreButton = e.target
-        showMoreButton.classList.remove('folded')
-        showMoreButton.innerHTML = SUBTRACT
+    addCard(card) {
+        let featuredCards = this.resultContext.getData('data')
+            ? extractObjectsWithMatchingKey(this.resultContext.getData('data'), 'featured_element_ids')
+            : []
 
-        const wrapper = this.$('.show-more').parentElement.querySelector('.movable-wrapper')
-        Array.from(wrapper.children).forEach(card => {
-            if (!card.hasAttribute('featured')) {
-                card.style.display = 'block'
-            }
+        featuredCards = featuredCards[0]
+            ? featuredCards[0].featured_element_ids
+            : []
+
+        const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
+        availableWebsites.forEach(item => {
+            item.websites.forEach(website => {
+                if (website.model === card.model) {
+                    card.view_id = website.view_id
+                }
+            })
         })
 
-        this.handleCardWrapperScroll(wrapper)
-    }
+        const newCard = document.createElement('agora-dynamic-card')
+        newCard.id = card.id
+        newCard.setAttribute('href', `${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`)
+        newCard.setAttribute('type', card.type)
+        newCard.setAttribute('model', card.model)
+        newCard.setAttribute('service', card.service)
+        newCard.setAttribute('data-data', card.dataset)
+        newCard.setAttribute('featured-fields', card.featured_fields)
+        newCard.classList.add('fade-in')
 
-    foldCardWrapper(e) {
-        const showMoreButton = e.target
-        showMoreButton.classList.add('folded')
-        showMoreButton.innerHTML = `+${this.countResults(showMoreButton.parentElement.dataset.name).notFeaturedElementIds}`
-
-        const wrapper = this.$('.show-more').parentElement.querySelector('.movable-wrapper')
-        Array.from(wrapper.children).forEach(card => {
-            if (!card.hasAttribute('featured')) {
-                card.style.display = 'none'
-            }
-        })
-
-        this.handleCardWrapperScroll(wrapper)
-    }
-
-    handleCardWrapperScroll(wrapper) {
-        const scrollLeft = wrapper.scrollLeft
-        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth
-
-        if (scrollLeft < 10) {
-            // Set wrapper::before opacity to 1
-            wrapper.classList.remove('scroll-left-active')
+        if (featuredCards.includes(Number(card.id.split('-')[1]))) {
+            newCard.setAttribute('featured', true)
         }
 
-        if (scrollLeft > 10) {
-            // Set wrapper::before opacity to 0
-            wrapper.classList.add('scroll-left-active')
-        }
+        // newCard.setAttribute('featured', true)
 
-        if (maxScroll - scrollLeft < 10) {
-            // Set wrapper::after opacity to 1
-            wrapper.classList.remove('scroll-right-active')
-        }
+        const serviceName = card.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
+        const serviceWrapper = this.$(`.${serviceName}-wrapper > .movable-wrapper`)
+        serviceWrapper.appendChild(newCard)
 
-        if (maxScroll - scrollLeft > 10) {
-            // Set wrapper::after opacity to 0
-            wrapper.classList.add('scroll-right-active')
-        }
-    }
-
-    showResults() {
-        /* if (!CONFIG.enabled_ai) return  */
-        this.wrapper.classList.add('showing-results')
-        this.isLoading.setState(true, false)
-        
-        this.fetchResults() 
-    }
-
-    hideResults() {
-        this.wrapper.classList.remove('showing-results')
+        this.handleCardWrapperScroll(serviceWrapper)
     }
 
     // Old function (This fetch could be done in elasticsearch aswell)
@@ -326,45 +287,30 @@ class ResultWindow extends PlainComponent {
         
     }
 
-    addCard(card) {
-        let featuredCards = this.resultContext.getData('data')
-            ? extractObjectsWithMatchingKey(this.resultContext.getData('data'), 'featured_element_ids')
-            : []
+    countResults(service) {
+        const results = this.resultContext.getData('data').find(result => result.service === service)
+        const numElementIds = results.element_ids.length
+        const numFeaturedElementIds = results.featured_element_ids.length
+        const notFeaturedElementIds = numElementIds - numFeaturedElementIds
 
-        featuredCards = featuredCards[0]
-            ? featuredCards[0].featured_element_ids
-            : []
-
-        const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
-        availableWebsites.forEach(item => {
-            item.websites.forEach(website => {
-                if (website.model === card.model) {
-                    card.view_id = website.view_id
-                }
-            })
-        })
-
-        const newCard = document.createElement('agora-dynamic-card')
-        newCard.id = card.id
-        newCard.setAttribute('href', `${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`)
-        newCard.setAttribute('type', card.type)
-        newCard.setAttribute('model', card.model)
-        newCard.setAttribute('service', card.service)
-        newCard.setAttribute('data-data', card.dataset)
-        newCard.setAttribute('featured-fields', card.featured_fields)
-        newCard.classList.add('fade-in')
-
-        if (featuredCards.includes(Number(card.id.split('-')[1]))) {
-            newCard.setAttribute('featured', true)
+        return {
+            numElementIds,
+            numFeaturedElementIds,
+            notFeaturedElementIds
         }
+    }
 
-        // newCard.setAttribute('featured', true)
+    /* UI State Management */
+    showResults() {
+        /* if (!CONFIG.enabled_ai) return  */
+        this.wrapper.classList.add('showing-results')
+        this.isLoading.setState(true, false)
+        
+        this.fetchResults() 
+    }
 
-        const serviceName = card.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
-        const serviceWrapper = this.$(`.${serviceName}-wrapper > .movable-wrapper`)
-        serviceWrapper.appendChild(newCard)
-
-        this.handleCardWrapperScroll(serviceWrapper)
+    hideResults() {
+        this.wrapper.classList.remove('showing-results')
     }
 
     setLoading(state) {
@@ -376,6 +322,90 @@ class ResultWindow extends PlainComponent {
         }
     }
 
+    /* Scroll & Display Handlers */
+    handleCardWrapperScroll(wrapper) {
+        const scrollLeft = wrapper.scrollLeft
+        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth
+
+        if (scrollLeft < 10) {
+            // Set wrapper::before opacity to 1
+            wrapper.classList.remove('scroll-left-active')
+        }
+
+        if (scrollLeft > 10) {
+            // Set wrapper::before opacity to 0
+            wrapper.classList.add('scroll-left-active')
+        }
+
+        if (maxScroll - scrollLeft < 10) {
+            // Set wrapper::after opacity to 1
+            wrapper.classList.remove('scroll-right-active')
+        }
+
+        if (maxScroll - scrollLeft > 10) {
+            // Set wrapper::after opacity to 0
+            wrapper.classList.add('scroll-right-active')
+        }
+    }
+
+    handleCursorScroll(e, wrapper) {
+        const movableWrapper = wrapper.querySelector('.movable-wrapper')
+        const wrapperVisibleWidth = wrapper.clientWidth
+
+        // If wrapper is smaller than movable wrapper there's no scroll bar so we return
+        if (movableWrapper.scrollWidth <= wrapperVisibleWidth + 50) return
+
+        const wrapperRect = wrapper.getBoundingClientRect()
+
+        // Create the interval that recalculates the cursor position
+        const wrapperXCenter = wrapperRect.x + wrapperRect.width / 2
+        const cursorXPosition = e.clientX
+        const cursorDistanceToWrapperCenter = Math.round(wrapperXCenter - cursorXPosition) * -1
+        const cursorDistancePercentage = clamp(
+            Math.round(cursorDistanceToWrapperCenter / wrapperVisibleWidth * 100) / 100 * 2.0, -1.0, 1.0
+        )
+
+        if (Math.abs(cursorDistancePercentage) > this.scrollTreshold) {
+            const direction = Math.sign(cursorDistancePercentage)
+            // const speedFactor = Math.pow(Math.abs(cursorDistancePercentage), 2) // Exponential factor
+            const speedFactor = Math.abs(cursorDistancePercentage) * this.speedMultiplier // Linear factor
+            this.currentScrollSpeed = direction * (this.scrollSpeed + speedFactor)
+        } else {
+            this.currentScrollSpeed = 0
+        }
+    }
+
+    unfoldCardWrapper(e) {
+        const showMoreButton = e.target
+        showMoreButton.classList.remove('folded')
+        showMoreButton.innerHTML = SUBTRACT
+
+        const wrapper = this.$('.show-more').parentElement.querySelector('.movable-wrapper')
+        Array.from(wrapper.children).forEach(card => {
+            if (!card.hasAttribute('featured')) {
+                card.style.display = 'block'
+            }
+        })
+
+        this.handleCardWrapperScroll(wrapper)
+    }
+
+    foldCardWrapper(e) {
+        const showMoreButton = e.target
+        showMoreButton.classList.add('folded')
+        showMoreButton.innerHTML = `+${this.countResults(showMoreButton.parentElement.dataset.name).notFeaturedElementIds}`
+
+        const wrapper = this.$('.show-more').parentElement.querySelector('.movable-wrapper')
+        Array.from(wrapper.children).forEach(card => {
+            if (!card.hasAttribute('featured')) {
+                card.style.display = 'none'
+            }
+        })
+
+        this.handleCardWrapperScroll(wrapper)
+    }
+
+    /* Navigation & Highlighting */
     highlightServiceOnHover(wrapper, state) {
         const app = document.querySelector('agora-app')
         const layout = app.$('agora-layout-v2')
@@ -396,24 +426,6 @@ class ResultWindow extends PlainComponent {
                 item.wrapper.classList.remove('highlight')
             }
         })
-    }
-
-    countResults(service) {
-        const results = this.resultContext.getData('data').find(result => result.service === service)
-        const numElementIds = results.element_ids.length
-        const numFeaturedElementIds = results.featured_element_ids.length
-        const notFeaturedElementIds = numElementIds - numFeaturedElementIds
-
-        return {
-            numElementIds,
-            numFeaturedElementIds,
-            notFeaturedElementIds
-        }
-    }
-
-    clear() {
-        this.resultContext.setData({data: [], grouped: []})
-        this.builtResults.setState([])
     }
 }
 
