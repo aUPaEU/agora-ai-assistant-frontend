@@ -59,6 +59,17 @@ class Landing extends PlainComponent {
             <span class="node-view-label">Service Content</span>
             <div class="node-wrapper">${this.renderNodeView(displayedService)}</div>
 
+            <!-- Suggested Search Terms Tags -->
+            <span class="search-tags-label">Suggested Search Terms</span>
+            <div class="search-terms-wrapper">
+                <span class="search-term-tag">ai</span>
+                <span class="search-term-tag">infrastructure</span>
+                <span class="search-term-tag">acceleration</span>
+                <span class="search-term-tag">laboratory</span>
+                <span class="search-term-tag">research</span>
+            </div>
+
+            <!-- Learn More Button -->
             <div class="item-link">
                 <span>${learnMoreButton}</span>
             </div>
@@ -78,6 +89,7 @@ class Landing extends PlainComponent {
     }
 
     displayOrderedService(data) { // TODO: There's a bug when the component is being rendered twice for some reason
+        console.trace('displayOrderedService called');
         let nextIndex = this.lastShown.getState() + 1
 
         if (nextIndex === data.length) nextIndex = 0

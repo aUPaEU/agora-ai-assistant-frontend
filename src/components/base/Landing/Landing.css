@@ -76,7 +76,7 @@
 }
 
 /* NODE VISUALIZATION */
-.node-view-label {
+.node-view-label, .search-tags-label {
     margin-bottom: -1.5rem;
     box-sizing: border-box;
 
@@ -228,4 +228,38 @@
     pointer-events: none;
 
     transition: 300ms;
+}
+
+/* SEARCH TERMS TAGS */
+.search-terms-wrapper {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.search-term-tag {
+    cursor: pointer;
+
+    padding: 0.5rem;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+
+    color: var(--text-tertiary-color);
+    font-size: 0.8rem;
+
+    border-radius: 10pt;
+
+    background-color: rgb(from var(--text-tertiary-color) r g b / 0.2);
+
+    transition: 300ms;
+}
+
+.search-term-tag:hover {
+    color: var(--text-secondary-color);
+    background-color: rgb(from var(--text-tertiary-color) r g b / 0.4);
 }
