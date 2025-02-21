@@ -12,7 +12,7 @@ class PinBox extends PlainComponent {
     constructor() {
         super('agora-pin-box', `${PATHS.MID_COMPONENTS}/PinBox/PinBox.css`)
 
-        this.pinContext = new PlainContext('pin', this)
+        this.pinContext = new PlainContext('pin', this, false, 'local')
 
         this.unfolded = new PlainState(false, this)
         this.data = new PlainState(null, this)
