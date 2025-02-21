@@ -18,6 +18,14 @@ export const ENV = {
         "ai_host": "http://localhost:2000"
     },
 
+    UNITE_PRE: {
+        "name": "Unite!",
+        "host": "https://unite.pre.upc.edu",
+        "company_id": 1,
+        "enabled_ai": false,
+        "ai_host": "http://localhost:2000"
+    },
+
     CIVIS_DEV: {
         "name": "CIVIS",
         "host": "https://aupaeu-dev.widening.eu",
@@ -27,4 +35,4 @@ export const ENV = {
     }
 }
 
-export const CONFIG = ENV.CIVIS_DEV
+export const CONFIG = ENV.LOCAL
