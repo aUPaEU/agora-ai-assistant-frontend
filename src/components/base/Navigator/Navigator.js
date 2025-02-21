@@ -28,14 +28,13 @@ class Navigator extends PlainComponent {
 
     template() {
         if (!this.items.getState()) return html`
-            <agora-base-loader width="100" height="100"></agora-base-loader>
+            <agora-base-loader width="500" height="500"></agora-base-loader>
         `
 
         if (this.error.getState()) return html`
             <h1>Error!</h1>
             <p>${this.error.getState()}</p>
         `
-
         const services = this.resultContext.getData('data') 
             ? [...new Set(this.resultContext.getData('data').map(result => result.service))]
             : []
@@ -86,12 +85,14 @@ class Navigator extends PlainComponent {
             })
 
             this.items.setState(services)
-            this.serviceContext.setData({services: services}, false)
+            console.log("Services has been fetched", services)
+            this.serviceContext.setData({services: services}, true)
         }
 
         catch (error) {
             this.error.setState(error)
-            console.log("Errorsito", error)
+            throw error
+            console.error("Exception manage when fetching services have to be implemented", error)
         }
     }
 

@@ -18,7 +18,6 @@ class PinCard extends PlainComponent {
     template() {
         const data = JSON.parse(this.dataset.data)
         const imageURL = `${CONFIG.host}/web/image?model=${data.model}&id=${data.id.split('-')[1]}&field=image`
-        console.log(imageURL)
         return html`
             <div class="image-wrapper">
                 <img class="image" src="${imageURL}" />

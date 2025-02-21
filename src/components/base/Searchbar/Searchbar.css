@@ -212,3 +212,65 @@
 
     z-index: 100000000;
 }
+
+/* AUTOCOMPLETE DROPDOWN */
+.autocomplete-dropdown {
+    list-style: none;
+
+    padding: 1rem;
+    margin: 0;
+    box-sizing: border-box;
+
+    position: absolute;
+    bottom: calc(100% - 0.8rem);
+    left: 0.8rem;
+
+    width: fit-content;
+    min-width: 200px;
+    height: fit-content;
+
+    opacity: 0;
+
+    border-radius: 10pt;
+    background-color: var(--primary-color);
+
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    overflow: hidden;
+
+    transition: 300ms;
+
+    z-index: 100;
+}
+
+.searchbar-input:focus ~ .autocomplete-dropdown:not(:empty) {
+    opacity: 1;
+}
+
+.autocomplete-dropdown li {
+    cursor: pointer;
+
+    padding: 0.5rem;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+
+    font-size: 0.8rem;
+
+    border-radius: 5pt;
+
+    transition: 300ms;
+}
+
+.autocomplete-dropdown li.selected-match {
+    background-color: var(--bg-color);
+}
+
+.match.highlighted {
+    color: var(--text-accent-color);
+}
+
+.match {
+    color: var(--text-tertiary-color);
+}
+
+

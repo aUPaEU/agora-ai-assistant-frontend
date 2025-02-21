@@ -59,9 +59,15 @@ class DynamicCard extends PlainComponent {
             ? html`<span class="card-summary">${this.data.getState().description}</span>`
             : null
 
+        const content = this.data.getState().content
+            ? html`<span class="card-summary">${this.data.getState().content}</span>`
+            : null
+
         const origin = this.data.getState().university_origin
             ? html`<span class="card-origin">${this.data.getState().university_origin[1]}</span>`
             : null
+
+        const publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
 
         return html`
             ${image}
@@ -72,15 +78,25 @@ class DynamicCard extends PlainComponent {
                 <div class="separator"></div>
                 ${summary}
                 ${description}
+                ${content}
                 <div class="fill-space"></div>
-                ${
-                    this.wrapper.classList.contains('featured') 
-                        ? html`
-                            <span title="This element is recommended by AIDA" class="featured-badge">
-                                ${AUPAEU_LOGO}
-                            </span>` 
-                        : ``
-                }
+
+                <div class="additional-info">
+                    <div 
+                        class="public-score" 
+                        title="This score represents the relevance of this\nitem in the search results."
+                        style="filter: hue-rotate(${(publicScore-10) * 20}deg);"
+                    >${publicScore}</div>
+                    ${
+                        this.wrapper.classList.contains('featured') 
+                            ? html`
+                                <!-- <span title="This element is recommended by AIDA" class="featured-badge">
+                                    ${AUPAEU_LOGO}
+                                </span>-->` 
+                            : ``
+                    }
+                </div>
+
                 <span class="score" title="(A)bsolute and (R)elative (to the group) scores">A: ${this.getAttribute('absolute-score')}, R: ${this.getAttribute('relative-score')}</span>
             </div>
         `

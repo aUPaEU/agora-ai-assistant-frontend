@@ -4,7 +4,7 @@ import { PlainComponent, PlainState, PlainContext} from "plain-reactive"
 import { PATHS } from "./constants/paths.const"
 
 /* Icons */
-import { ARROW_LEFT, ARROW_RIGHT } from "./icons/icons"
+import { ARROW_LEFT, ARROW_RIGHT, CLOSE } from "./icons/icons"
 
 /* Utils */
 import { html } from "./utils/templateTags.util"
@@ -15,6 +15,7 @@ import './components/base/Navigator/Navigator'
 import './components/base/NavigatorItem/NavigatorItem'
 import './components/base/Showcase/Showcase'
 import './components/base/Greetings/Greetings'
+import './components/base/Landing/Landing'
 
 /* Buttons */
 import './components/base/TextButton/TextButton'
@@ -50,6 +51,7 @@ class App extends PlainComponent {
 
         this.companyContext = new PlainContext('company', this, false)
         this.resultContext = new PlainContext('result', this, false)
+        this.serviceContext = new PlainContext('service', this, false)
         this.chatContext = new PlainContext('chat', this, false)
 
         this.layout = new PlainState('main', this)
@@ -65,21 +67,28 @@ class App extends PlainComponent {
 
             <!-- Element Info Dialog -->
             <dialog class="card-info-dialog">
+                <!-- Card Content -->
                 <div class="card-info-dialog-wrapper">
+                    <!-- Card Image -->
                     <div class="card-info-image-container">
                         <img class="card-info-image" src="">
                     </div>
+
+                    <!-- Card Main Content -->
                     <div class="card-info-content">
                         <span class="card-info-origin"></span>
                         <span class="card-info-name"></span>
                         <span class="card-info-lastname"></span>
                         <span class="card-info-summary"></span>
                     </div>
+
+                    <!-- Card Actions -->
                     <div class="card-info-actions">
                         <button class="card-info-explore-button">Explore</button>
                     </div>
                 </div>
 
+                <!-- Carousel Controls -->
                 <div class="carousel-controls">
                     <span class="prev-control">${ARROW_LEFT}</span>
                     <span class="next-control">${ARROW_RIGHT}</span>

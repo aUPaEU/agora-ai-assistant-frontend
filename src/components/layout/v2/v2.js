@@ -16,10 +16,20 @@ class LayoutV2 extends PlainComponent {
         return html`
             <img class="fake-header" src="public/assets/images/fake-header.png"/>
             <main class="main">
-                <div class="navigator-wrapper">
-                    <agora-navigator></agora-navigator>
+                <!-- Left Side -->
+                <div class="left">
+                    <div class="navigator-wrapper">
+                        <agora-navigator></agora-navigator>
+                    </div>
                 </div>
-                <agora-result-window></agora-result-window>
+
+                <!-- Right Side -->
+                <div class="right">
+                    <div class="showcase">
+                        <agora-landing></agora-landing>
+                    </div>
+                    <agora-result-window></agora-result-window>
+                </div>
             </main>
             ${
                 CONFIG.enabled_ai 
@@ -28,6 +38,7 @@ class LayoutV2 extends PlainComponent {
             }
             <agora-pin-box></agora-pin-box>
             <agora-card-info-carousel></agora-card-info-carousel>
+            <div class="bottom-fade"></div>
         `
     }
 }

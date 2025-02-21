@@ -1,0 +1,231 @@
+.agora-landing-wrapper {
+    padding: 2.5rem;
+    box-sizing: border-box;
+
+    width: fit-content;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+
+    border: 1px solid var(--primary-color);
+    border-radius: 15pt;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+
+    color: var(--text-primary-color);
+}
+
+.agora-landing-wrapper:empty {
+    display: none;
+}
+
+.item-info {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 1rem;
+}
+
+.item-info div:first-child {
+    width: 100%;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-info p, h1 {
+    margin: 0;
+    padding: 0;
+
+    max-width: 500px;
+}
+
+.item-info p {
+    max-width: 750px;
+    line-height: 1.5;
+}
+
+.item-info .icon {
+    color: var(--text-secondary-color);
+    align-self: end;
+}
+
+.item-info h1 {
+    font-size: 1.5rem;
+}
+
+.item-info p {
+    color: var(--text-secondary-color);
+    font-size: 1rem;
+}
+
+.item-link {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+}
+
+/* NODE VISUALIZATION */
+.node-view-label {
+    margin-bottom: -1.5rem;
+    box-sizing: border-box;
+
+    color: var(--text-tertiary-color);
+    font-size: 0.8rem;
+}
+
+.node-view-label:has(+ .node-wrapper:empty) {
+    display: none;
+}
+
+.node-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 100px;
+
+    width: 100%;
+    height: 100%;
+}
+
+.layer {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.layer:only-child {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.layer:only-child .node {
+    flex: 1;
+}
+
+.node {
+    flex: 1;
+
+    max-width: 200px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    border: 1px solid var(--text-accent-color);
+    border-radius: 10pt;
+
+    background-color: var(--bg-color);
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.node-name {
+    padding: 1rem;
+    padding-bottom: 0;
+    box-sizing: border-box;
+
+    color: var(--text-primary-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.node-description {
+    flex:1;
+
+    padding-inline: 1rem;
+    box-sizing: border-box;
+
+    color: var(--text-secondary-color);
+    font-size: 0.7rem;
+}
+
+.node-actions {
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 30px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+
+    background-color: var(--primary-color);
+}
+
+.node.sub-service .node-actions-info {
+    color: var(--text-accent-color);
+    font-size: 0.75rem;
+}
+
+.node.catalogue .node-actions-info {
+    color: var(--catalogue-color);
+    font-size: 0.75rem;
+}
+
+.node.sub-service {
+    background-color: rgb(from var(--text-accent-color) r g b / 0.2);
+}
+
+.node.catalogue {
+    border-color: var(--catalogue-color);
+    background-color: rgb(from var(--catalogue-color) r g b / 0.4);
+}
+
+.node-action-icon {
+    cursor: pointer;
+    color: var(--text-tertiary-color);
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+
+    transition: 300ms;
+}
+
+.node.sub-service .node-action-icon:hover {
+    color: var(--text-accent-color);
+}
+
+.node.catalogue .node-action-icon:hover {
+    color: var(--catalogue-color);
+}
+
+/* CONNECTIONS CANVAS */
+.node-connection-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+    transition: 300ms;
+}
