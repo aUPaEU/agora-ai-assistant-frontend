@@ -106,6 +106,9 @@ export const sendMessage = async (message, models, history) => {
 }
 
 export const search = async (query, models = [], fieldRelevance = {}, filters = {}) => {
+    if (!query || query.length === 0) throw new Error('No query provided')
+    if (models.length === 0) throw new Error('No models provided for the search')
+
     const url = `${CONFIG.host}/elastic/search?query=${query}&models=${models.join()}`
 
     try {
@@ -122,6 +125,4 @@ export const search = async (query, models = [], fieldRelevance = {}, filters = 
     catch(error) {
         throw error
     }
-
-    
 }
