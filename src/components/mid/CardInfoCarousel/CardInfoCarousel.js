@@ -8,14 +8,14 @@ import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
-import { ARROW_LEFT, ARROW_RIGHT } from "../../../icons/icons"
+import { ARROW_LEFT, ARROW_RIGHT, CLOSE } from "../../../icons/icons"
 
 class CardInfoCarousel extends PlainComponent {
     constructor() {
         super('agora-card-info-carousel', `${PATHS.MID_COMPONENTS}/CardInfoCarousel/CardInfoCarousel.css`)
 
         this.resultContext = new PlainContext('result', this, true)
-        this.searchContext = new PlainContext('search', this, true)
+        this.searchContext = new PlainContext('search', this, true, 'local')
 
         this.groupedData = new PlainState(null, this) // We'll use this to store all the cards in a group so we can display them in the carousel and be able to scroll through them
         this.displayedCardId = new PlainState(null, this)
@@ -25,6 +25,9 @@ class CardInfoCarousel extends PlainComponent {
 
     template() {
         return html`
+            <!-- Close Button -->
+            <button class="close-button">${CLOSE}</button>
+
             <!-- Card Content -->
             <div class="card-info-wrapper">
                 <!-- Card Image -->
@@ -84,9 +87,10 @@ class CardInfoCarousel extends PlainComponent {
         this.wrapper.classList.remove('no-image')
 
         // Check if the card has an image
-        if (!hasImage) {
+        /* if (!hasImage) {
             this.wrapper.classList.add('no-image')
-        }
+        } */
+        //this.$('.card-info-image-container').classList.add('default-image')
 
         this.wrapper.style.display = 'flex'
     }
@@ -95,7 +99,7 @@ class CardInfoCarousel extends PlainComponent {
         this.$('.card-info-image').src = `${CONFIG.host}/web/image?model=${cardData.model}&id=${cardData.data.id}&field=image` ?? ''
         this.$('.card-info-name').textContent = cardData.data.name ?? ''
         this.$('.card-info-lastname').innerHTML = cardData.data.lastname ?? ''
-        this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? ''
+        this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? cardData.data.content ?? ''
         this.$('.card-info-origin').textContent = cardData.data.origin ?? ''
         this.$('.card-info-explore-button').dataset['url'] = detailUrl ?? ''
 
@@ -151,6 +155,12 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     close(e) {
+        console.log(e.target)
+        if (e.target.classList.contains('close-button')) {
+            this.style.display = 'none'
+            return
+        }
+
         e.stopPropagation()
         if (e.target === this.wrapper) {
             this.style.display = 'none'

@@ -23,6 +23,8 @@
     height: 75%;
     aspect-ratio: 10/12;
 
+    position: relative;
+
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -107,6 +109,14 @@
 
 .no-image .card-info-image-container {
     display: none;
+}
+
+.default-image {
+    background-image: 
+        radial-gradient(ellipse at top, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
+        radial-gradient(ellipse at bottom,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff),
+        radial-gradient(ellipse at left, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
+        radial-gradient(ellipse at right,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff);
 }
 
 /* SCROLLBAR */
@@ -249,6 +259,38 @@
 }
 
 .controls-wrapper .prev-control:hover, .controls-wrapper .next-control:hover {
+    background-color: var(--primary-color);
+}
+
+.close-button {
+    cursor: pointer;
+
+    top: 1rem;
+    right: 1rem;
+
+    width: 40px;
+    aspect-ratio: 1;
+
+    display: grid;
+    place-content: center;
+
+    border: none;
+    border-radius: 100pt;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+
+    color: var(--text-primary-color);
+    font-weight: bold;
+
+    transition: 300ms;
+}
+
+.close-button svg {
+    pointer-events: none;
+}
+
+.close-button:hover {
     background-color: var(--primary-color);
 }
 
