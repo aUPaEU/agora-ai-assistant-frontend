@@ -38,6 +38,8 @@
 .right {
     position: relative;
 
+    padding-bottom: 100px;
+
     width: 100%;
     height: fit-content;
     min-height: 100vh;
