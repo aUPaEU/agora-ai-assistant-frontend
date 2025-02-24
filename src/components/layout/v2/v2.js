@@ -27,7 +27,7 @@ class LayoutV2 extends PlainComponent {
                 <!-- Right Side -->
                 <div class="right">
                     <div class="showcase">
-                        <!-- <agora-landing></agora-landing> -->
+                        <agora-landing></agora-landing>
                     </div>
                     <agora-result-window></agora-result-window>
                 </div>
