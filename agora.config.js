@@ -35,4 +35,4 @@ export const ENV = {
     }
 }
 
-export const CONFIG = ENV.LOCAL
+export const CONFIG = ENV.UNITE_PRE
