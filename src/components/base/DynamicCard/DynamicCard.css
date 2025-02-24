@@ -7,8 +7,6 @@
 
     border-radius: 10pt;
 
-    /* background-color: var(--card-primary-color); */
-
     background-color: var(--primary-color);
 
     box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.15);
@@ -73,13 +71,14 @@
 }
 
 .card-name {
+    line-height: normal;
     color: var(--text-primary-color);
     font-weight: bold;
     font-size: 0.9rem;
 
     width: 100%;
 
-    display: -webkit-box;           /* Use a flex-like box for text rendering */
+    display: -webkit-box;          /* Use a flex-like box for text rendering */
     -webkit-line-clamp: 2;         /* Number of lines to show */
     -webkit-box-orient: vertical;  /* Define the orientation of the box */
     overflow: hidden;              /* Hide any overflowing text */
@@ -97,6 +96,7 @@
 }
 
 .card-summary {
+    line-height: normal;
     color: var(--text-secondary-color);
     font-size: 0.7rem;
 
