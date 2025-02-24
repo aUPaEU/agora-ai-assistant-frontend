@@ -17,6 +17,7 @@ class Chat extends PlainComponent {
     constructor() {
         super('agora-chat', `${PATHS.COMPLEX_COMPONENTS}/Chat/Chat.css`)
 
+        this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, false)
         this.chatContext = new PlainContext('chat', this, false)
         this.serviceContext = new PlainContext('service', this, false)
@@ -87,7 +88,7 @@ class Chat extends PlainComponent {
         this.storeMessageInContext(message, 'user')
         this.setLoading(true)
 
-        const botResponse = await api.sendMessage(message, availableModels, formattedChatHistory)
+        const botResponse = await api.sendMessage(this.configContext.getData('host'), message, availableModels, formattedChatHistory)
 
         this.handleBotResponse(botResponse.result)
         

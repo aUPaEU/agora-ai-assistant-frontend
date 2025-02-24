@@ -19,11 +19,12 @@ class Searchbar extends PlainComponent {
 
     this.treshold = 0.5
 
-    this.currentSource = new PlainState('all', this)
-
+    this.configContext = new PlainContext('config', this, false)
     this.resultContext = new PlainContext('result', this, false)
     this.serviceContext = new PlainContext('service', this, false)
     this.searchContext = new PlainContext('search', this, false, 'local') // We'll use this to autocomplete queries
+
+    this.currentSource = new PlainState('all', this)
 
     this.signals = new PlainSignal(this)
     this.signals.register('results-updated')
@@ -80,7 +81,7 @@ class Searchbar extends PlainComponent {
     // We call the elasticsearch api to get search results
     try {
       const query = this.$('.searchbar-input').value
-      const response = await api.search(query, models)
+      const response = await api.search(this.configContext.getData('host'), query, models)
 
       this.handleResponse(query, response)
 

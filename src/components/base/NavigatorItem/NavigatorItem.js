@@ -1,5 +1,4 @@
-import { CONFIG } from "../../../../agora.config"
-import { PlainComponent, PlainState } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
 
 /* Constants */
 import { PATHS } from "../../../constants/paths.const"
@@ -14,6 +13,8 @@ import { ADD, SUBTRACT, CATALOGUE, BOOST, WEBSITE } from "../../../icons/icons"
 class NavigatorItem extends PlainComponent {
     constructor() {
         super('agora-navigator-item', `${PATHS.BASE_COMPONENTS}/NavigatorItem/NavigatorItem.css`)
+
+        this.configContext = new PlainContext('config', this, false)
 
         this.name = new PlainState(this.dataset.name, this)
         this.info = new PlainState(JSON.parse(this.dataset.info), this)
@@ -63,7 +64,7 @@ class NavigatorItem extends PlainComponent {
                 <a 
                     class="label" 
                     ${info && showcase ? `href="${showcase.domain}"` : ''}
-                    ${info && info.url ? `href="${CONFIG.host}/${info.url}"` : ''}
+                    ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
                     ${name}
                     <span>${this.type.getState()}</span>
@@ -71,7 +72,7 @@ class NavigatorItem extends PlainComponent {
                 <a 
                     class="label hover" 
                     ${info && showcase ? `href="${showcase.domain}"` : ''}
-                    ${info && info.url ? `href="${CONFIG.host}/${info.url}"` : ''}
+                    ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
                     ${name}
                     <span>${this.type.getState()}</span>

@@ -1,6 +1,9 @@
-import { PlainComponent, PlainState } from "plain-reactive"
-import { CONFIG } from "../../../../agora.config"
+import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+
+/* Constants */
 import { PATHS } from "../../../constants/paths.const"
+
+/* Utils */
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
@@ -10,6 +13,8 @@ class PinCard extends PlainComponent {
     constructor() {
         super('agora-pin-card', `${PATHS.BASE_COMPONENTS}/PinCard/PinCard.css`)
 
+        this.configContext = new PlainContext('config', this, false)
+
         this.data = new PlainState(JSON.parse(this.dataset.data), this)
 
         this.loadAttributes()
@@ -17,7 +22,7 @@ class PinCard extends PlainComponent {
 
     template() {
         const data = JSON.parse(this.dataset.data)
-        const imageURL = `${CONFIG.host}/web/image?model=${data.model}&id=${data.id.split('-')[1]}&field=image`
+        const imageURL = `${this.configContext.getData('host')}/web/image?model=${data.model}&id=${data.id.split('-')[1]}&field=image`
         return html`
             <div class="image-wrapper">
                 <img class="image" src="${imageURL}" />
@@ -83,7 +88,7 @@ class PinCard extends PlainComponent {
             infoDialog.classList.add('no-image')
         }
         
-        infoDialog.querySelector('.card-info-image').src = `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? ''
+        infoDialog.querySelector('.card-info-image').src = `${this.configContext.getData('host')}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? ''
         infoDialog.querySelector('.card-info-name').textContent = this.data.getState().name ?? ''
         infoDialog.querySelector('.card-info-lastname').innerHTML = this.data.getState().lastname ?? ''
         infoDialog.querySelector('.card-info-summary').innerHTML = this.data.getState().summary ?? this.data.getState().description ?? ''

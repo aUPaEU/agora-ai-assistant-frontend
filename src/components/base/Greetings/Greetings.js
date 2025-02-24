@@ -1,4 +1,3 @@
-import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainContext } from "plain-reactive"
 
 /* Constants */
@@ -11,6 +10,7 @@ class Greetings extends PlainComponent {
     constructor() {
         super('agora-greetings', `${PATHS.BASE_COMPONENTS}/Greetings/Greetings.css`)
 
+        this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
     }
 
@@ -25,7 +25,7 @@ class Greetings extends PlainComponent {
                 <span>Welcome to</span> 
                 <div class="logo">
                     <span class="agora-name">Agora</span>
-                    <span class="alliance-name">${CONFIG.name}</span>
+                    <span class="alliance-name">${this.configContext.getData('name')}</span>
                 </div>
             </div>
             <span>How could I help you?</span>

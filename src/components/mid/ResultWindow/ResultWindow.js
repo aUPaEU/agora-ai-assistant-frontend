@@ -1,4 +1,3 @@
-import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
 
 /* Constants */
@@ -21,6 +20,7 @@ class ResultWindow extends PlainComponent {
     constructor() {
         super('agora-result-window', `${PATHS.MID_COMPONENTS}/ResultWindow/ResultWindow.css`)
 
+        this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
         this.serviceContext = new PlainContext('service', this, true)
 
@@ -36,7 +36,7 @@ class ResultWindow extends PlainComponent {
         this.scrollSpeed = 0.25
         this.speedMultiplier = 6
 
-        CONFIG.enabled_ai ? null : this.clear()
+        this.configContext.getData('enabled_ai') ? null : this.clear()
     }
 
     template() {
@@ -77,7 +77,7 @@ class ResultWindow extends PlainComponent {
                                                 <agora-dynamic-card 
                                                     id="${card.id}"
                                                     class="fade-in"
-                                                    href="${`${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`}"
+                                                    href="${`${this.configContext.getData('host')}/offering/${card.view_id}/${card.id.split('-')[1]}`}"
                                                     type="${card.type}"
                                                     model="${card.model}"
                                                     service="${card.service}"
@@ -208,7 +208,7 @@ class ResultWindow extends PlainComponent {
 
         const newCard = document.createElement('agora-dynamic-card')
         newCard.id = card.id
-        newCard.setAttribute('href', `${CONFIG.host}/offering/${card.view_id}/${card.id.split('-')[1]}`)
+        newCard.setAttribute('href', `${this.configContext.getData('host')}/offering/${card.view_id}/${card.id.split('-')[1]}`)
         newCard.setAttribute('type', card.type)
         newCard.setAttribute('model', card.model)
         newCard.setAttribute('service', card.service)
@@ -241,7 +241,7 @@ class ResultWindow extends PlainComponent {
         .sort((a, b) => a.service.localeCompare(b.service))
         .forEach((result) => {
             result.element_ids.forEach(async (element) => {
-                const response = await api.fetchElement(result.model, element, result.featured_fields)
+                const response = await api.fetchElement(this.configContext.getData('host'), result.model, element, result.featured_fields)
                 if (!response.id) return
 
                 console.log("This is the format of the response we need", response)
@@ -302,7 +302,7 @@ class ResultWindow extends PlainComponent {
 
     /* UI State Management */
     showResults() {
-        /* if (!CONFIG.enabled_ai) return  */
+        /* if (!this.configContext.getData('enabled_ai')) return  */
         this.wrapper.classList.add('showing-results')
         this.isLoading.setState(true, false)
         

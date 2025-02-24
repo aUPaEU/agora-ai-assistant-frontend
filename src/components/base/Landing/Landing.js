@@ -27,7 +27,7 @@ class Landing extends PlainComponent {
         const services = this.servicesContext.getData('services')
 
         if (!services) return ''
-        if (this.resultContext.getData('data').length > 0 ) return ''
+        if (!this.resultContext.getData('data') || this.resultContext.getData('data').length > 0 ) return ''
 
         const displayedService = this.displayOrderedService(services)
         if (!displayedService) return ''

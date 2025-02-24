@@ -1,5 +1,4 @@
-import { CONFIG } from "../../../../agora.config"
-import { PlainComponent, PlainState } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
 
 /* Constants */
 import { PATHS } from "../../../constants/paths.const"
@@ -13,6 +12,8 @@ import { AUPAEU_LOGO } from "../../../icons/icons"
 class DynamicCard extends PlainComponent {
     constructor() {
         super('agora-dynamic-card', `${PATHS.BASE_COMPONENTS}/DynamicCard/DynamicCard.css`)
+
+        this.configContext = new PlainContext('config', this, false)
 
         this.data = new PlainState(null, this)
 
@@ -40,7 +41,7 @@ class DynamicCard extends PlainComponent {
         this.data.setState(JSON.parse(this.dataset.data), false)
 
         const image = true
-            ? html`<img class="card-image" src="${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image"/>`
+            ? html`<img class="card-image" src="${this.configContext.getData('host')}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image"/>`
             : null
 
         const name = this.data.getState().name
@@ -106,7 +107,7 @@ class DynamicCard extends PlainComponent {
         const app = document.querySelector('agora-app')
         const payload = {
             id: this.data.getState().id,
-            src: `${CONFIG.host}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? '',
+            src: `${this.configContext.getData('host')}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? '',
             name: this.data.getState().name ?? '',
             lastname: this.data.getState().lastname ?? '',
             summary: this.data.getState().summary ?? this.data.getState().description ?? '',

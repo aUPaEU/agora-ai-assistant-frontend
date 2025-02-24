@@ -1,4 +1,3 @@
-import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
 import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"

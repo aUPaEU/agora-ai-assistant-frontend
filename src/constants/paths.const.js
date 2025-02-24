@@ -1,5 +1,3 @@
-import { CONFIG } from "../../agora.config"
-
 const LOCAL_PATHS = {
     SRC : 'src',
     DIST: 'dist',

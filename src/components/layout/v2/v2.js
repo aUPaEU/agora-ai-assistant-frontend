@@ -1,5 +1,4 @@
-import { CONFIG } from "../../../../agora.config"
-import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+import { PlainComponent, PlainContext } from "plain-reactive"
 
 /* Constants */
 import { PATHS } from "../../../constants/paths.const"
@@ -10,6 +9,8 @@ import { html } from "../../../utils/templateTags.util"
 class LayoutV2 extends PlainComponent {
     constructor() {
         super('agora-layout-v2', `${PATHS.LAYOUT_COMPONENTS}/v2/v2.css`)
+
+        this.configContext = new PlainContext('config', this, false)
     }
 
     template() {
@@ -26,13 +27,13 @@ class LayoutV2 extends PlainComponent {
                 <!-- Right Side -->
                 <div class="right">
                     <div class="showcase">
-                        <agora-landing></agora-landing>
+                        <!-- <agora-landing></agora-landing> -->
                     </div>
                     <agora-result-window></agora-result-window>
                 </div>
             </main>
             ${
-                CONFIG.enabled_ai 
+                this.configContext.getData('enabled_ai')
                 ? html`<agora-chat class="chat"></agora-chat>`
                 : html`<agora-searchbar class="searchbar"></agora-searchbar>`
             }

@@ -1,4 +1,3 @@
-import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainState, PlainSignal, PlainContext } from "plain-reactive"
 
 /* Constants */
@@ -14,6 +13,7 @@ class CardInfoCarousel extends PlainComponent {
     constructor() {
         super('agora-card-info-carousel', `${PATHS.MID_COMPONENTS}/CardInfoCarousel/CardInfoCarousel.css`)
 
+        this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
         this.searchContext = new PlainContext('search', this, true, 'local')
 
@@ -96,7 +96,7 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     updateCardConent(cardData, detailUrl) {
-        this.$('.card-info-image').src = `${CONFIG.host}/web/image?model=${cardData.model}&id=${cardData.data.id}&field=image` ?? ''
+        this.$('.card-info-image').src = `${this.configContext.getData('host')}/web/image?model=${cardData.model}&id=${cardData.data.id}&field=image` ?? ''
         this.$('.card-info-name').textContent = cardData.data.name ?? ''
         this.$('.card-info-lastname').innerHTML = cardData.data.lastname ?? ''
         this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? cardData.data.content ?? ''

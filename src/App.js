@@ -53,8 +53,23 @@ class App extends PlainComponent {
         this.resultContext = new PlainContext('result', this, false)
         this.serviceContext = new PlainContext('service', this, false)
         this.chatContext = new PlainContext('chat', this, false)
+        this.configContext = new PlainContext('config', this, false)
 
         this.layout = new PlainState('main', this)
+
+        this.setupConfig()
+    }
+
+    setupConfig() {
+        const customConfig = {
+            "name": this.getAttribute('name') || CONFIG.name,
+            "host": this.getAttribute('host') || CONFIG.host,
+            "company_id": this.getAttribute('company_id') || CONFIG.company_id,
+            "enabled_ai": this.hasAttribute('enabled_ai') || CONFIG.enabled_ai,
+            "ai_host": this.getAttribute('ai_host') || CONFIG.ai_host
+        }
+
+        this.configContext.setData(customConfig)
     }
 
     template() {
@@ -117,9 +132,9 @@ class App extends PlainComponent {
 
     connectors() {
         // App Components
-        const chatWindow = CONFIG.enabled_ai ? this.$('agora-layout-v2').$('agora-chat').$('agora-chat-window') : null
+        const chatWindow = this.configContext.getData('enabled_ai') ? this.$('agora-layout-v2').$('agora-chat').$('agora-chat-window') : null
         const resultWindow = this.$('agora-layout-v2').$('agora-result-window')
-        const searchbar = CONFIG.enabled_ai ? null : this.$('agora-layout-v2').$('agora-searchbar')
+        const searchbar = this.configContext.getData('enabled_ai') ? null : this.$('agora-layout-v2').$('agora-searchbar')
         const navigator = this.$('agora-layout-v2').$('agora-navigator')
         const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
 
@@ -230,21 +245,6 @@ class App extends PlainComponent {
         }
 
         return 
-        direction === 'prev' 
-            ? this.$('.card-info-dialog').classList.add('fade-left')
-            : this.$('.card-info-dialog').classList.add('fade-right')
-
-        this.$('.card-info-dialog').onanimationend = () => {
-            this.$('.card-info-dialog').classList.remove('fade-left')
-            this.$('.card-info-dialog').classList.add('fade-in')
-            this.$('.card-info-dialog').onanimationend = () => this.$('.card-info-dialog').classList.remove('fade-in')
-        }
-
-        this.$('.card-info-dialog').onanimationend = () => {
-            this.$('.card-info-dialog').classList.remove('fade-right')
-            this.$('.card-info-dialog').classList.add('fade-in')
-            this.$('.card-info-dialog').onanimationend = () => this.$('.card-info-dialog').classList.remove('fade-in')
-        }
     }
 }
 

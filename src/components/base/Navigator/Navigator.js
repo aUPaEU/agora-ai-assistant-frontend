@@ -17,6 +17,7 @@ class Navigator extends PlainComponent {
 
         this.signals = new PlainSignal(this)
 
+        this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
         this.serviceContext = new PlainContext('service', this, false)
 
@@ -66,7 +67,7 @@ class Navigator extends PlainComponent {
     /* DATA FETCHING */
     async fetchItems() {
         try {
-            const agora = await api.fetchAgoraServices()
+            const agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
 
             let services = []
 
