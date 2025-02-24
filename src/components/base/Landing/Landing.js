@@ -45,6 +45,8 @@ class Landing extends PlainComponent {
 
         return html`
             <canvas class="node-connection-canvas"></canvas>
+            <!-- Banner Image -->
+            <div class="banner-image default-image"></div>
 
             <!-- Item Info -->
             <div class="item-info">
