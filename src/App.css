@@ -1,7 +1,7 @@
 .agora-app-wrapper {    
     overflow-x: hidden;
     
-    height: 100%;
+    height: fit-content;
     min-height: 100vh;
     background-color: #EDEBEB;
 }
