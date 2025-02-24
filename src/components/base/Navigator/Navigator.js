@@ -85,8 +85,10 @@ class Navigator extends PlainComponent {
                 return 0
             })
 
+            // Filter just active services (this have to be moved to the backend)
+            services = services.filter(service => service.fields.stage === 'active')
+
             this.items.setState(services)
-            console.log("Services has been fetched", services)
             this.serviceContext.setData({services: services}, true)
         }
 
