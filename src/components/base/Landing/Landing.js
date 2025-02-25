@@ -13,6 +13,7 @@ class Landing extends PlainComponent {
     constructor() {
         super('agora-landing', `${PATHS.BASE_COMPONENTS}/Landing/Landing.css`)
 
+
         this.servicesContext = new PlainContext('service', this, true)
         this.resultContext = new PlainContext('result', this, true)
 
@@ -21,6 +22,7 @@ class Landing extends PlainComponent {
         this.lastShown = new PlainState(-1, this)
         this.updateTime = new PlainState(10000, this)
         this.serviceTree = new PlainState(null, this)
+        this.isAnimating = new PlainState(false, this)
     }
 
     template() {
@@ -52,7 +54,7 @@ class Landing extends PlainComponent {
             <div class="item-info">
                 <div>
                     <h1>${displayedService.fields.name}</h1>
-                    <span class="icon">${BOOST}</span>
+                    <!-- <span class="icon">${BOOST}</span> -->
                 </div>
                 <p>${displayedService.fields.description}</p>
             </div>
@@ -88,6 +90,14 @@ class Landing extends PlainComponent {
         window.addEventListener('resize', () => {
                 this.drawConnections()
         })
+
+        const tags = this.$$('.search-term-tag')
+        const searchBar = document.querySelector('agora-app').$('agora-layout-v2').$('agora-searchbar')
+        tags.forEach(tag => {
+            tag.onclick = () => {
+                searchBar.autocompleteFromSuggestedTag(tag.innerText)
+            }
+        })
     }
 
     displayOrderedService(data) { // TODO: There's a bug when the component is being rendered twice for some reason
@@ -95,6 +105,11 @@ class Landing extends PlainComponent {
         let nextIndex = this.lastShown.getState() + 1
 
         if (nextIndex === data.length) nextIndex = 0
+
+        // Don't proceed if we're already showing a service
+        if (this.isAnimating.getState()) return data[this.lastShown.getState()]
+
+        this.isAnimating.setState(true, false)
 
         // Set a timeout to re-render the component
         setTimeout(() => {
@@ -104,6 +119,7 @@ class Landing extends PlainComponent {
                 x: 500,
                 duration: 0.5,
                 onComplete: () => {
+                    this.isAnimating.setState(false, false)
                     this.render()
 
                     // Reset the x position
@@ -258,7 +274,7 @@ class Landing extends PlainComponent {
                                                     }
                                                 </div>
                                                 <div class="node-actions-icons">
-                                                    <span class="node-action-icon">${WEBSITE_LINK}</span>
+                                                    <!-- <span class="node-action-icon">${WEBSITE_LINK}</span> -->
                                                 </div>
                                             </div> 
                                         </div>
@@ -343,7 +359,6 @@ class Landing extends PlainComponent {
         ctx.lineWidth = 3
         ctx.stroke()
     }
-
 }
 
 export default window.customElements.define("agora-landing", Landing)

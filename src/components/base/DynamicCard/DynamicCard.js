@@ -5,6 +5,7 @@ import { PATHS } from "../../../constants/paths.const"
 
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
+import { isDebugMode } from "../../../utils/core.util"
 
 /* Icons */
 import { AUPAEU_LOGO } from "../../../icons/icons"
@@ -97,8 +98,13 @@ class DynamicCard extends PlainComponent {
                             : ``
                     }
                 </div>
-
-                <span class="score" title="(A)bsolute and (R)elative (to the group) scores">A: ${this.getAttribute('absolute-score')}, R: ${this.getAttribute('relative-score')}</span>
+                <span 
+                    class="score" 
+                    title="(A)bsolute and (R)elative (to the group) scores"
+                    style="${isDebugMode() ? '' : 'display:none'}"
+                >
+                        A: ${this.getAttribute('absolute-score')}, R: ${this.getAttribute('relative-score')}
+                </span>
             </div>
         `
     }

@@ -6,6 +6,7 @@ import { PATHS } from "../../../constants/paths.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+import { isDebugMode } from "../../../utils/core.util"
 
 /* Icons */
 import { SEARCH, AUPAEU_LOGO} from "../../../icons/icons"
@@ -17,7 +18,7 @@ class Searchbar extends PlainComponent {
   constructor() {
     super('agora-searchbar', `${PATHS.BASE_COMPONENTS}/Searchbar/Searchbar.css`)
 
-    this.treshold = 0.5
+    this.defaultTreshold = 0.45
 
     this.configContext = new PlainContext('config', this, false)
     this.resultContext = new PlainContext('result', this, false)
@@ -28,14 +29,21 @@ class Searchbar extends PlainComponent {
 
     this.signals = new PlainSignal(this)
     this.signals.register('results-updated')
+    this.signals.register('no-results')
   }
 
   template() {
     return html`
         <!-- Score Treshold -->
         <div class="treshold">
-          <input type="range" min="0" max="1" value="0.35" step="0.01" id="treshold"/>
-          <label class="treshold-label" for="treshold">A: 0.35</label>
+          ${
+            isDebugMode()
+              ? html`
+                <input type="range" min="0" max="1" value="0.35" step="0.01" id="treshold"/>
+                <label class="treshold-label" for="treshold">A: 0.35</label>
+              `
+              : html``
+          }
         </div>
 
         <!-- Searchbar Input -->
@@ -62,7 +70,9 @@ class Searchbar extends PlainComponent {
 
     this.$('.searchbar-button').onclick = () => this.query()
 
-    this.$('#treshold').oninput = (e) => this.$('.treshold-label').innerHTML = `A: ${e.target.value}`
+    if (this.$('#treshold')) {
+      this.$('#treshold').oninput = (e) => this.$('.treshold-label').innerHTML = `A: ${e.target.value}`
+    }
   }
 
   /* Search & Query Handling */
@@ -90,7 +100,6 @@ class Searchbar extends PlainComponent {
     }
 
     catch(error) {
-      throw error
       console.error(`Error while searching: ${error.message}`)
     }
 
@@ -105,6 +114,8 @@ class Searchbar extends PlainComponent {
         data: filteredResults
       }, true)
       
+      this.signals.emit('no-results')
+
       return
     }
 
@@ -177,7 +188,9 @@ class Searchbar extends PlainComponent {
   }
 
   applyScoreTreshold(results, type = 'absolute') {
-    const treshold = this.$('#treshold').value
+    let treshold = this.defaultTreshold
+    if (isDebugMode()) treshold = this.$('#treshold').value
+
     if (type === 'absolute') return results.filter(result => result.score.absolute >= treshold)
     if (type === 'relative') return results.filter(result => result.score.relative >= treshold)
   }
@@ -283,6 +296,10 @@ class Searchbar extends PlainComponent {
     this.$('.searchbar-input').focus()
   }
 
+  autocompleteFromSuggestedTag(tagValue) {
+    this.$('.searchbar-input').value = tagValue
+  }
+
   setupAutocompleteOptionListener(item) {
     item.onmouseenter = () => this.handleMatchOptionHover(item)
     item.onmouseleave = () => item.classList.remove('selected-match')
@@ -345,6 +362,11 @@ class Searchbar extends PlainComponent {
       const autocompleteDropdown = this.$('.autocomplete-dropdown')
       autocompleteDropdown.innerHTML = ''
     }
+  }
+
+  isDebugMode() {
+    const queryParams = new URLSearchParams(window.location.search)
+    return queryParams.get('debug') === '1'
   }
 
 }

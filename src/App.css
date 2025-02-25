@@ -3,7 +3,42 @@
     
     height: fit-content;
     min-height: 100vh;
-    background-color: #EDEBEB;
+    
+    /* background-color: #EDEBEB; */
+
+    /* background: url("https://images.pexels.com/photos/2847617/pexels-photo-2847617.jpeg?auto=compress&cs=tinysrgb&w=1920");
+    background-size: cover; */
+
+    background: radial-gradient(circle at 20% 30%, #242424, #818181 30%, transparent 70%),
+                radial-gradient(circle at 70% 80%, #6d6d6d, #bfbfbf 20%, transparent 60%),
+                radial-gradient(circle at 50% 50%, #686868, #e6e6e6 40%, transparent 80%);
+
+    background-color: rgb(from var(--bg-color) r g b / 0.25);
+
+    position: relative;
+}
+
+.agora-app-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--primary-color);
+    opacity: 0.75;
+
+    backdrop-filter: blur(10px);
+
+    transition: 300ms;
+
+    /* Looping animation */
+    animation-name: bg-beat;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 agora-navbar {
@@ -319,5 +354,14 @@ agora-navbar {
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes bg-beat {
+    0% {
+        opacity: 0.65;
+    }
+    100% {
+        transform: 0.85;
     }
 }

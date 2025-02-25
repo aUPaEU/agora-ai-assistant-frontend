@@ -4,7 +4,7 @@ import { PlainComponent, PlainState, PlainContext} from "plain-reactive"
 import { PATHS } from "./constants/paths.const"
 
 /* Icons */
-import { ARROW_LEFT, ARROW_RIGHT, CLOSE } from "./icons/icons"
+import { ARROW_LEFT, ARROW_RIGHT } from "./icons/icons"
 
 /* Utils */
 import { html } from "./utils/templateTags.util"
@@ -141,6 +141,9 @@ class App extends PlainComponent {
         // Connections between components
         if (resultWindow && chatWindow)
             resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
+
+        if (resultWindow && searchbar)
+            resultWindow.signals.connect(searchbar, 'no-results', () => resultWindow.displayNoResultsMessage())
 
         if (navigator && chatWindow)
             navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
