@@ -15,7 +15,7 @@ class LayoutV2 extends PlainComponent {
 
     template() {
         return html`
-            <img class="fake-header" src="public/assets/images/fake-header.png"/>
+            <!-- <img class="fake-header" src="public/assets/images/fake-header.png"/> -->
             <main class="main">
                 <!-- Left Side -->
                 <div class="left">
