@@ -28,14 +28,17 @@ class Navigator extends PlainComponent {
     }
 
     template() {
+        if (this.error.getState()) return html`
+            <div class="error-wrapper">
+                <h1>Oops! Looks like an error...</h1>
+                <p>Something went wrong while connecting to the server.<br> Wait some seconds and try reloading the page.</p>
+            </div>
+        `
+
         if (!this.items.getState()) return html`
             <agora-base-loader width="500" height="500"></agora-base-loader>
         `
 
-        if (this.error.getState()) return html`
-            <h1>Error!</h1>
-            <p>${this.error.getState()}</p>
-        `
         const services = this.resultContext.getData('data') 
             ? [...new Set(this.resultContext.getData('data').map(result => result.service))]
             : []
@@ -94,7 +97,6 @@ class Navigator extends PlainComponent {
 
         catch (error) {
             this.error.setState(error)
-            throw error
             console.error("Exception manage when fetching services have to be implemented", error)
         }
     }
