@@ -5,6 +5,8 @@ import { PATHS } from "../../../constants/paths.const"
 
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
+import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+import { splitAndKeepDelimiter } from "../../../utils/parsingHelper.util"
 
 /* Icons */
 import { ARROW_LEFT, ARROW_RIGHT, CLOSE } from "../../../icons/icons"
@@ -16,6 +18,7 @@ class CardInfoCarousel extends PlainComponent {
         this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
         this.searchContext = new PlainContext('search', this, true, 'local')
+        this.serviceContext = new PlainContext('service', this, false)
 
         this.groupedData = new PlainState(null, this) // We'll use this to store all the cards in a group so we can display them in the carousel and be able to scroll through them
         this.displayedCardId = new PlainState(null, this)
@@ -37,6 +40,8 @@ class CardInfoCarousel extends PlainComponent {
 
                 <!-- Card Main Content -->
                 <div class="card-info-content">
+                    <!-- Card Service -->
+                    <span class="card-info-service"></span>
                     <span class="card-info-origin"></span>
                     <span class="card-info-name"></span>
                     <span class="card-info-lastname"></span>
@@ -64,19 +69,42 @@ class CardInfoCarousel extends PlainComponent {
         this.$('.prev-control').onclick = (e) => this.showPrevious(e)
 
         this.$('.card-info-explore-button').onclick = () => window.open(this.$('.card-info-explore-button').dataset.url, '_blank')
+    
+        document.addEventListener('keydown', (e) => this.handleKeyDown(e))
+    }
+
+    handleKeyDown(e) {
+        if (e.key === 'Escape') {
+            this.close()
+        }
     }
 
     show(id, detailUrl, hasImage) {
         this.displayedCardId.setState(id, false)
 
         const cardData = this.resultContext.getData('data').find(card => Number(card.data.id) === Number(id))
-        console.log("CARD DATA",cardData)
+        
+        if (!detailUrl) detailUrl = this.updateUrl(cardData)
         
         this.updateVisibility(hasImage)
         this.updateCardConent(cardData, detailUrl)
         this.displayAdditionalFields(cardData.data, cardData.featured_fields)
         this.updateNavigationControls()
         this.highlightSearchTerms()
+    }
+
+    updateUrl(cardData) {
+        const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
+            availableWebsites.forEach(item => {
+                item.websites.forEach(website => {
+                    if (website.model === cardData.model) {
+                        cardData.data.view_id = website.view_id
+                    }
+                })
+            })
+
+        const detailUrl = `${this.configContext.getData('host')}/offering/${cardData.data.view_id}/${cardData.data.id}`
+        return detailUrl
     }
 
     updateVisibility(hasImage) {
@@ -96,11 +124,12 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     updateCardConent(cardData, detailUrl) {
+        this.$('.card-info-service').textContent = cardData.service ?? ''
         this.$('.card-info-image').src = `${this.configContext.getData('host')}/web/image?model=${cardData.model}&id=${cardData.data.id}&field=image` ?? ''
         this.$('.card-info-name').textContent = cardData.data.name ?? ''
         this.$('.card-info-lastname').innerHTML = cardData.data.lastname ?? ''
         this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? cardData.data.content ?? ''
-        this.$('.card-info-origin').textContent = cardData.data.origin ?? ''
+        this.$('.card-info-origin').textContent = cardData.data.university_origin ?? ''
         this.$('.card-info-explore-button').dataset['url'] = detailUrl ?? ''
 
         this.$('.card-info-content').scrollTo(0, 0)
@@ -117,8 +146,6 @@ class CardInfoCarousel extends PlainComponent {
         const cardIndex = currentService.items.findIndex(item => Number(item.data.id) === Number(cardData.data.id))
 
         if (cardIndex === currentService.items.length - 1) return
-
-        console.log("CARD DATA",cardData)
 
         this.displayedCardId.setState(currentService.items[cardIndex + 1].data.id, false)
         this.show(this.displayedCardId.getState(), cardData.data.detail_url, cardData.data.image_url)
@@ -155,7 +182,11 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     close(e) {
-        console.log(e.target)
+        if (!e) {
+            this.style.display = 'none'
+            return 
+        }
+
         if (e.target.classList.contains('close-button')) {
             this.style.display = 'none'
             return
@@ -208,25 +239,26 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     highlightSearchTerms() {
-       /*  const searchTerms = this.searchContext.getData('current') || []
-
-        this.$('.card-info-content').innerHTML = this.$('.card-info-content').innerHTML
-            .replaceAll(searchTerms.join(' '), `<span class="highlight">${searchTerms.join(' ')}</span>`) */
         const searchTerms = this.searchContext.getData('current') || []
         let content = this.$('.card-info-content').innerHTML
         
         searchTerms.forEach(term => {
-            const termLength = term.length
-            const minMatchLength = Math.ceil(termLength / 2) // At least half of the word
-            const regex = new RegExp(`\\b\\w*${term}\\w*\\b`, 'gi')
-            
-            content = content.replace(regex, match => {
-                // Only highlight if the match contains at least half of the search term
-                if (match.toLowerCase().includes(term.toLowerCase())) {
-                    return `<span class="highlight">${match}</span>`
-                }
-                return match
+            const searchRegex = new RegExp(`\\b${term}\\w*\\b`, 'gi')
+            content = content.replace(searchRegex, match => {
+                const split = splitAndKeepDelimiter(match, term)
+                let result = ''
+                split.forEach(slice => {
+                    console.log(slice)
+                    if (slice.toLowerCase().includes(term.toLowerCase())) {
+                        result += `<span class="highlight">${slice}</span>`
+                    } else {
+                        result += slice
+                    }
+                })
+                console.log(result)
+                return result
             })
+         
         })
         
         this.$('.card-info-content').innerHTML = content
