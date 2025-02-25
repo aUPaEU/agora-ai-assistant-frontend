@@ -26,6 +26,36 @@ agora-base-loader {
     z-index: 200;
 }
 
+/* NO RESULTS MESSAGE */
+.no-results-message {
+    padding-top: 50%;
+    box-sizing: border-box;
+
+    transform: translateY(-50%);
+
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    place-content: center;
+
+    transition: 300ms;
+
+    text-align: center;
+}
+
+.no-results-message h1 {
+    color: var(--text-secondary-color);
+    font-size: 1.5rem;
+}
+
+.no-results-message p {
+    margin: 0;
+    
+    color: var(--text-tertiary-color);
+    font-size: 1rem;
+}
+
 /* CARD WRAPPER */
 .card-wrapper {
     padding: 2rem;
@@ -127,6 +157,9 @@ agora-dynamic-card {
     width: 4rem;
     height: calc(100% + 1.5rem);
 
+    border-top-left-radius: 10pt;
+    border-bottom-left-radius: 10pt;
+
     z-index: 1;
 
     background: linear-gradient(to right, var(--bg-color), rgba(255, 255, 255, 0));
@@ -150,6 +183,9 @@ agora-dynamic-card {
     
     width: 4rem;
     height: calc(100% + 1.5rem);
+
+    border-top-right-radius: 10pt;
+    border-bottom-right-radius: 10pt;
 
     z-index: 1;
 

@@ -55,6 +55,11 @@ class ResultWindow extends PlainComponent {
         })()
 
         return html`
+            <!-- No Results Message -->
+            <div class="no-results-message" style="display: none;">
+                <h1>No results found</h1>
+                <p>Try changing the search terms.</p>
+            </div>
             <!-- Fades -->
             <div class="right-fade"></div>
             <div class="left-fade"></div>
@@ -426,6 +431,10 @@ class ResultWindow extends PlainComponent {
                 item.wrapper.classList.remove('highlight')
             }
         })
+    }
+
+    displayNoResultsMessage() {
+        this.$('.no-results-message').style.display = 'grid'
     }
 }
 
