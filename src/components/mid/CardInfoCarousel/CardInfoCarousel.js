@@ -129,7 +129,7 @@ class CardInfoCarousel extends PlainComponent {
         this.$('.card-info-name').textContent = cardData.data.name ?? ''
         this.$('.card-info-lastname').innerHTML = cardData.data.lastname ?? ''
         this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? cardData.data.content ?? ''
-        this.$('.card-info-origin').textContent = cardData.data.university_origin ?? ''
+        this.$('.card-info-origin').textContent = ''//cardData.data.university_origin ?? ''
         this.$('.card-info-explore-button').dataset['url'] = detailUrl ?? ''
 
         this.$('.card-info-content').scrollTo(0, 0)
