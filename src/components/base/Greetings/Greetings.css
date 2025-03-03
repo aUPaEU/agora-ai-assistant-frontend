@@ -28,6 +28,10 @@
     font-style: normal;
 }
 
+.default-message {
+    text-wrap: pretty;
+}
+
 .greetings-description {
     max-width: 450px;
     min-width: 350px;
@@ -36,17 +40,28 @@
     font-size: 0.9rem;
     font-weight: normal;
 
-    text-align: right;
+    text-align: left;
     text-wrap: pretty;
 }
 
 .welcome-message {
+    width: 100%;
+
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: end;
     gap: 1rem;
 
     font-weight: normal;
+}
+
+.default-welcome {
+    text-align: left;
+    text-wrap: pretty;
+}
+
+.multilanguage-welcome {
+    display: none;
 }
 
 /* AGORA LOGO */
@@ -117,5 +132,79 @@
     }
     100% {
         opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        color: var(--text-tertiary-color);
+    }
+    25% {
+        opacity: 0.5;
+        color: var(--text-tertiary-color);
+    }
+    50% {
+        opacity: 1;
+        color: var(--text-tertiary-color);
+    }
+    75% {
+        opacity: 0.5;
+        color: var(--text-accent-color);
+    }
+    100% {
+        opacity: 1;
+        color: var(--text-tertiary-color);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+    .agora-greetings-wrapper {
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        
+        align-items: center;
+    }
+
+    .agora-greetings-wrapper > span:nth-child(2) {
+        display: none;
+    }
+
+    .welcome-message {
+        width: fit-content;
+
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem; 
+    }
+
+    .default-welcome {
+        display: none;
+    }
+
+    .multilanguage-welcome {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        color: var(--text-tertiary-color);
+
+        opacity: 0.75;
+    }
+
+    .multilanguage-welcome span {
+        animation-name: pulse;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+    }
+
+    .greetings-description {
+        display: none;
     }
 }

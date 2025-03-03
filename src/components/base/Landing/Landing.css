@@ -2,7 +2,7 @@
     padding: 2.5rem;
     box-sizing: border-box;
 
-    width: fit-content;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -25,8 +25,23 @@
     display: none;
 }
 
+.agora-landing-wrapper > *:not(canvas, agora-greetings):empty {
+    display: none;
+}
+
+.agora-landing-wrapper:has( > agora-greetings) {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+
+}
+
 /* BANNER */
 .banner-image {
+    padding: 1rem;
+    padding-inline: 2.5rem;
+    box-sizing: border-box;
+    
     margin-top: -2.5rem;
     margin-left: -2.5rem;
     width: calc(100% + 5rem);
@@ -36,14 +51,22 @@
     border-top-right-radius: 10pt;
 
     background-color: blue;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .default-image {
-    background-image: 
+    /* background-image: 
         radial-gradient(ellipse at top, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
         radial-gradient(ellipse at bottom,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff),
         radial-gradient(ellipse at left, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
-        radial-gradient(ellipse at right,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff);
+        radial-gradient(ellipse at right,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff); */
+
+    background-color: white;
+
+    z-index: 100000000000000;
 }
 
 
@@ -77,12 +100,13 @@
     line-height: 1.5;
 }
 
-.item-info .icon {
-    color: var(--text-secondary-color);
-    align-self: end;
+.icon {
+    color: var(--text-tertiary-color);
+    opacity: 0.75;
 }
 
-.item-info h1 {
+.item-info h1, .banner-image h1 {
+    color: var(--text-secondary-color);
     font-size: 1.5rem;
 }
 
@@ -115,7 +139,7 @@
 
 .node-wrapper {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-evenly;
     align-items: center;
     gap: 100px;
 
@@ -129,7 +153,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     gap: 2rem;
 }
 
@@ -287,4 +311,19 @@
 .search-term-tag:hover {
     color: var(--text-secondary-color);
     background-color: rgb(from var(--text-tertiary-color) r g b / 0.4);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+    canvas {
+        display: none;
+    }
+    
+    agora-greetings {
+        width: 100%;
+    }
+
+    .node-wrapper, .node-view-label {
+        display: none;
+    }
 }

@@ -9,11 +9,13 @@
     /* background: url("https://images.pexels.com/photos/2847617/pexels-photo-2847617.jpeg?auto=compress&cs=tinysrgb&w=1920");
     background-size: cover; */
 
-    background: radial-gradient(circle at 20% 30%, #242424, #818181 30%, transparent 70%),
+    /* background: radial-gradient(circle at 20% 30%, #242424, #818181 30%, transparent 70%),
                 radial-gradient(circle at 70% 80%, #6d6d6d, #bfbfbf 20%, transparent 60%),
                 radial-gradient(circle at 50% 50%, #686868, #e6e6e6 40%, transparent 80%);
 
-    background-color: rgb(from var(--bg-color) r g b / 0.25);
+    background-color: rgb(from var(--bg-color) r g b / 0.25); */    
+    background-color: var(--bg-color);  
+    background: linear-gradient(to bottom, var(--text-accent-color), var(--bg-color), var(--bg-color), var(--primary-color));
 
     position: relative;
 }

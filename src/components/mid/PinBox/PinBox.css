@@ -136,3 +136,8 @@ agora-pin-card {
     border: 3px solid transparent;
     background-clip: content-box;
 }
+
+/* RESPONISVE */
+@media (max-width: 1000px) {
+    
+}
