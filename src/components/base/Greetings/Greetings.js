@@ -18,17 +18,28 @@ class Greetings extends PlainComponent {
         this.getAttribute('hidden')
             ? this.wrapper.classList.add('hidden')
             : this.wrapper.classList.remove('hidden')
-        
+
         return html`
             <!-- Greetings -->
             <div class="welcome-message">
-                <span>Welcome to</span> 
+                <span class="default-welcome">Welcome</span> 
                 <div class="logo">
                     <span class="agora-name">Agora</span>
                     <span class="alliance-name">${this.configContext.getData('name')}</span>
                 </div>
+                <span class="multilanguage-welcome">
+                    <span>WELCOME</span>
+                    <span style="animation-delay: 0.5s">BIENVENUE</span>
+                    <span style="animation-delay: 1s">TERVETULOA</span>
+                    <span style="animation-delay: 1s">BIENVENUE</span>
+                    <span style="animation-delay: 1.5s">BENVENUTI</span>
+                    <span style="animation-delay: 1.5s">BEM-VINDOS</span>
+                    <span style="animation-delay: 2s">WITAMY</span>
+                    <span style="animation-delay: 2s">BENVINGUTS</span>
+                    <span style="animation-delay: 2.5s">VÄLKOMMEN</span>
+                </span>
             </div>
-            <span>How could I help you?</span>
+            <span class="default-message">How could we help you?</span>
             <p class="greetings-description">
                 You can navigate directly through our acceleration services 
                 or ask our assistant to guide you through the process of finding the right resources.
