@@ -23,18 +23,58 @@ class Landing extends PlainComponent {
         this.updateTime = new PlainState(10000, this)
         this.serviceTree = new PlainState(null, this)
         this.isAnimating = new PlainState(false, this)
+
+        this.greetingsDuration = new PlainState(7500, this)
+        this.isGreeting = new PlainState(false, this)
+        this.isGreeted = new PlainState(false, this)
     }
 
     template() {
+        // Greetings render management
+        if (!this.isGreeted.getState() && !this.isGreeting.getState()) {
+            this.isGreeting.setState(true, false)
+            setTimeout(() => {
+                gsap.to(this.wrapper, {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () => {
+                        this.isGreeting.setState(false, false)
+                        this.isGreeted.setState(true, false)
+                        this.render()
+
+                        // Reset the x position
+                        gsap.set(this.wrapper, {x: -500})
+
+                        // Animate in
+                        gsap.to(this.wrapper, {
+                            delay: 0.3,
+                            x: 0,
+                            opacity: 1,
+                            duration: 1
+                        })
+                    }
+                })
+            }, this.greetingsDuration.getState())
+        }
+
+        if (this.isGreeting.getState()) return html`
+            <agora-greetings></agora-greetings>
+        ` 
+
+        // Regular service showcase rendering
         const services = this.servicesContext.getData('services')
 
-        if (!services) return ''
-        if (!this.resultContext.getData('data') || this.resultContext.getData('data').length > 0 ) return ''
+        if (
+            !services ||
+            !this.resultContext.getData('data') ||
+            this.resultContext.getData('data').length > 0
+        ) {
+            this.parentElement.style.display = 'none'
+            return ''
+        }
 
         const displayedService = this.displayOrderedService(services)
         if (!displayedService) return ''
-        //const displayedService = this.displayRandomService(services)
-        //const randomService = this.servicesContext.getData('services')[0] 
 
         const learnMoreButton = displayedService.fields.website && !(displayedService.fields.website instanceof Array) && displayedService.fields.website.fields.domain
             ? html`<agora-text-button 
@@ -43,19 +83,17 @@ class Landing extends PlainComponent {
                 >Learn more</agora-text-button>`
             : html``
 
-        console.log(`Rendering service with index ${this.lastShown.getState()}`)
-
         return html`
             <canvas class="node-connection-canvas"></canvas>
             <!-- Banner Image -->
-            <div class="banner-image default-image"></div>
+            <div class="banner-image default-image">
+                <h1>${displayedService.fields.name}</h1>
+                <span class="icon">${BOOST}</span>
+            </div>
 
             <!-- Item Info -->
             <div class="item-info">
-                <div>
-                    <h1>${displayedService.fields.name}</h1>
-                    <!-- <span class="icon">${BOOST}</span> -->
-                </div>
+                
                 <p>${displayedService.fields.description}</p>
             </div>
 
@@ -101,7 +139,6 @@ class Landing extends PlainComponent {
     }
 
     displayOrderedService(data) { // TODO: There's a bug when the component is being rendered twice for some reason
-        console.trace('displayOrderedService called');
         let nextIndex = this.lastShown.getState() + 1
 
         if (nextIndex === data.length) nextIndex = 0
@@ -139,44 +176,11 @@ class Landing extends PlainComponent {
 
         this.lastShown.setState(nextIndex, false)
         return data[nextIndex]
+
+        // This is for testing purposes (write the index of the card you want to keep on the screen)
+        /* this.lastShown.setState(2, false)
+        return data[2] */
     }
-
-    /* displayRandomService(data) {
-        const randomIndex = Math.floor(Math.random() * data.length);
-
-        // Ensure that the last shown item is not the same as the current one
-        if (this.lastShown.getState() === randomIndex) {
-            return this.displayRandomService(data)
-        }
-
-        // Set the last shown item
-        this.lastShown.setState(randomIndex, false)
-
-        // Set a timeout to re-render the component
-        setTimeout(() => {
-            // Animate the component to exit it and when animation ends, re-render it
-            gsap.to(this.wrapper, {
-                opacity: 0,
-                x: 500,
-                duration: 0.5,
-                onComplete: () => {
-                    this.render()
-
-                    // Reset the x position
-                    gsap.set(this.wrapper, {x: 0})
-
-                    // Animate in
-                    gsap.to(this.wrapper, {
-                        delay: 0.3,
-                        opacity: 1,
-                        duration: 0.5
-                    })
-                }
-            })
-        }, this.updateTime.getState())
-
-        return data[randomIndex]
-    } */
 
     renderNodeView(service) {
         setTimeout(() => {
