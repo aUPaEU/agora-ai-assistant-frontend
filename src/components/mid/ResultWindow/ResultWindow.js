@@ -54,15 +54,19 @@ class ResultWindow extends PlainComponent {
             })
         })()
 
+        // Condition to hide the component if there are no results
+        if (data.length === 0) {
+            this.style.display = 'none'
+        } else {
+            this.style.display = 'block'
+        }
+
         return html`
             <!-- No Results Message -->
             <div class="no-results-message" style="display: none;">
                 <h1>No results found</h1>
                 <p>Try changing the search terms.</p>
             </div>
-            <!-- Fades -->
-            <div class="right-fade"></div>
-            <div class="left-fade"></div>
 
             <!-- Result counter -->
             <!-- TODO -->
@@ -434,6 +438,7 @@ class ResultWindow extends PlainComponent {
     }
 
     displayNoResultsMessage() {
+        this.style.display = 'block'
         this.$('.no-results-message').style.display = 'grid'
     }
 }

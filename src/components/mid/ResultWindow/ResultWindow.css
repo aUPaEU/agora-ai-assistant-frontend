@@ -293,3 +293,14 @@ agora-dynamic-card {
         transform: translateY(0);
     }
 }
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+    .card-wrapper {
+        justify-content: center;
+    }
+    
+    .card-wrapper > div {
+        min-width: 100%;    
+    }
+}
