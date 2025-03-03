@@ -8,6 +8,9 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 
+/* Icons */
+import { CATALOGUE, DELETE } from "../../../icons/icons"
+
 /* Services */
 import * as api from "../../../services/api.service"
 
@@ -51,6 +54,7 @@ class Navigator extends PlainComponent {
         }
 
         return html`
+            <div class="menu-unfold-button">${CATALOGUE}</div>
             <ul class="menu">
                 ${Object.entries(this.items.getState()).map(
                     ([index, data]) => {
@@ -65,6 +69,22 @@ class Navigator extends PlainComponent {
                 }).join('')}
             </ul>
         `
+    }
+
+    listeners() {
+        if (this.$('.menu-unfold-button')) {
+            this.$('.menu-unfold-button').onclick = () => this.toogleMenu()
+        }
+    }
+
+    toogleMenu() {
+        this.$('.menu').classList.toggle('expanded')
+
+        if (this.$('.menu').classList.contains('expanded')) {
+            this.$('.menu-unfold-button').innerHTML = DELETE
+        } else {
+            this.$('.menu-unfold-button').innerHTML = CATALOGUE
+        }
     }
 
     /* DATA FETCHING */
