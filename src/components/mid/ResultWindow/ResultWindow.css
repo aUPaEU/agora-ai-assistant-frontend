@@ -303,4 +303,12 @@ agora-dynamic-card {
     .card-wrapper > div {
         min-width: 100%;    
     }
+
+    .movable-wrapper::before {
+        left: -1.1rem;
+    }
+
+    .movable-wrapper::after {
+        right: -1.1rem;
+    }
 }

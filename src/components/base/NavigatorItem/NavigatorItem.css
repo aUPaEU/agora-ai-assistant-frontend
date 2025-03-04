@@ -238,3 +238,10 @@
         transform: rotate(180deg);
     }
 }
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+    .unfold-icon {
+        background-color: var(--bg-color);
+    }
+}

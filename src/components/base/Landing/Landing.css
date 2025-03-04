@@ -25,6 +25,10 @@
     display: none;
 }
 
+agora-greetings {
+    align-self: flex-end;
+}
+
 .agora-landing-wrapper > *:not(canvas, agora-greetings):empty {
     display: none;
 }
@@ -320,7 +324,7 @@
     }
     
     agora-greetings {
-        width: 100%;
+        align-self: center;
     }
 
     .node-wrapper, .node-view-label {
