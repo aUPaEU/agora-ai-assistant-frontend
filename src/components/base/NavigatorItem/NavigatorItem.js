@@ -81,8 +81,7 @@ class NavigatorItem extends PlainComponent {
             </li>
 
             <!-- Submenu -->
-            <ul class="submenu">
-            </ul>
+            <ul class="submenu"></ul>
         `
     }
 

@@ -10,7 +10,7 @@ import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 
 /* Icons */
-import { CATALOGUE, DELETE } from "../../../icons/icons"
+import { UNFOLD, FOLD } from "../../../icons/icons"
 
 /* Services */
 import * as api from "../../../services/api.service"
@@ -69,7 +69,7 @@ class Navigator extends PlainComponent {
         }
 
         return html`
-            <div class="menu-unfold-button">${CATALOGUE}</div>
+            <div class="menu-unfold-button">${UNFOLD}</div>
             <ul class="menu">
                 ${Object.entries(this.items.getState()).map(
                     ([index, data]) => {
@@ -96,9 +96,9 @@ class Navigator extends PlainComponent {
         this.$('.menu').classList.toggle('expanded')
 
         if (this.$('.menu').classList.contains('expanded')) {
-            this.$('.menu-unfold-button').innerHTML = DELETE
+            this.$('.menu-unfold-button').innerHTML = FOLD
         } else {
-            this.$('.menu-unfold-button').innerHTML = CATALOGUE
+            this.$('.menu-unfold-button').innerHTML = UNFOLD
         }
     }
 

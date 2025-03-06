@@ -153,6 +153,10 @@ agora-base-loader {
         transform: translateY(0);
     }
 
+    .menu-unfold-button:has(+ .menu.expanded) {
+        transform: rotate(0deg);
+    }
+
     .menu-unfold-button:has(+ .menu.expanded) svg {
         color: var(--text-tertiary-color);
         opacity: 0.75;
@@ -162,6 +166,8 @@ agora-base-loader {
         pointer-events: all;
         display: grid;
         place-content: center;
+
+        transform: rotate(90deg);
     }
 
     .agora-navigator-wrapper {
