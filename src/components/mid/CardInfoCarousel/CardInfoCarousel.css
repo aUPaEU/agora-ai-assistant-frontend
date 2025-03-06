@@ -398,6 +398,7 @@
 /* RESPONSIVE */
 @media (max-width: 1000px) {
     .card-info-wrapper {
+        width: 100%;
         aspect-ratio: auto;
     }    
 }
