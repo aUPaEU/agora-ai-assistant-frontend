@@ -6,9 +6,6 @@ import { PATHS } from "../../../constants/paths.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 
-/* Icons */
-import { CATALOGUE } from "../../../icons/icons"
-
 class LayoutV2 extends PlainComponent {
     constructor() {
         super('agora-layout-v2', `${PATHS.LAYOUT_COMPONENTS}/v2/v2.css`)
