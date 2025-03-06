@@ -1,3 +1,5 @@
+import { CONFIG } from "../agora.config"
+
 const LOCAL_PATHS = {
     SRC : 'src',
     DIST: 'dist',
@@ -9,7 +11,7 @@ const LOCAL_PATHS = {
     PAGE_COMPONENTS: 'src/components/page',
 }
 
-const CDN_URL = 'https://cdn.jsdelivr.net/gh/aUPaEU/agora-ai-assistant-frontend@main'
+const CDN_URL = `https://cdn.jsdelivr.net/gh/aUPaEU/agora-ai-assistant-frontend@${CONFIG.current_version}`
 
 const CDN_PATHS = {
     SRC : `${CDN_URL}/src`,
