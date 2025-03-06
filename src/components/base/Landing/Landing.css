@@ -84,6 +84,33 @@ agora-greetings {
     gap: 1rem;
 }
 
+.item-image-wrapper {
+    display: none;
+
+    margin-block: -1rem;
+
+    width: 100%;
+    max-height: 400px;
+
+    border-radius: 5pt;
+
+    overflow: hidden;
+}
+
+.item-image-wrapper:has(> img) {
+    display: grid;
+    place-content: center;
+}
+
+.item-image {
+    width: inherit;
+    height: inherit;
+
+    object-fit: cover;
+
+    border-radius: 5pt;
+}
+
 .item-info div:first-child {
     width: 100%;
     

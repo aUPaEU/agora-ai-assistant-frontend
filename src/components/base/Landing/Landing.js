@@ -13,7 +13,7 @@ class Landing extends PlainComponent {
     constructor() {
         super('agora-landing', `${PATHS.BASE_COMPONENTS}/Landing/Landing.css`)
 
-
+        this.configContext = new PlainContext('config', this, true)
         this.servicesContext = new PlainContext('service', this, true)
         this.resultContext = new PlainContext('result', this, true)
 
@@ -76,6 +76,8 @@ class Landing extends PlainComponent {
         const displayedService = this.displayOrderedService(services)
         if (!displayedService) return ''
 
+        const suggestedSearchTerms = Array.from(new Set(displayedService.fields.suggested_search_terms.split(','))).map(term => term.trim())
+
         const learnMoreButton = displayedService.fields.website && !(displayedService.fields.website instanceof Array) && displayedService.fields.website.fields.domain
             ? html`<agora-text-button 
                     class="learn-more-button" 
@@ -91,9 +93,17 @@ class Landing extends PlainComponent {
                 <span class="icon">${BOOST}</span>
             </div>
 
+            <!-- Item Image -->
+            <div class="item-image-wrapper">
+                ${
+                    displayedService.fields.image
+                        ? html`<img class="item-image" src="${this.configContext.getData('host')}${displayedService.fields.image}" alt="${displayedService.fields.name}" />`
+                        : ''
+                }
+            </div>
+
             <!-- Item Info -->
             <div class="item-info">
-                
                 <p>${displayedService.fields.description}</p>
             </div>
 
@@ -104,11 +114,7 @@ class Landing extends PlainComponent {
             <!-- Suggested Search Terms Tags -->
             <span class="search-tags-label">Suggested Search Terms</span>
             <div class="search-terms-wrapper">
-                <span class="search-term-tag">ai</span>
-                <span class="search-term-tag">infrastructure</span>
-                <span class="search-term-tag">acceleration</span>
-                <span class="search-term-tag">laboratory</span>
-                <span class="search-term-tag">research</span>
+                ${suggestedSearchTerms.map(term => html`<span class="search-term-tag">${term}</span>`).join('')}
             </div>
 
             <!-- Learn More Button -->
