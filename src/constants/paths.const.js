@@ -22,4 +22,4 @@ const CDN_PATHS = {
     PAGE_COMPONENTS: `${CDN_URL}/src/components/page`,
 }
 
-export const PATHS = LOCAL_PATHS
+export const PATHS = CDN_PATHS
