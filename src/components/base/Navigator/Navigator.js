@@ -1,3 +1,4 @@
+import { CONFIG } from "../../../../agora.config"
 import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
 
 /* Constants */
@@ -27,7 +28,21 @@ class Navigator extends PlainComponent {
         this.error = new PlainState(null, this)
         this.items = new PlainState(null, this)
 
+        this.ensureConfig()
         this.fetchItems()
+    }
+
+    ensureConfig() {
+        const app = window.document.querySelector('agora-app')
+        const customConfig = {
+            "name": app.getAttribute('name') ?? CONFIG.name,
+            "host": app.getAttribute('host') ?? CONFIG.host,
+            "company_id": app.getAttribute('company_id') ?? CONFIG.company_id,
+            "enabled_ai": app.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
+            "ai_host": app.getAttribute('ai_host') ?? CONFIG.ai_host
+        }
+
+        this.configContext.setData(customConfig)
     }
 
     template() {
