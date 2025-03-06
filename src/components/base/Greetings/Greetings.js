@@ -39,11 +39,23 @@ class Greetings extends PlainComponent {
                     <span style="animation-delay: 2.5s">VÄLKOMMEN</span>
                 </span>
             </div>
-            <span class="default-message">How could we help you?</span>
-            <p class="greetings-description">
-                You can navigate directly through our acceleration services 
-                or ask our assistant to guide you through the process of finding the right resources.
-            </p>
+            ${
+                this.configContext.getData('ai_enabled')
+                    ? html`
+                        <span class="default-message">How could we help you?</span>
+                        <p class="greetings-description">
+                            You can navigate directly through our acceleration services 
+                            or ask our assistant to guide you through the process of finding the right resources.
+                        </p>
+                    `
+                    : html`
+                        <span class="default-message">How could we help you?</span>
+                        <p class="greetings-description">
+                            Use our search tool to quickly find the resources and acceleration services you need.
+                            Simply enter your query to get started.
+                        </p>
+                    `
+            }
         `
     }
 
