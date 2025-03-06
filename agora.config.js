@@ -1,6 +1,8 @@
 // This could be fetched automatically from the server depending on an environment variable,
 // a cookie or the domain name.
 
+const CURRENT_VERSION = "1.0.1"
+
 export const ENV = {
     LOCAL: {
         "name": "Unite!",
@@ -8,7 +10,7 @@ export const ENV = {
         "company_id": 1,
         "enabled_ai": false,
         "ai_host": "http://localhost:2000",
-        "current_version": "1.0.0"
+        "current_version": CURRENT_VERSION
     },
 
     UNITE: {
@@ -17,7 +19,7 @@ export const ENV = {
         "company_id": 1,
         "enabled_ai": false,
         "ai_host": "http://localhost:2000",
-        "current_version": "1.0.0"
+        "current_version": CURRENT_VERSION
     },
 
     UNITE_PRE: {
@@ -26,7 +28,7 @@ export const ENV = {
         "company_id": 1,
         "enabled_ai": false,
         "ai_host": "http://localhost:2000",
-        "current_version": "1.0.0"
+        "current_version": CURRENT_VERSION
     },
 
     CIVIS_DEV: {
@@ -35,7 +37,7 @@ export const ENV = {
         "company_id": 1,
         "enabled_ai": false,
         "ai_host": "http://localhost:2000",
-        "current_version": "1.0.0"
+        "current_version": CURRENT_VERSION
     }
 }
 
