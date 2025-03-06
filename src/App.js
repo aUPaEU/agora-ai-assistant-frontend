@@ -66,7 +66,8 @@ class App extends PlainComponent {
             "host": this.getAttribute('host') ?? CONFIG.host,
             "company_id": this.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": this.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
-            "ai_host": this.getAttribute('ai_host') ?? CONFIG.ai_host
+            "ai_host": this.getAttribute('ai_host') ?? CONFIG.ai_host,
+            "current_version": CONFIG.current_version
         }
 
         this.configContext.setData(customConfig)
