@@ -6,6 +6,9 @@ import { PATHS } from "../../../constants/paths.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 
+/* Icons */
+import { BOOKMARK } from "../../../icons/icons"
+
 class LayoutV2 extends PlainComponent {
     constructor() {
         super('agora-layout-v2', `${PATHS.LAYOUT_COMPONENTS}/v2/v2.css`)
@@ -45,6 +48,7 @@ class LayoutV2 extends PlainComponent {
             }
 
             <!-- Pin Box -->
+            <div class="pinbox-unfold-button">${BOOKMARK}</div>
             <agora-pin-box></agora-pin-box>
 
             <!-- Carousel -->
@@ -53,6 +57,15 @@ class LayoutV2 extends PlainComponent {
             <!-- Bottom Fade -->
             <div class="bottom-fade"></div>
         `
+    }
+
+    listeners() {
+        this.$('.pinbox-unfold-button').onclick = () => this.tooglePinBox()
+    }
+
+    tooglePinBox() {
+        this.$('.pinbox-unfold-button').classList.toggle('unfolded')
+        this.$('agora-pin-box').toogleFold()
     }
 }
 
