@@ -60,6 +60,7 @@
 - [x] Correct 'clear chat' button positioning.
 
 <!-- BUGS -->
+- [ ] Drag and drop does not work on mobile displays.
 - [ ] Solve a bug where "next" and "previous" buttons in carousel are mixing results from different services (wrappers).
 - [ ] Solve issue when the CDN cache is not being purged properly (mainly with css files).
 
