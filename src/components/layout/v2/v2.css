@@ -202,8 +202,6 @@ agora-card-info-carousel {
 
     border-left: 4px solid var(--text-accent-color);
 
-    /* border-bottom-right-radius: 10pt; */
-
     background-color: var(--primary-color);
 
     z-index: 1000;
@@ -211,8 +209,8 @@ agora-card-info-carousel {
 
 .pinbox-unfold-button svg {
     color: var(--text-secondary-color);
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 
     transition: 300ms;
 }
