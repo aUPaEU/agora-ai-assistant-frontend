@@ -1,5 +1,4 @@
 <!-- FEATURES -->
-- [ ] Implement an API call to fetch company data from agora.config.js.
 - [ ] Open info dialog through the app component when clicking on a pin card.
 - [ ] Implement card layouts depending on the type of card.
 - [ ] Implement a method to detect which kind of card it is based on the fetched data.
@@ -9,6 +8,7 @@
 - [-] Implement a system to resend the message if the bot response is not received or there's an error. WHile avoiding sending new messages.
 - [-] Implement a method to check if the image that is being fetched is not a placeholder.
 
+- [x] Implement an API call to fetch company data from agora.config.js.
 - [x] Implement left and right arrows to navigate throught the info dialog as a carousel.
 - [x] Add service name to the card view within the carousel.
 - [x] Add a "close" button to the carousel component.
@@ -47,11 +47,11 @@
 - [x] Add a field within the acceleration services module to add an image.
 
 <!-- STYLING -->
-- [ ] Display the images of the acceleration services within the showcase component.
-- [ ] Remove greetings if the are results to be displayed.
+- [ ] Remove greetings if there are results to be displayed.
 - [ ] Make fades visibility blend with the background (somehow).
 - [ ] Adapt style to make it coherent.
 
+- [x] Display the images of the acceleration services within the showcase component.
 - [x] Display in a user friendly way the score of each result.
 - [x] Make the color of the score dynamic based on the score.
 - [x] Make a display adaption for mobile devices.
