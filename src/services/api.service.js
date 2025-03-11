@@ -114,7 +114,10 @@ export const search = async (host, query, models = [], fieldRelevance = {}, filt
         const response = await fetch(url)
 
         if (!response.ok) {
-            throw new Error('Something went wrong while making the search')
+            if (response.status === 404) {
+                const errorData = await response.json()
+                throw new Error(JSON.stringify(errorData))
+            }
         }
 
         const data = await response.json()
@@ -122,6 +125,25 @@ export const search = async (host, query, models = [], fieldRelevance = {}, filt
     }
 
     catch(error) {
+        throw error
+    }
+}
+
+export const ingest = async (host, model) => {
+    const url = `${host}/elastic/ingest/${model}`
+
+    try {
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error('Something went wrong while ingesting data into Elasticsearch')
+        }
+
+        const data = await response.json()
+        return data
+    }
+
+    catch (error) {
         throw error
     }
 }

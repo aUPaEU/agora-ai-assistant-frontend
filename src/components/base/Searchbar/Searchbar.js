@@ -100,9 +100,15 @@ class Searchbar extends PlainComponent {
     }
 
     catch(error) {
-      console.error(`Error while searching: ${error.message}`)
-    }
+      const errorData = JSON.parse(error.message)
 
+      if (errorData.missing_model) {
+        await api.ingest(this.configContext.getData('host'), errorData.missing_model)
+        console.error(`Ingesting missing data from the model: '${errorData.missing_model}' into Elasticsearch`)
+
+        this.query()
+      }
+    }
   }
 
   handleResponse(query, response) {
