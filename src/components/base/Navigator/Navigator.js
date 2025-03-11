@@ -21,6 +21,7 @@ class Navigator extends PlainComponent {
 
         this.signals = new PlainSignal(this)
 
+        this.companyContext = new PlainContext('company', this, false)
         this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
         this.serviceContext = new PlainContext('service', this, false)
@@ -106,6 +107,9 @@ class Navigator extends PlainComponent {
     async fetchItems() {
         try {
             const agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
+
+            // We need to set the company name and the colors in the company context
+            this.companyContext.setData({info: agora.items[0].fields.company.fields}, false)
 
             let services = []
 
