@@ -8,7 +8,7 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
-import { ADD, SUBTRACT, CATALOGUE, BOOST, WEBSITE } from "../../../icons/icons"
+import { ADD, SUBTRACT, CATALOGUE, BOOST, NAGIVATE_TO_WEBSITE, SIMPLE_INFO } from "../../../icons/icons"
 
 class NavigatorItem extends PlainComponent {
     constructor() {
@@ -53,6 +53,14 @@ class NavigatorItem extends PlainComponent {
             `
             : ``
 
+        const showcaseIcon = info && showcase
+                ? html`<div class="showcase-icon">${NAGIVATE_TO_WEBSITE}</div>`
+                : null
+
+        const infoIcon = this.type.getState() === ITEM_TYPE.CATALOGUE
+                ? null
+                : html`<div class="info-icon">${SIMPLE_INFO}</div>`
+
         /* const moreInfoIcon = this.isEmptyService()
                 ? html`<div class="unfold-icon">${BOOST}</div>`
                 : `` */
@@ -60,14 +68,21 @@ class NavigatorItem extends PlainComponent {
         return html`
             <!-- Item -->
             <li class="item ${this.type.getState().toLowerCase().replace(' ', '-')} ${info && showcase || info && info.url ? 'has-showcase': ''}">
+                <!-- Item Type Icon -->
                 ${typeIcon}
+
+                <!-- Item Label -->
                 <a 
                     class="label" 
                     ${info && showcase ? `href="${showcase.domain}"` : ''}
                     ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
-                    ${name}
-                    <span>${this.type.getState()}</span>
+                    <div class="label-content">
+                        <span class="label-title">${name}</span>
+                        <div class="label-subtitle">
+                            <span>${this.type.getState()}</span>
+                        </div>
+                    </div>
                 </a>
                 <a 
                     class="label hover" 
@@ -77,8 +92,21 @@ class NavigatorItem extends PlainComponent {
                     ${name}
                     <span>${this.type.getState()}</span>
                 </a>
-                ${unfoldIcon}
+
+                <div 
+                    class="actions"
+                    style="${!showcaseIcon && !infoIcon ? 'display: none;' : ''}"
+                >
+                    ${infoIcon}
+                    ${showcaseIcon}
+                    ${unfoldIcon}
+                </div>
+
+                <!-- Description -->
+                <div class="description">${this.info.getState().description}</div>
             </li>
+
+            
 
             <!-- Submenu -->
             <ul class="submenu"></ul>
@@ -88,6 +116,7 @@ class NavigatorItem extends PlainComponent {
     listeners() {
         this.$('.label').onclick = () => this.navigateToShowcase()
         this.$('.unfold-icon') ? this.$('.unfold-icon').onclick = () => this.unfold() : null
+        this.$('.showcase-icon') ? this.$('.showcase-icon').onclick = () => this.navigateToShowcase() : null
     }
 
     unfold() {
@@ -145,8 +174,8 @@ class NavigatorItem extends PlainComponent {
     } */
 
     navigateToShowcase() {
-        if (!this.info.getState().showcase) return  
-        window.location.href = this.info.getState().showcase
+        const label = this.$('.label')
+        window.location.href = label.getAttribute('href')
     }
 }
 

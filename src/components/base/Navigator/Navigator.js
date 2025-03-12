@@ -28,6 +28,7 @@ class Navigator extends PlainComponent {
 
         this.error = new PlainState(null, this)
         this.items = new PlainState(null, this)
+        this.initialLoad = new PlainState(true, this)
 
         this.ensureConfig()
         this.fetchItems()
@@ -70,13 +71,19 @@ class Navigator extends PlainComponent {
         }
 
         return html`
-            <div class="menu-unfold-button">${UNFOLD}</div>
+            <div 
+                class="menu-unfold-button">${UNFOLD}</div>
             <ul class="menu">
                 ${Object.entries(this.items.getState()).map(
                     ([index, data]) => {
                         return html`
                             <agora-navigator-item 
-                                class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'}"
+                                class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'} ${this.initialLoad.getState() ? 'initial-load' : ''}"
+                                style="${
+                                    this.initialLoad.getState()
+                                        ? `animation-delay: ${index * 0.2}s; z-index: ${100 - index};`
+                                        : ``
+                                }"
                                 data-name='${data.fields.name}'
                                 data-info='${JSON.stringify(data.fields, stringifyReplacer)}'
                                 data-type='${ITEM_TYPE.ACCELERATION_SERVICE}'>
@@ -109,7 +116,16 @@ class Navigator extends PlainComponent {
             const agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
 
             // We need to set the company name and the colors in the company context
-            this.companyContext.setData({info: agora.items[0].fields.company.fields}, false)
+            const companyName = agora.items[0].fields.company.fields.name
+            const companyPrimaryColor = agora.items[0].fields.primary_color
+            const companySecondaryColor = agora.items[0].fields.secondary_color
+            this.companyContext.setData({
+                info: {
+                    name: companyName,
+                    primary_color: companyPrimaryColor,
+                    secondary_color: companySecondaryColor
+                }
+            }, true)
 
             let services = []
 
@@ -131,6 +147,7 @@ class Navigator extends PlainComponent {
             services = services.filter(service => service.fields.stage === 'active')
 
             this.items.setState(services)
+            this.initialLoad.setState(false, false)
             this.serviceContext.setData({services: services}, true)
         }
 
