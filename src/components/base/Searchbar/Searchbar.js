@@ -18,7 +18,8 @@ class Searchbar extends PlainComponent {
   constructor() {
     super('agora-searchbar', `${PATHS.BASE_COMPONENTS}/Searchbar/Searchbar.css`)
 
-    this.defaultTreshold = 0.45
+    //this.defaultTreshold = 0.45
+    this.defaultTreshold = 0.1
 
     this.configContext = new PlainContext('config', this, false)
     this.resultContext = new PlainContext('result', this, false)
