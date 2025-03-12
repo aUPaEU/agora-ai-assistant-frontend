@@ -155,6 +155,12 @@
     padding-top: 10px;
 }
 
+.card-summary  span {
+    line-height: normal !important;
+    color: var(--text-secondary-color) !important;
+    font-size: 0.7rem !important;
+}
+
 .fill-space {
     flex: 1;
 }
