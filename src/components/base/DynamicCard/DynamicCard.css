@@ -11,7 +11,7 @@
 
     box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.15);
 
-    overflow: hidden;
+    /* overflow: hidden; */
 
     position: relative;
 
@@ -28,6 +28,42 @@
     box-shadow: 0px 30px 30px rgba(0, 0, 0, 0.15);
 }
 
+/* CATALOGUE */
+.catalogue {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+
+    transform: translate(-50%, 100%);
+
+    height: 2rem;
+    width: 80%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 0.8rem;
+    color: var(--text-tertiary-color);
+
+    background-color: rgb(from var(--primary-color) r g b / 0.65);
+    border-bottom-left-radius: 5pt;
+    border-bottom-right-radius: 5pt;
+
+    border: 1px solid var(--primary-color);
+    border-top: none;
+
+    backdrop-filter: blur(10px);
+
+    opacity: 0;
+
+    transition: 300ms;
+}
+
+.agora-dynamic-card-wrapper:hover > .catalogue {
+    opacity: 1;
+}
+
 /* DRAG AND DROP */
 .ondrag {
     opacity: 0.25;
@@ -38,6 +74,9 @@
     width: 100%;
     height: 40%;
     object-fit: cover;
+
+    border-top-left-radius: 10pt;
+    border-top-right-radius: 10pt;
 }
 
 .default-image {
@@ -77,6 +116,7 @@
     font-size: 0.9rem;
 
     width: 100%;
+    min-height: fit-content;
 
     display: -webkit-box;          /* Use a flex-like box for text rendering */
     -webkit-line-clamp: 2;         /* Number of lines to show */

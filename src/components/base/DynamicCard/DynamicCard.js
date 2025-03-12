@@ -9,12 +9,14 @@ import { isDebugMode } from "../../../utils/core.util"
 
 /* Icons */
 import { AUPAEU_LOGO } from "../../../icons/icons"
+import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 
 class DynamicCard extends PlainComponent {
     constructor() {
         super('agora-dynamic-card', `${PATHS.BASE_COMPONENTS}/DynamicCard/DynamicCard.css`)
 
         this.configContext = new PlainContext('config', this, false)
+        this.serviceContext = new PlainContext('service', this, false)
 
         this.data = new PlainState(null, this)
 
@@ -71,7 +73,15 @@ class DynamicCard extends PlainComponent {
 
         const publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
 
+        const model = this.getAttribute('model') ?? null
+        const websites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
+        const flatWebsites = websites.flatMap(website => website.websites)
+        const modelVerboseName = flatWebsites.find(website => website.model === model).name
+
+        const isFeatured = this.data.getState().featured
+
         return html`
+            <div class="catalogue">${modelVerboseName}</div>
             ${image}
             <div class="card-content">
                 ${origin}
@@ -84,6 +94,15 @@ class DynamicCard extends PlainComponent {
                 <div class="fill-space"></div>
 
                 <div class="additional-info">
+                    ${
+                        isFeatured 
+                            ? html`
+                                <span title="This element is featured by Agora" class="featured-badge">
+                                    ${AUPAEU_LOGO}
+                                </span>
+                            `
+                            : ``
+                    }
                     <div 
                         class="public-score" 
                         title="This score represents the relevance of this\nitem in the search results."
