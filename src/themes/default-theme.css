@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900');
+
 .default-theme {
     --primary-color: white;
 
@@ -16,4 +18,6 @@
 
     --card-primary-color: #D2E1EF;
     --card-hover-color: #98b1c9;
+
+    font-family: "Reddit Sans", 'Courier New', Courier, monospace;
 }
