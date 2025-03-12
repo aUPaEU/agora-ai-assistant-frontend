@@ -14,3 +14,14 @@ export function splitAndKeepDelimiter(str, delimiter) {
   const parts = str.split(new RegExp(`(${delimiter})`, 'g'));
   return parts;
 }
+
+export const escapeHTML = (str) => { 
+  return str.replace(/[&<>'"]/g, 
+      tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+      })[tag]);
+}
