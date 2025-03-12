@@ -38,19 +38,20 @@
 - [x] Add a fold-unfold button to display or hide the not featured results.
 
 <!-- BACKEND -->
-- [ ] Automatize the ingest of data into elastic search when making write operations on Odoo.
 - [ ] Check the single element api endpoint to retrieve url or null on the image field just like in the service.
 - [ ] Look for a solution to fetch the fields that contains an id to get some basic data about the entity. Like "university_origin". 
 - [-] Perhaps, bot responses could have a key called 'explanation' and this text could be displayed in a tooltip when hovering result containers.
 
+- [x] Automatize the ingest of data into elastic search when making write operations on Odoo.
 - [x] Add a field within the acceleration services module to add suggested search terms.
 - [x] Add a field within the acceleration services module to add an image.
 
 <!-- STYLING -->
 - [ ] Remove greetings if there are results to be displayed.
 - [ ] Make fades visibility blend with the background (somehow).
-- [ ] Adapt style to make it coherent.
 
+- [x] Improve usability on the navigator component.
+- [x] Adapt style to make it coherent.
 - [x] Display the images of the acceleration services within the showcase component.
 - [x] Display in a user friendly way the score of each result.
 - [x] Make the color of the score dynamic based on the score.
