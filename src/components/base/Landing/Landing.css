@@ -10,7 +10,7 @@
     gap: 2.5rem;
 
     border: 1px solid var(--primary-color);
-    border-radius: 15pt;
+    border-radius: 10pt;
 
     background-color: rgb(from var(--primary-color) r g b / 0.5);
     backdrop-filter: blur(10px);

@@ -32,6 +32,7 @@
 .default-message {
     width: 100%;
     text-wrap: pretty;
+    text-align: right;
 }
 
 .greetings-description {
@@ -42,7 +43,7 @@
     font-size: 0.9rem;
     font-weight: normal;
 
-    text-align: left;
+    text-align: right;
     text-wrap: pretty;
 }
 

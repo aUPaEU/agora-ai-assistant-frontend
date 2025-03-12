@@ -10,6 +10,7 @@ class Greetings extends PlainComponent {
     constructor() {
         super('agora-greetings', `${PATHS.BASE_COMPONENTS}/Greetings/Greetings.css`)
 
+        this.companyContext = new PlainContext('company', this, true)
         this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
     }
@@ -25,7 +26,10 @@ class Greetings extends PlainComponent {
                 <span class="default-welcome">Welcome</span> 
                 <div class="logo">
                     <span class="agora-name">Agora</span>
-                    <span class="alliance-name">${this.configContext.getData('name')}</span>
+                    <span 
+                        class="alliance-name" 
+                        style="color: ${this.companyContext.getData('info').primary_color} !important;"
+                    >${this.companyContext.getData('info').name}</span>
                 </div>
                 <span class="multilanguage-welcome">
                     <span>WELCOME</span>
