@@ -7,6 +7,7 @@ import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 import { isDebugMode } from "../../../utils/core.util"
+import { translate } from "../../../utils/translator.util"
 
 /* Icons */
 import { SEARCH, AUPAEU_LOGO} from "../../../icons/icons"
@@ -81,8 +82,9 @@ class Searchbar extends PlainComponent {
     // If there's no text in the input we just return
     if (this.$('.searchbar-input').value.length === 0) return
 
-    // We store the query in a search history so we can autocomplete later
-    // this.storeQueryInContext(this.$('.searchbar-input').value)
+    /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
+    const translatedQuery = await translate(this.$('.searchbar-input').value)
+    console.log(translatedQuery)
 
     // We extract all the availablel models in the Agora from the service context
     const models = this.currentSource.getState() === 'all' 
@@ -91,12 +93,17 @@ class Searchbar extends PlainComponent {
 
     // We call the elasticsearch api to get search results
     try {
-      const query = this.$('.searchbar-input').value
-      const response = await api.search(this.configContext.getData('host'), query, models)
+      const query = {
+        raw: this.$('.searchbar-input').value,
+        translated: translatedQuery
+      }
+
+      const response = await api.search(this.configContext.getData('host'), query.translated, models)
 
       this.handleResponse(query, response)
 
-      this.$('.searchbar-input').placeholder = this.searchContext.getData('current').join(' ').replace(/\/$/, '')
+      /* this.$('.searchbar-input').placeholder = this.searchContext.getData('current').join(' ').replace(/\/$/, '') */
+      this.$('.searchbar-input').placeholder = query.raw
       this.$('.searchbar-input').value = ''
     }
 
@@ -207,8 +214,8 @@ class Searchbar extends PlainComponent {
     const queryHistory = this.searchContext.getData('history') || []
 
     this.searchContext.setData({
-      history: [...new Set([...queryHistory, query])],
-      current: query.split(' '),
+      history: [...new Set([...queryHistory, query.raw])],
+      current: query.translated.split(' '),
     }, false)
   }
 
