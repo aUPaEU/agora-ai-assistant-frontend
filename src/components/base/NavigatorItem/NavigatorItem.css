@@ -28,7 +28,7 @@
 
 .acceleration-service .type-icon {
     color: var(--primary-color);
-    background-color: rgb(from var(--acceleration-service-color) r g b / 0.5);
+    background-color: rgb(from var(--acceleration-service-color) r g b / 0.75);
 }
 
 /* Service */
@@ -47,7 +47,7 @@
 
 .service .type-icon {
     color: var(--primary-color);
-    background-color: rgb(from var(--service-color) r g b / 0.5);
+    background-color: rgb(from var(--service-color) r g b / 0.75);
 }
 
 /* Catalogue */
@@ -66,7 +66,7 @@
 
 .catalogue .type-icon {
     color: var(--primary-color);
-    background-color: rgb(from var(--catalogue-color) r g b / 0.5);
+    background-color: rgb(from var(--catalogue-color) r g b / 0.75);
 }
 
 /* Showcase */
@@ -179,9 +179,8 @@
 
     text-decoration: none;
 
-    
-
-    background-color: var(--text-accent-color);
+    /* background-color: var(--text-accent-color); */
+    background-color: white !important;
 }
 
 .label-content {
@@ -209,6 +208,18 @@
     font-weight: bold;
 }
 
+.acceleration-service .label-title {
+    color: var(--acceleration-service-color);
+}
+
+.service .label-title {
+    color: var(--service-color);
+}
+
+.catalogue .label-title {
+    color: var(--catalogue-color);
+}
+
 .label-subtitle {
     width: 100%;
 
@@ -217,7 +228,8 @@
     align-items: center;
     gap: 0.2rem;
 
-    color: var(--bg-color);
+    /* color: var(--bg-color); */
+    color: var(--text-tertiary-color);
     font-size: 0.7rem;
 }
 

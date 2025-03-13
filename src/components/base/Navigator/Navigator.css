@@ -179,7 +179,8 @@ agora-base-loader {
 
         transform: translateY(-100%);
 
-        background-color: var(--primary-color);
+        /* background-color: var(--primary-color); */
+        background-color: var(--bg-secondary-color);
     }
 
     .menu.expanded {
