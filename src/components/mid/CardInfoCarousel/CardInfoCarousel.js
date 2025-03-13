@@ -241,7 +241,13 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     highlightSearchTerms() {
-        const searchTerms = this.searchContext.getData('current') || []
+        let searchTerms = this.searchContext.getData('current') || []
+        searchTerms = searchTerms.filter(term => {
+            if (!['i', 'I'].includes(term)) return term
+        })
+
+        console.log(searchTerms)
+
         let content = this.$('.card-info-content').innerHTML
         
         searchTerms.forEach(term => {
@@ -250,14 +256,12 @@ class CardInfoCarousel extends PlainComponent {
                 const split = splitAndKeepDelimiter(match, term)
                 let result = ''
                 split.forEach(slice => {
-                    console.log(slice)
                     if (slice.toLowerCase().includes(term.toLowerCase())) {
                         result += `<span class="highlight">${slice}</span>`
                     } else {
                         result += slice
                     }
                 })
-                console.log(result)
                 return result
             })
          
