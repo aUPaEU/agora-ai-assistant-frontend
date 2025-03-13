@@ -69,9 +69,19 @@
 }
 
 .card-info-summary {
+    display: -webkit-box;           /* Use a flex-like box for text rendering */
+    -webkit-line-clamp: 10;         /* Number of lines to show */
+    -webkit-box-orient: vertical;  /* Define the orientation of the box */
+    overflow: hidden;              /* Hide any overflowing text */
+    text-overflow: ellipsis;       /* Add ellipsis (...) at the end */
+    word-wrap: break-word;   
+}
+
+.card-info-summary,
+.card-info-summary span {
     color: var(--text-secondary-color);
-    font-size: 0.9rem;
-    line-height: 1.35rem;
+    font-size: 0.9rem !important;
+    line-height: 1.35rem !important;
 
     width: 100%;
 }
@@ -340,7 +350,7 @@
     padding-inline: 0;
     box-sizing: border-box;
 
-    color: var(--text-accent-color);
+    color: var(--text-accent-color) !important;
     font-weight: bold;
 
     background-color: rgb(from var(--text-accent-color) r g b / 0.1);

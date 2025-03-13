@@ -22,6 +22,7 @@ class CardInfoCarousel extends PlainComponent {
 
         this.groupedData = new PlainState(null, this) // We'll use this to store all the cards in a group so we can display them in the carousel and be able to scroll through them
         this.displayedCardId = new PlainState(null, this)
+        this.maxDescriptionLength = new PlainState(200, this)
 
         this.signals = new PlainSignal(this)
     }
@@ -203,6 +204,7 @@ class CardInfoCarousel extends PlainComponent {
     }
 
     displayAdditionalFields(cardData, additionalFields) {
+        return
         const data = cardData
         // Delete the container for the additional fields if it exists and there's no additional fields
         if (additionalFields.length === 0) {
