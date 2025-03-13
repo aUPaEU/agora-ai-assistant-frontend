@@ -280,20 +280,25 @@ class Searchbar extends PlainComponent {
 
     matches.forEach(match => {
       const item = document.createElement('li')
-      item.innerHTML = html`<span class="match highlighted">${match.slice(0, inputLength)}</span><span class="match">${match.slice(inputLength)}</span>`
+      item.innerHTML = html`
+        <div class="match-container">
+          <span class="match highlighted">${match.slice(0, inputLength)}</span>
+          <span class="match">${match.slice(inputLength)}</span>
+        </div>
+        <span class="tab-word">TAB</span>
+      `
       this.setupAutocompleteOptionListener(item)
       autocompleteDropdown.appendChild(item)
     })
 
     const firstMatch = autocompleteDropdown.children[0]
     if (firstMatch) firstMatch.classList.add('selected-match')
-
-    // if (matches.length > 0) this.toogleAutocompleteDropdown('unfold') 
   }
 
   autocompleteFromDropdown() {
     const selectedItem = Array.from(this.$('.autocomplete-dropdown').children).find(item => item.classList.contains('selected-match'))
-    this.$('.searchbar-input').value = selectedItem.innerText
+    const selectedItemValue = selectedItem.querySelector('.match-container').innerText
+    this.$('.searchbar-input').value = selectedItemValue
     this.$('.searchbar-input').focus()
   }
 

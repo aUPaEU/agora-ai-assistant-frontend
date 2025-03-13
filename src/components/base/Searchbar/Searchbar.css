@@ -41,6 +41,10 @@
     z-index: 10;
 }
 
+.searchbar-input::placeholder {
+    color: rgb(from var(--text-tertiary-color) r g b / 0.6);
+}
+
 .searchbar-input.folded {
     width: 200px;
 
@@ -254,6 +258,9 @@
     padding-inline: 1rem;
     box-sizing: border-box;
 
+    display: flex;
+    justify-content: space-between;
+
     font-size: 0.8rem;
 
     border-radius: 5pt;
@@ -271,6 +278,25 @@
 
 .match {
     color: var(--text-tertiary-color);
+}
+
+.match-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.tab-word {
+    padding: 0.25rem;
+    padding-inline: 0.5rem;
+    margin-right: -0.5rem;
+    box-sizing: border-box;
+
+    color: var(--text-tertiary-color);
+    font-size: 0.6rem;
+
+    border-radius: 2pt;
+
+    background-color: rgb(from var(--text-tertiary-color) r g b / 0.1);
 }
 
 /* RESPONSIVE */
