@@ -27,6 +27,10 @@
     transition: 500ms;
 }
 
+.menu agora-navigator-item:hover {
+    z-index: 1000;
+}
+
 .menu agora-navigator-item.initial-load {
     opacity: 0;
 

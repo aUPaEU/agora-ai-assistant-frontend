@@ -107,7 +107,7 @@
 
     background-color: transparent;
 
-    overflow: hidden;
+    /* overflow: hidden; */
 
     position: relative;
 
@@ -118,7 +118,7 @@
     opacity: 0;
     pointer-events: none;
 
-    position: fixed;
+    position: absolute;
     bottom: 0;
     right: 0;
 
@@ -303,8 +303,8 @@
     display: grid;
     place-content: center;
 
-    border-top-left-radius: 5pt;
-    border-bottom-left-radius: 5pt;
+    /* border-top-left-radius: 5pt;
+    border-bottom-left-radius: 5pt; */
 
     transition: 300ms;
 }

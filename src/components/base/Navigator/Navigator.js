@@ -81,7 +81,7 @@ class Navigator extends PlainComponent {
                                 class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'} ${this.initialLoad.getState() ? 'initial-load' : ''}"
                                 style="${
                                     this.initialLoad.getState()
-                                        ? `animation-delay: ${index * 0.2}s; z-index: ${100 - index};`
+                                        ? `animation-delay: ${index * 0.2}s;`
                                         : ``
                                 }"
                                 data-name='${data.fields.name}'
