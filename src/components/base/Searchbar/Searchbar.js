@@ -112,7 +112,7 @@ class Searchbar extends PlainComponent {
 
       if (errorData.missing_model) {
         await api.ingest(this.configContext.getData('host'), errorData.missing_model)
-        console.error(`Ingesting missing data from the model: '${errorData.missing_model}' into Elasticsearch`)
+        console.warn(`Ingesting missing data from the model: '${errorData.missing_model}' into Elasticsearch`)
 
         this.query()
       }
