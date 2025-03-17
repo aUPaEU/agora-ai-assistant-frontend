@@ -8,6 +8,7 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
+import { gsap } from "gsap"
 
 /* Icons */
 import { UNFOLD, FOLD } from "../../../icons/icons"
@@ -20,11 +21,13 @@ class Navigator extends PlainComponent {
         super('agora-navigator', `${PATHS.BASE_COMPONENTS}/Navigator/Navigator.css`)
 
         this.signals = new PlainSignal(this)
+        this.signals.register('changed-agora')
 
         this.companyContext = new PlainContext('company', this, false)
         this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
         this.serviceContext = new PlainContext('service', this, false)
+        this.metagoraContext = new PlainContext('metagora', this, false)
 
         this.error = new PlainState(null, this)
         this.items = new PlainState(null, this)
@@ -71,8 +74,7 @@ class Navigator extends PlainComponent {
         }
 
         return html`
-            <div 
-                class="menu-unfold-button">${UNFOLD}</div>
+            <div class="menu-unfold-button">${UNFOLD}</div>
             <ul class="menu">
                 ${Object.entries(this.items.getState()).map(
                     ([index, data]) => {
@@ -91,6 +93,11 @@ class Navigator extends PlainComponent {
                         `
                 }).join('')}
             </ul>
+            ${
+                this.items.getState().length === 0
+                    ? html`<span >There are no currently available services for this Agora.</span>`
+                    : ''
+            }
         `
     }
 
@@ -113,18 +120,18 @@ class Navigator extends PlainComponent {
     /* DATA FETCHING */
     async fetchItems() {
         try {
-            /* const metagora = await api.fetchMetagoraServices(this.configContext.getData('host'))
-            console.log(metagora)
+            let agora
+
+            this.configContext.getData('name') === 'Metagora'
+                ? agora = await api.fetchMetagoraServices(this.configContext.getData('host'))
+                : agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
             
-            const agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
-            console.log(agora) */
-
-            const agora = await api.fetchMetagoraServices(this.configContext.getData('host'))
-            console.log(agora)
-
             // We need to set the company name and the colors in the company context
-            this.updateCompanyContext(agora)
-            this.updateServiceContext(agora)
+            this.updateCompanyContext(agora.items[0])
+
+            this.configContext.getData('name') === 'Metagora'
+                ? this.updateMetagoraContext(agora)
+                : this.updateServiceContext(agora.items[0])
         }
 
         catch (error) {
@@ -133,10 +140,31 @@ class Navigator extends PlainComponent {
         }
     }
 
+    updateAgora(agoraIndex, isMetagora=false) {
+        console.log("UPDATE AGORA", agoraIndex, isMetagora)
+        this.initialLoad.setState(true, false)
+        this.resultContext.setData({data: [], grouped: []}, false)
+
+        const metagoraData = this.metagoraContext.getData('data')
+        const agora = metagoraData.agoras[agoraIndex]
+
+        isMetagora
+            ? this.updateCompanyContext(metagoraData)
+            : this.updateCompanyContext(agora)
+
+        isMetagora 
+            ? this.updateMetagoraServices(metagoraData.agoras)
+            : this.updateServiceContext(agora)
+
+        if (isMetagora) this.$('.menu').style.display = 'none' // This hides the menu when the metagora is selected
+
+        this.signals.emit('changed-agora')
+    }
+
     updateCompanyContext(agora) {
-        const companyName = agora.items[0].fields.company.fields.name
-        const companyPrimaryColor = agora.items[0].fields.primary_color
-        const companySecondaryColor = agora.items[0].fields.secondary_color
+        const companyName = agora.fields.company.fields.name
+        const companyPrimaryColor = agora.fields.primary_color
+        const companySecondaryColor = agora.fields.secondary_color
         this.companyContext.setData({
             info: {
                 name: companyName,
@@ -146,15 +174,39 @@ class Navigator extends PlainComponent {
         }, true)
     }
 
-    updateServiceContext(agora) {
+    updateMetagoraContext(metagora) {
+        const agoras = metagora.items[0].fields.sub_acceleration_services
+        this.metagoraContext.setData({
+            data: {
+                    fields:{
+                        company: metagora.items[0].fields.company,
+                        primary_color: metagora.items[0].fields.primary_color,
+                        secondary_color: metagora.items[0].fields.secondary_color,
+                    },
+                    agoras: agoras
+                }
+        }, false)
+
+        this.updateMetagoraServices(agoras)
+    }
+
+    updateMetagoraServices(agoras) {
+        this.serviceContext.setData({services: []}, false)
+        agoras.forEach((agora) => {
+            this.updateServiceContext(agora, true)
+        })
+        this.initialLoad.setState(false, false)
+    }
+
+    updateServiceContext(agora, extend=false) {
         let services = []
 
-        if (agora.items[0].fields.sub_acceleration_services.length === undefined) {
-            services = [agora.items[0].fields.sub_acceleration_services]
+        if (agora.fields.sub_acceleration_services.length === undefined) {
+            services = [agora.fields.sub_acceleration_services]
         }
 
-        else if (agora.items[0].fields.sub_acceleration_services.length > 1) {
-            services = [...agora.items[0].fields.sub_acceleration_services]
+        else if (agora.fields.sub_acceleration_services.length > 1) {
+            services = [...agora.fields.sub_acceleration_services]
         }
 
         services.sort((a, b) => {
@@ -166,8 +218,10 @@ class Navigator extends PlainComponent {
         // Filter just active services (this have to be moved to the backend)
         services = services.filter(service => service.fields.stage === 'active')
 
+        if (extend) services = [...this.serviceContext.getData('services'), ...services]
+        
         this.items.setState(services)
-        this.initialLoad.setState(false, false)
+        if (!extend) this.initialLoad.setState(false, false)
         this.serviceContext.setData({services: services}, true)
     }
 
