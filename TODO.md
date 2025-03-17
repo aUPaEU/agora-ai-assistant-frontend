@@ -72,3 +72,16 @@
 - [x] Solve issue when url in the carousel window is not being build correctly.
 - [x] Avoid rendering greetings if there was previous results.
 - [x] Solve pointer events issue when the Chat component is over some card and the ChatWindow is hidden. 
+
+<!-- FROM 13th March -->
+- [x] Add translation to the query sent to the search engine.
+    - [x] Install LibreTranslate service within the docker container.
+- [x] Add 'tab' word to the placeholder in the searchbar.
+    - [x] Add 'tab' word to the autocomplete dropdown items.
+- [x] Truncate carousel cards descriptions.
+- [x] Solve service info display once result cards are displayed.
+- [x] Remove extra fields temporarily from the carousel cards.
+- [x] Rediseño visual.
+- [x] Create a new repo within aUPaEU organization to host common utilities like LibreTranslate or HTMLExtractor.
+- [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial.
+- [x] Open all the links in new tabs.
