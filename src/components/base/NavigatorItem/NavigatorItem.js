@@ -73,7 +73,8 @@ class NavigatorItem extends PlainComponent {
 
                 <!-- Item Label -->
                 <a 
-                    class="label" 
+                    class="label"
+                    target="_blank" 
                     ${info && showcase ? `href="${showcase.domain}"` : ''}
                     ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
@@ -85,7 +86,8 @@ class NavigatorItem extends PlainComponent {
                     </div>
                 </a>
                 <a 
-                    class="label hover" 
+                    class="label hover"
+                    target="_blank" 
                     ${info && showcase ? `href="${showcase.domain}"` : ''}
                     ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
@@ -175,7 +177,8 @@ class NavigatorItem extends PlainComponent {
 
     navigateToShowcase() {
         const label = this.$('.label')
-        window.location.href = label.getAttribute('href')
+        window.open(label.getAttribute('href'), '_blank').focus();
+        /* window.location.href = label.getAttribute('href') */
     }
 }
 
