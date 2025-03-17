@@ -12,6 +12,7 @@ import { html } from "./utils/templateTags.util"
 /* Components */
 import './components/base/Navbar/Navbar'
 import './components/base/Navigator/Navigator'
+import './components/base/MetagoraNavigator/MetagoraNavigator'
 import './components/base/NavigatorItem/NavigatorItem'
 import './components/base/Showcase/Showcase'
 import './components/base/Greetings/Greetings'
@@ -52,6 +53,7 @@ class App extends PlainComponent {
         this.companyContext = new PlainContext('company', this, false)
         this.resultContext = new PlainContext('result', this, false)
         this.serviceContext = new PlainContext('service', this, false)
+        this.metagoraContext = new PlainContext('metagora', this, false)
         this.chatContext = new PlainContext('chat', this, false)
         this.configContext = new PlainContext('config', this, false)
 
@@ -138,6 +140,8 @@ class App extends PlainComponent {
         const searchbar = this.configContext.getData('enabled_ai') ? null : this.$('agora-layout-v2').$('agora-searchbar')
         const navigator = this.$('agora-layout-v2').$('agora-navigator')
         const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
+        const landing = this.$('agora-layout-v2').$('agora-landing')
+        const metagoraNavigator = this.$('agora-layout-v2').$('agora-metagora-navigator')
 
         // Connections between components
         if (resultWindow && chatWindow)
@@ -154,6 +158,12 @@ class App extends PlainComponent {
     
         if (carousel && searchbar)
             carousel.signals.connect(searchbar, 'results-updated', (records) => carousel.setData(records))
+
+        if (landing && navigator)
+            landing.signals.connect(navigator, 'changed-agora', () => landing.reset())
+
+        if (metagoraNavigator && navigator)
+            navigator.signals.connect(metagoraNavigator, 'changed-agora', (params) => navigator.updateAgora(params.index, params.isMetagora))
     }
 
     openInfoDialog(payload) {
