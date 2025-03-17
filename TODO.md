@@ -85,3 +85,4 @@
 - [x] Create a new repo within aUPaEU organization to host common utilities like LibreTranslate or HTMLExtractor.
 - [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial.
 - [x] Open all the links in new tabs.
+- [x] Add metagora data fetching.
