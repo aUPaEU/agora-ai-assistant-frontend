@@ -6,9 +6,9 @@
     
     width: 100%;
     height: fit-content;
-    min-height: fit-content;
+    /* min-height: fit-content; */
+    min-height: 100vh;
 
-    /* position: relative; */
 
     overflow: hidden;
     overflow-y: auto;
@@ -154,6 +154,13 @@ agora-card-info-carousel {
     background: linear-gradient(to top, var(--bg-color), rgba(255, 255, 255, 0));
 
     z-index: 10;
+}
+
+/* METAGORA NAVIGATOR */
+agora-metagora-navigator {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 /* BUTTONS */

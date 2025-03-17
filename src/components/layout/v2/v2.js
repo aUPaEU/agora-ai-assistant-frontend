@@ -56,6 +56,12 @@ class LayoutV2 extends PlainComponent {
 
             <!-- Bottom Fade -->
             <div class="bottom-fade"></div>
+
+            <!-- Metagora Navigator -->
+            ${this.configContext.getData('name') === 'Metagora' 
+                ? html`<agora-metagora-navigator></agora-metagora-navigator>` 
+                : ''
+            }
         `
     }
 
