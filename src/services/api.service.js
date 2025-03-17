@@ -27,6 +27,24 @@ export const fetchAccelerationServicesV1 = async () => {
     }
 }
 
+export const fetchMetagoraServices = async (host) => {
+    try {
+        const url = `${host}/catalogue-api/v1/agoras`
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error('Something went wrong while fetching Metagora services')
+        }
+
+        const data = await response.json()
+        return data
+    }
+
+    catch (error) {
+        throw error
+    }
+}
+
 export const fetchAgoraServices = async (host, company_id) => {
     try {
         const url = `${host}/catalogue-api/v1/acceleration-services/${company_id}`
