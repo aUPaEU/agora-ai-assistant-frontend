@@ -89,6 +89,7 @@ class Landing extends PlainComponent {
             : html``
 
         return html`
+            <div class="showcase-card-wrapper">
             <canvas class="node-connection-canvas"></canvas>
             <!-- Banner Image -->
             <div class="banner-image default-image">
@@ -123,6 +124,7 @@ class Landing extends PlainComponent {
             <!-- Learn More Button -->
             <div class="item-link">
                 <span>${learnMoreButton}</span>
+            </div>
             </div>
         `
     }
