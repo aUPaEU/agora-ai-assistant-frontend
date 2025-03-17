@@ -83,6 +83,13 @@
 - [x] Remove extra fields temporarily from the carousel cards.
 - [x] Rediseño visual.
 - [x] Create a new repo within aUPaEU organization to host common utilities like LibreTranslate or HTMLExtractor.
-- [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial.
+- [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial (ejemplo: 'acoustics' vs 'acoustic').
 - [x] Open all the links in new tabs.
 - [x] Add metagora data fetching.
+- [x] Make the metagora navigator render conditionally.
+- [ ] Change the config 'host' to a list in the case of the metagora and check all the business logic related to that. 
+- [ ] Ensure the proper work of the metagora data fetching when fetching from different hosts (ie. CIVIS).
+- [ ] The partial matches are not being highlighted properly.
+- [ ] Each time the pages re-renders, the selected agora button is not maintaining its state.
+- [ ] When the metagora is selected, hide the navigator and show another widget like a european map with the location of each alliance.
+- [ ] Make showcase cards less wide.
