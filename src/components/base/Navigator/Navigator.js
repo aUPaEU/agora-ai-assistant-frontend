@@ -113,48 +113,62 @@ class Navigator extends PlainComponent {
     /* DATA FETCHING */
     async fetchItems() {
         try {
+            /* const metagora = await api.fetchMetagoraServices(this.configContext.getData('host'))
+            console.log(metagora)
+            
             const agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
+            console.log(agora) */
+
+            const agora = await api.fetchMetagoraServices(this.configContext.getData('host'))
+            console.log(agora)
 
             // We need to set the company name and the colors in the company context
-            const companyName = agora.items[0].fields.company.fields.name
-            const companyPrimaryColor = agora.items[0].fields.primary_color
-            const companySecondaryColor = agora.items[0].fields.secondary_color
-            this.companyContext.setData({
-                info: {
-                    name: companyName,
-                    primary_color: companyPrimaryColor,
-                    secondary_color: companySecondaryColor
-                }
-            }, true)
-
-            let services = []
-
-            if (agora.items[0].fields.sub_acceleration_services.length === undefined) {
-                services = [agora.items[0].fields.sub_acceleration_services]
-            }
-
-            else if (agora.items[0].fields.sub_acceleration_services.length > 1) {
-                services = [...agora.items[0].fields.sub_acceleration_services]
-            }
-
-            services.sort((a, b) => {
-                if (a.fields.name < b.fields.name) return -1
-                if (a.fields.name > b.fields.name) return 1
-                return 0
-            })
-
-            // Filter just active services (this have to be moved to the backend)
-            services = services.filter(service => service.fields.stage === 'active')
-
-            this.items.setState(services)
-            this.initialLoad.setState(false, false)
-            this.serviceContext.setData({services: services}, true)
+            this.updateCompanyContext(agora)
+            this.updateServiceContext(agora)
         }
 
         catch (error) {
             this.error.setState(error)
             console.error("Exception manage when fetching services have to be implemented", error)
         }
+    }
+
+    updateCompanyContext(agora) {
+        const companyName = agora.items[0].fields.company.fields.name
+        const companyPrimaryColor = agora.items[0].fields.primary_color
+        const companySecondaryColor = agora.items[0].fields.secondary_color
+        this.companyContext.setData({
+            info: {
+                name: companyName,
+                primary_color: companyPrimaryColor,
+                secondary_color: companySecondaryColor
+            }
+        }, true)
+    }
+
+    updateServiceContext(agora) {
+        let services = []
+
+        if (agora.items[0].fields.sub_acceleration_services.length === undefined) {
+            services = [agora.items[0].fields.sub_acceleration_services]
+        }
+
+        else if (agora.items[0].fields.sub_acceleration_services.length > 1) {
+            services = [...agora.items[0].fields.sub_acceleration_services]
+        }
+
+        services.sort((a, b) => {
+            if (a.fields.name < b.fields.name) return -1
+            if (a.fields.name > b.fields.name) return 1
+            return 0
+        })
+
+        // Filter just active services (this have to be moved to the backend)
+        services = services.filter(service => service.fields.stage === 'active')
+
+        this.items.setState(services)
+        this.initialLoad.setState(false, false)
+        this.serviceContext.setData({services: services}, true)
     }
 
     initialDisplay() {

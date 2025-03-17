@@ -38,6 +38,15 @@ export const ENV = {
         "enabled_ai": false,
         "ai_host": "http://localhost:2000",
         "current_version": CURRENT_VERSION
+    },
+
+    METAGORA: {
+        "name": "Metagora",
+        "host": "http://localhost:8000",
+        "company_id": null,
+        "enabled_ai": false,
+        "ai_host": "http://localhost:2000",
+        "current_version": CURRENT_VERSION
     }
 }
 
