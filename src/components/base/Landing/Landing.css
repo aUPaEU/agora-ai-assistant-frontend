@@ -168,6 +168,7 @@ agora-greetings {
 
 /* NODE VISUALIZATION */
 .node-view-label, .search-tags-label {
+    display: none; /* REMOVED TEMPORARY */
     margin-bottom: -1.5rem;
     box-sizing: border-box;
 
@@ -180,7 +181,8 @@ agora-greetings {
 }
 
 .node-wrapper {
-    display: flex;
+    display: none; /* REMOVED TEMPORARY */
+    /* display: flex; */
     justify-content: space-evenly;
     align-items: center;
     gap: 100px;

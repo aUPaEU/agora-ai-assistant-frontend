@@ -1,4 +1,4 @@
-import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
 /* Constants */
 import { PATHS } from "../../../constants/paths.const"
 
@@ -12,6 +12,8 @@ import { BOOST, WEBSITE_LINK } from "../../../icons/icons"
 class Landing extends PlainComponent {
     constructor() {
         super('agora-landing', `${PATHS.BASE_COMPONENTS}/Landing/Landing.css`)
+
+        this.signals = new PlainSignal(this)
 
         this.configContext = new PlainContext('config', this, true)
         this.servicesContext = new PlainContext('service', this, true)
@@ -27,13 +29,14 @@ class Landing extends PlainComponent {
         this.greetingsDuration = new PlainState(7500, this)
         this.isGreeting = new PlainState(false, this)
         this.isGreeted = new PlainState(false, this)
+        this.greetingTimeout = null
     }
 
     template() {
         // Greetings render management
         if (!this.isGreeted.getState() && !this.isGreeting.getState()) {
             this.isGreeting.setState(true, false)
-            setTimeout(() => {
+            this.greetingTimeout = setTimeout(() => {
                 gsap.to(this.wrapper, {
                     opacity: 0,
                     duration: 1,
@@ -321,8 +324,8 @@ class Landing extends PlainComponent {
                     const nodeAId = node.data.name.toLowerCase().replaceAll(/ /g, '-')
                     const nodeBId = child.data.name.toLowerCase().replaceAll(/ /g, '-')
     
-                    const nodeA = this.$(`#${nodeAId}`)
-                    const nodeB = this.$(`#${nodeBId}`)
+                    const nodeA = this.$(`[id="${nodeAId}"]`)
+                    const nodeB = this.$(`[id="${nodeBId}"]`)
     
                     if (nodeA && nodeB) {
                         this.drawNodeConnectionBetween(nodeA, nodeB, ctx)
@@ -368,6 +371,12 @@ class Landing extends PlainComponent {
         ctx.strokeStyle = 'grey'
         ctx.lineWidth = 3
         ctx.stroke()
+    }
+
+    reset() {
+        clearTimeout(this.greetingTimeout)
+        this.isGreeted.setState(false, false)
+        this.isGreeting.setState(false, true)
     }
 }
 
