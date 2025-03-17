@@ -21,6 +21,11 @@ class Greetings extends PlainComponent {
             : this.wrapper.classList.remove('hidden')
 
         return html`
+            <style>
+                .agora-greetings-wrapper {
+                    --company-color: ${this.companyContext.getData('info').primary_color};
+                }
+            </style>
             <!-- Greetings -->
             <div class="welcome-message">
                 <span class="default-welcome">Welcome</span> 
@@ -28,7 +33,6 @@ class Greetings extends PlainComponent {
                     <span class="agora-name">Agora</span>
                     <span 
                         class="alliance-name" 
-                        style="color: ${this.companyContext.getData('info').primary_color} !important;"
                     >${this.companyContext.getData('info').name}</span>
                 </div>
                 <span class="multilanguage-welcome">
