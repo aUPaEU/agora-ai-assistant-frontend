@@ -23,7 +23,11 @@ class Greetings extends PlainComponent {
         return html`
             <style>
                 .agora-greetings-wrapper {
-                    --company-color: ${this.companyContext.getData('info').primary_color};
+                    --company-color: ${
+                        this.companyContext.getData('info') 
+                            ? this.companyContext.getData('info').primary_color
+                            : "var(--text-accent-color)"
+                    };
                 }
             </style>
             <!-- Greetings -->
@@ -33,7 +37,11 @@ class Greetings extends PlainComponent {
                     <span class="agora-name">Agora</span>
                     <span 
                         class="alliance-name" 
-                    >${this.companyContext.getData('info').name}</span>
+                    >${
+                        this.companyContext.getData('info')
+                            ? this.companyContext.getData('info').name
+                            : this.configContext.getData('name')
+                    }</span>
                 </div>
                 <span class="multilanguage-welcome">
                     <span>WELCOME</span>
@@ -59,8 +67,11 @@ class Greetings extends PlainComponent {
                     : html`
                         <span class="default-message">How could we help you?</span>
                         <p class="greetings-description">
-                            Use our search tool to quickly find the resources and acceleration services you need.
-                            Simply enter your query to get started.
+                            Use our search tool to quickly find the resources and acceleration services that you may
+                            need within the ${this.companyContext.getData('info').name} Agora.
+                        </p>
+                        <p class="greetings-description" style="color: var(--text-tertiary-color);font-weight:100;">
+                            Enter your query to get started...
                         </p>
                     `
             }

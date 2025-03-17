@@ -89,7 +89,7 @@
     box-sizing: border-box;
 
     color: var(--company-color);
-    font-size: 48px;
+    font-size: 46px;
     font-weight: bold;
 
     display: grid;
@@ -149,7 +149,7 @@
     }
     75% {
         opacity: 0.5;
-        color: var(--text-accent-color);
+        color: var(--company-color);
     }
     100% {
         opacity: 1;
@@ -181,6 +181,10 @@
     }
 
     .default-welcome {
+        display: none;
+    }
+
+    .default-message {
         display: none;
     }
 
