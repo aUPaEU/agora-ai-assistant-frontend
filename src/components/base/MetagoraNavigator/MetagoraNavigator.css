@@ -81,3 +81,20 @@
     font-size: 1.8rem;
     font-weight: bold;
 }
+
+/* ANIMATIONS */
+.clicked {
+    animation: click 0.3s ease-in-out;
+}
+
+@keyframes click {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-1rem);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}

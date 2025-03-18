@@ -56,9 +56,17 @@ class MetagoraNavigator extends PlainComponent {
     }
 
     handleClick(button, index, isMetagora) {
+        this.animateClick(button)
+        if (button.classList.contains('selected')) return
+
         this.signals.emit('changed-agora', {index: index === 0 ? 0 : index, isMetagora: isMetagora})
         this.currentSelected.setState(index, false)
         this.toggleSelected(button)
+    }
+
+    animateClick(button) {
+        button.classList.add('clicked')
+        button.onanimationend = () => button.classList.remove('clicked')
     }
 
     toggleSelected(button) {
