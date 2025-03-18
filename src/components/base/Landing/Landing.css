@@ -22,12 +22,13 @@
 }
 
 .showcase-card-wrapper {
+    /* position: sticky; */ /* TODO */
     align-self: center;
 
     padding: 2.5rem;
     box-sizing: border-box;
 
-    width: 80%;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -117,17 +118,34 @@ agora-greetings {
 }
 
 .item-image-wrapper {
+    position: relative;
+
     display: none;
 
     margin-block: -1rem;
-    margin-left: -1rem;
+    margin-top: -2.5rem;
+    margin-left: -2.5rem;
 
-    width: calc(100% + 2rem);
+    width: calc(100% + 5rem);
     max-height: 400px;
 
-    border-radius: 5pt;
+    /* border-radius: 5pt; */
 
     overflow: hidden;
+}
+
+.item-image-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100px;
+
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+
+    pointer-events: none;
 }
 
 .item-image-wrapper:has(> img) {
@@ -143,6 +161,14 @@ agora-greetings {
     object-fit: cover;
 
     border-radius: 5pt;
+
+    transform-origin: center center;
+
+    transition: 0.5s ease-in-out;
+}
+
+.showcase-card-wrapper:hover .item-image-wrapper img {
+    transform: scale(1.025);
 }
 
 .item-info div:first-child {
@@ -380,6 +406,24 @@ agora-greetings {
     background-color: rgb(from var(--text-tertiary-color) r g b / 0.4);
 }
 
+/* ANIMATIONS */
+.first-fade-in {
+    animation-name: fade-in;
+    animation-duration: 1s;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 /* RESPONSIVE */
 @media (max-width: 1000px) {
     canvas {
@@ -396,6 +440,7 @@ agora-greetings {
 
     .showcase-card-wrapper {
         width: calc(100% + 4rem);
+        margin-left: 4rem;
     }
 
     .banner-image h1 {
