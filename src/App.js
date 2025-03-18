@@ -17,6 +17,7 @@ import './components/base/NavigatorItem/NavigatorItem'
 import './components/base/Showcase/Showcase'
 import './components/base/Greetings/Greetings'
 import './components/base/Landing/Landing'
+import './components/base/MapVisualizer/MapVisualizer'
 
 /* Buttons */
 import './components/base/TextButton/TextButton'
