@@ -25,6 +25,9 @@ class LayoutV2 extends PlainComponent {
                     <div class="navigator-wrapper">
                         <agora-navigator></agora-navigator>
                     </div>
+
+                    <!-- Map Visualizer -->
+                    <agora-map-visualizer></agora-map-visualizer>
                 </div>
 
                 <!-- Right Side -->

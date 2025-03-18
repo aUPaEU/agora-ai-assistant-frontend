@@ -1,0 +1,19 @@
+.agora-map-visualizer-wrapper {
+}
+
+.map {
+    min-height: 95vh;
+    height: 100%;
+
+    mask: 
+        linear-gradient(to top,  transparent 10%, #fff 50% 75%, transparent 95%),
+        linear-gradient(to left, transparent 0%, #fff 50% 75%, transparent 95%);
+    mask-size: 100% 100%;
+    mask-position: center;
+    mask-repeat:no-repeat;
+    mask-composite: intersect;
+}
+
+.map > path:hover {
+    transform: scale(1.1);
+}
