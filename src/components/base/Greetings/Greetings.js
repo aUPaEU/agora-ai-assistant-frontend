@@ -40,7 +40,7 @@ class Greetings extends PlainComponent {
                     >${
                         this.companyContext.getData('info')
                             ? this.companyContext.getData('info').name
-                            : this.configContext.getData('name')
+                            : this.configContext.getData('name') ?? '    '
                     }</span>
                 </div>
                 <span class="multilanguage-welcome">
