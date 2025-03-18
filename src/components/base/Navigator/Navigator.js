@@ -125,6 +125,7 @@ class Navigator extends PlainComponent {
             this.configContext.getData('name') === 'Metagora'
                 ? agora = await api.fetchMetagoraServices(this.configContext.getData('host'))
                 : agora = await api.fetchAgoraServices(this.configContext.getData('host'), this.configContext.getData('company_id'))
+
             
             // We need to set the company name and the colors in the company context
             this.updateCompanyContext(agora.items[0])
@@ -132,6 +133,8 @@ class Navigator extends PlainComponent {
             this.configContext.getData('name') === 'Metagora'
                 ? this.updateMetagoraContext(agora)
                 : this.updateServiceContext(agora.items[0])
+
+            if (this.configContext.getData('name') === 'Metagora') this.$('.menu').style.display = 'none' // This hides the menu when the metagora is selected
         }
 
         catch (error) {
@@ -141,7 +144,6 @@ class Navigator extends PlainComponent {
     }
 
     updateAgora(agoraIndex, isMetagora=false) {
-        console.log("UPDATE AGORA", agoraIndex, isMetagora)
         this.initialLoad.setState(true, false)
         this.resultContext.setData({data: [], grouped: []}, false)
 
