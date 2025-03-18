@@ -94,3 +94,4 @@
 - [ ] When the metagora is selected, hide the navigator and show another widget like a european map with the location of each alliance.
 - [ ] Make showcase cards less wide.
 - [ ] Keep the greetings until the user makes the first click or scrolls down ¿?
+- [ ] Animate the metagora navigator buttons on click.
