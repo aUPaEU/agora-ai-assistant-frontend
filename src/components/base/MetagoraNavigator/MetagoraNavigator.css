@@ -24,7 +24,7 @@
     justify-content: center;
     align-items: center;
 
-    background-color: rgb(from var(--primary-color) r g b / 0.35);
+    background-color: rgb(from var(--primary-color) r g b / 0.25);
     border: none;
 
     backdrop-filter: blur(10px);
@@ -59,17 +59,27 @@
 }
 
 .metagora {
-    height: 40px;
+    /* height: 40px; */
 
-    font-weight: bold;
-    color: var(--text-accent-color);
+    /* font-weight: bold;
+    color: var(--text-accent-color); */
 
     background-color: rgb(from var(--text-accent-color) r g b / 0.2);
+}
+
+.metagora svg {
+    color: var(--primary-color);
+    width: 80%;
+    height: 80%;
 }
 
 .metagora.selected {
     color: var(--primary-color);
     background-color: var(--text-accent-color);
+}
+
+.metagora.selected svg {
+    color: var(--primary-color);
 }
 
 .metagora:hover {
@@ -78,7 +88,7 @@
 }
 
 .no-logo {
-    font-size: 1.8rem;
+    /* font-size: 1.8rem; */
     font-weight: bold;
 }
 
