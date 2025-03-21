@@ -25,7 +25,7 @@ class Greetings extends PlainComponent {
                 .agora-greetings-wrapper {
                     --company-color: ${
                         this.companyContext.getData('info') 
-                            ? this.companyContext.getData('info').primary_color
+                            ? this.companyContext.getData('info').primary_color ?? "var(--text-accent-color)"
                             : "var(--text-accent-color)"
                     };
                 }
@@ -39,8 +39,8 @@ class Greetings extends PlainComponent {
                         class="alliance-name" 
                     >${
                         this.companyContext.getData('info')
-                            ? this.companyContext.getData('info').name
-                            : this.configContext.getData('name') ?? '    '
+                            ? this.companyContext.getData('info').name ?? ''
+                            : this.configContext.getData('name') ?? ''
                     }</span>
                 </div>
                 <span class="multilanguage-welcome">
@@ -68,7 +68,7 @@ class Greetings extends PlainComponent {
                         <span class="default-message">How could we help you?</span>
                         <p class="greetings-description">
                             Use our search tool to quickly find the resources and acceleration services that you may
-                            need within the ${this.companyContext.getData('info').name} Agora.
+                            need within the ${this.companyContext.getData('info') ? this.companyContext.getData('info').name : ''} Agora.
                         </p>
                         <p class="greetings-description" style="color: var(--text-tertiary-color);font-weight:100;">
                             Enter your query to get started...
