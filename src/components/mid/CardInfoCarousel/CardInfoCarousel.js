@@ -86,12 +86,12 @@ class CardInfoCarousel extends PlainComponent {
         const cardData = this.resultContext.getData('data').find(card => Number(card.data.id) === Number(id))
         
         if (!detailUrl) detailUrl = this.updateUrl(cardData)
-        
+
         this.updateVisibility(hasImage)
         this.updateCardConent(cardData, detailUrl)
         this.displayAdditionalFields(cardData.data, cardData.featured_fields)
         this.updateNavigationControls()
-        this.highlightSearchTerms()
+        this.highlightSearchTerms(cardData.roots)
     }
 
     updateUrl(cardData) {
@@ -240,19 +240,19 @@ class CardInfoCarousel extends PlainComponent {
         })
     }
 
-    highlightSearchTerms() {
+    highlightSearchTerms(terms) {
         let searchTerms = this.searchContext.getData('current') || []
+        searchTerms = terms
         searchTerms = searchTerms.filter(term => {
             if (!['i', 'I'].includes(term)) return term
         })
-
-        console.log(searchTerms)
 
         let content = this.$('.card-info-content').innerHTML
         
         searchTerms.forEach(term => {
             const searchRegex = new RegExp(`\\b${term}\\w*\\b`, 'gi')
-            content = content.replace(searchRegex, match => {
+            content = content.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
+            /* content = content.replace(searchRegex, match => {
                 const split = splitAndKeepDelimiter(match, term)
                 let result = ''
                 split.forEach(slice => {
@@ -263,7 +263,7 @@ class CardInfoCarousel extends PlainComponent {
                     }
                 })
                 return result
-            })
+            }) */
          
         })
         
