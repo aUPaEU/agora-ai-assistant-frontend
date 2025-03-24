@@ -95,3 +95,6 @@
 - [ ] Make showcase cards less wide.
 - [ ] Keep the greetings until the user makes the first click or scrolls down ¿?
 - [ ] Animate the metagora navigator buttons on click.
+
+- [ ] Improve pinbox on desktop display
+- [ ] Improve elasticsearch query with partial matches and stemming implementation.
