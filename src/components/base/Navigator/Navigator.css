@@ -56,7 +56,7 @@
 agora-base-loader {
     position: fixed;
     bottom: 2rem;
-    left: 2rem;
+    left: 2.5rem;
 
     z-index: 100000000000000000000000;
 }
