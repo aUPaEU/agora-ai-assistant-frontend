@@ -6,6 +6,9 @@ import { PATHS } from "../../../constants/paths.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 
+/* Icons */
+import { METAGORA_LOGO } from "../../../icons/icons"
+
 class MetagoraNavigator extends PlainComponent {
     constructor() {
         super('agora-metagora-navigator', `${PATHS.BASE_COMPONENTS}/MetagoraNavigator/MetagoraNavigator.css`)
@@ -24,8 +27,8 @@ class MetagoraNavigator extends PlainComponent {
     template() {
         return html`
             <div class="agora-button-grid">
-                <button class="agora-selector metagora ${this.currentSelected.getState() === -1 ? 'selected' : ''}">
-                    Metagora
+                <button class="agora-selector metagora ${this.currentSelected.getState() === -1 ? 'selected' : ''}" title="Metagora">
+                    ${METAGORA_LOGO}
                 </button>
                 ${
                     this.metagoraContext.getData('data').agoras.map((agora, index) => {

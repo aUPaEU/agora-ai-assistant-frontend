@@ -72,12 +72,61 @@
     border-top-right-radius: 10pt;
 }
 
-.default-image {
+/* DEFAULT IMAGES */
+.default-image-0 {
     background-image: 
         radial-gradient(ellipse at top, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
         radial-gradient(ellipse at bottom,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff),
         radial-gradient(ellipse at left, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
         radial-gradient(ellipse at right,#00ccd3,#00bfe6,#00aef8, #009aff,#0080ff);
+}
+
+.default-image-1 {
+    background: 
+        radial-gradient(ellipse at top, #ffcc00, #ffdb4d, #ffe066, #ffeb99, #fff2cc),
+        radial-gradient(ellipse at bottom, #fff2cc, #ffeb99, #ffe066, #ffdb4d, #ffcc00),
+        radial-gradient(ellipse at left, #ffcc00, #ffdb4d, #ffe066, #ffeb99, #fff2cc),
+        radial-gradient(ellipse at right, #fff2cc, #ffeb99, #ffe066, #ffdb4d, #ffcc00);
+}
+
+.default-image-2 {
+    background: 
+        radial-gradient(ellipse at top, #32cd32, #40e040, #66ff66, #80ff80, #99ff99),
+        radial-gradient(ellipse at bottom, #99ff99, #80ff80, #66ff66, #40e040, #32cd32),
+        radial-gradient(ellipse at left, #32cd32, #40e040, #66ff66, #80ff80, #99ff99),
+        radial-gradient(ellipse at right, #99ff99, #80ff80, #66ff66, #40e040, #32cd32);
+}
+
+.default-image-3 {
+    background: 
+        radial-gradient(ellipse at top, #800000, #990000, #b30000, #cc0000, #e60000),
+        radial-gradient(ellipse at bottom, #e60000, #cc0000, #b30000, #990000, #800000),
+        radial-gradient(ellipse at left, #800000, #990000, #b30000, #cc0000, #e60000),
+        radial-gradient(ellipse at right, #e60000, #cc0000, #b30000, #990000, #800000);
+}
+
+.default-image-4 {
+    background: 
+        radial-gradient(ellipse at top, #800080, #993399, #b366b3, #cc99cc, #e6cce6),
+        radial-gradient(ellipse at bottom, #e6cce6, #cc99cc, #b366b3, #993399, #800080),
+        radial-gradient(ellipse at left, #800080, #993399, #b366b3, #cc99cc, #e6cce6),
+        radial-gradient(ellipse at right, #e6cce6, #cc99cc, #b366b3, #993399, #800080);
+}
+
+.default-image-5 {
+    background: 
+        radial-gradient(ellipse at top, #ff4500, #ff5a1f, #ff713d, #ff8a66, #ffa07a),
+        radial-gradient(ellipse at bottom, #ffa07a, #ff8a66, #ff713d, #ff5a1f, #ff4500),
+        radial-gradient(ellipse at left, #ff4500, #ff5a1f, #ff713d, #ff8a66, #ffa07a),
+        radial-gradient(ellipse at right, #ffa07a, #ff8a66, #ff713d, #ff5a1f, #ff4500);
+}
+
+.default-image-6 {
+    background: 
+        radial-gradient(ellipse at top, #008080, #009999, #00b3b3, #00cccc, #00e6e6),
+        radial-gradient(ellipse at bottom, #00e6e6, #00cccc, #00b3b3, #009999, #008080),
+        radial-gradient(ellipse at left, #008080, #009999, #00b3b3, #00cccc, #00e6e6),
+        radial-gradient(ellipse at right, #00e6e6, #00cccc, #00b3b3, #009999, #008080);
 }
 
 .card-content {

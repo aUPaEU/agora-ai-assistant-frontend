@@ -47,9 +47,7 @@
 - [x] Add a field within the acceleration services module to add an image.
 
 <!-- STYLING -->
-- [ ] Remove greetings if there are results to be displayed.
 - [ ] Make fades visibility blend with the background (somehow).
-
 - [x] Improve usability on the navigator component.
 - [x] Adapt style to make it coherent.
 - [x] Display the images of the acceleration services within the showcase component.
@@ -63,8 +61,7 @@
 <!-- BUGS -->
 - [ ] Drag and drop does not work on mobile displays.
 - [ ] Solve a bug where "next" and "previous" buttons in carousel are mixing results from different services (wrappers).
-- [ ] Solve issue when the CDN cache is not being purged properly (mainly with css files).
-
+- [x] Solve issue when the CDN cache is not being purged properly (mainly with css files).
 - [x] Solve "highlight search terms" bug when the query is just one letter.
 - [x] Solve style bug where some texts are blurry (maybe due to the font size).
 - [x] Solve bug where the showcase cards are being rendered twice.
@@ -83,18 +80,29 @@
 - [x] Remove extra fields temporarily from the carousel cards.
 - [x] Rediseño visual.
 - [x] Create a new repo within aUPaEU organization to host common utilities like LibreTranslate or HTMLExtractor.
-- [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial (ejemplo: 'acoustics' vs 'acoustic').
 - [x] Open all the links in new tabs.
 - [x] Add metagora data fetching.
 - [x] Make the metagora navigator render conditionally.
+- [x] Make showcase cards less wide.
+- [x] Each time the pages re-renders, the selected agora button is not maintaining its state.
+- [x] Make color variations on the default images for dynamic cards (based on title hash ¿?).
+
+<!-- FROM 19th March -->
+- [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial (ejemplo: 'acoustics' vs 'acoustic'). The issue is that the partial match takes into account more letters ie. 'acoustic' returns 'acoustic-s' as a match but not the reverse 'acoustics' does not return 'acoustic' as a match.
+- [ ] Display showcase card when hovering the navigator (it should be implemented with a debouncer).
+- [ ] Make carousel cards more big.
+- [ ] Implement a breadcrumb within the carousel card Service >> Sub-service >> Catalogue.
+- [ ] Make navigator menu dynamic to be always visible when scrolling up and down.
+- [ ] Add a checkbox to the navigator items to use them as a filter. If you check one the rest uncheck, then you can check others.
+- [ ] Add a button near the searchbar to clear the filtering.
 - [ ] Change the config 'host' to a list in the case of the metagora and check all the business logic related to that. 
 - [ ] Ensure the proper work of the metagora data fetching when fetching from different hosts (ie. CIVIS).
 - [ ] The partial matches are not being highlighted properly.
-- [ ] Each time the pages re-renders, the selected agora button is not maintaining its state.
 - [ ] When the metagora is selected, hide the navigator and show another widget like a european map with the location of each alliance.
-- [ ] Make showcase cards less wide.
 - [ ] Keep the greetings until the user makes the first click or scrolls down ¿?
 - [ ] Animate the metagora navigator buttons on click.
-
 - [ ] Improve pinbox on desktop display
 - [ ] Improve elasticsearch query with partial matches and stemming implementation.
+- [ ] Solve greetings animation bug when changing to the showcase.
+- [ ] Remove greetings if there are results to be displayed.
+- [ ] Make results permanent. 

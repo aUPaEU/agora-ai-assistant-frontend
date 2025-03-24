@@ -7,7 +7,7 @@ import { gsap } from "gsap/gsap-core"
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
-import { BOOST, WEBSITE_LINK } from "../../../icons/icons"
+import { BOOST, WEBSITE_LINK, METAGORA_LOGO } from "../../../icons/icons"
 
 class Landing extends PlainComponent {
     constructor() {
@@ -18,6 +18,8 @@ class Landing extends PlainComponent {
         this.configContext = new PlainContext('config', this, true)
         this.servicesContext = new PlainContext('service', this, true)
         this.resultContext = new PlainContext('result', this, true)
+        this.companyContext = new PlainContext('company', this, true)
+        this.metagoraContext = new PlainContext('metagora', this, false)
 
         this.servicesContext.setData({services: []})
 
@@ -44,32 +46,8 @@ class Landing extends PlainComponent {
                     opacity: 0,
                     duration: 1,
                     onComplete: () => {
-                        // if (!this.greetingTimeout) return
-
                         this.isGreeting.setState(false, false)
                         this.isGreeted.setState(true, true)
-
-                        /* const showcase = this.$('.showcase-card-wrapper')
-                        console.log(showcase)
-                        
-                        const showcaseCardWrapper = this.$('.showcase-card-wrapper')
-                        console.log("!!!!", this.wrapper)
-                        // Reset the x position
-                        gsap.set(showcaseCardWrapper, {
-                            opacity: 0,
-                            x: -500,
-                            onComplete: () => {
-                                // Animate in
-                                gsap.to(showcaseCardWrapper, {
-                                    delay: 0.3,
-                                    x: 0,
-                                    opacity: 1,
-                                    duration: 1
-                                })
-                            }
-                        })
-
-                        this.render() */
                     }
                 })
             }, this.greetingsDuration.getState())
@@ -91,8 +69,14 @@ class Landing extends PlainComponent {
             return ''
         }
 
+        const isMetagora = this.companyContext.getData('info') && this.companyContext.getData('info').name === 'Metagora'
+
         const displayedService = this.displayOrderedService(services)
+        const currentAgora = this.getServiceParentAgora(displayedService)
+        console.log(currentAgora)
         if (!displayedService) return ''
+
+        console.log("DISPLAYED SERVICE", displayedService)
 
         const suggestedSearchTerms = Array.from(new Set(displayedService.fields.suggested_search_terms.split(','))).map(term => term.trim())
 
@@ -103,13 +87,21 @@ class Landing extends PlainComponent {
                 >Learn more</agora-text-button>`
             : html``
 
-        return html`
-            <div class="showcase-card-wrapper first-fade-in">
+        const card = html`
+            <div class="showcase-card-wrapper first-fade-in ${isMetagora ? 'showcase-metagora-display' : ''}">
+                <!-- Node Connection Rendering Canvas -->
                 <canvas class="node-connection-canvas"></canvas>
+
                 <!-- Banner Image -->
                 <div class="banner-image default-image">
                     <h1>${displayedService.fields.name}</h1>
-                    <span class="icon">${BOOST}</span>
+                    <span class="icon">
+                        ${
+                            isMetagora 
+                                ? html`<img src="${this.configContext.getData('host')}${currentAgora.agora.fields.image}" alt="${currentAgora.agora.fields.name}" />`
+                                : BOOST
+                        }
+                    </span>
                 </div>
 
                 <!-- Item Image -->
@@ -142,6 +134,8 @@ class Landing extends PlainComponent {
                 </div>
             </div>
         `
+
+        return card
     }
 
     listeners() {
@@ -171,6 +165,35 @@ class Landing extends PlainComponent {
         })
     }
 
+    getServiceParentAgora(displayedService) {
+        const metagora = this.metagoraContext.getData('data')
+        const mappedServices = metagora.agoras.map(agora => {
+            return {
+                agora: agora,
+                services: agora.fields.sub_acceleration_services instanceof Array
+                    ? Array.from(agora.fields.sub_acceleration_services).map(service => {
+                        return {
+                            id: service.id,
+                            name: service.fields.name
+                        }
+                    })
+                    : [{
+                        id: agora.fields.sub_acceleration_services.id,
+                        name: agora.fields.sub_acceleration_services.fields.name
+                    }]
+            }
+        })
+
+        console.log(mappedServices)
+        console.log(displayedService)
+
+        return mappedServices.find(agora => {
+            return agora.services.find(service => {
+                return service.id === displayedService.id && service.name === displayedService.fields.name
+            })
+        })
+    }
+
     displayOrderedService(data) { 
         let nextIndex = this.lastShown.getState() + 1
 
@@ -180,39 +203,6 @@ class Landing extends PlainComponent {
         if (this.isAnimating.getState()) return data[this.lastShown.getState()]
 
         this.animateShowcaseCard()
-
-        /* this.isAnimating.setState(true, false) */
-
-        // Set a timeout to re-render the component
-        /* setTimeout(() => {
-            const showcaseCardWrapper = this.$('.showcase-card-wrapper')
-            console.log(showcaseCardWrapper)
-            // Animate the component to exit it and when animation ends, re-render it
-            gsap.to(showcaseCardWrapper, {
-                opacity: 0,
-                x: 500,
-                duration: 0.5,
-                onComplete: () => {
-                    this.isAnimating.setState(false, false)
-                    this.render()
-
-                    const showcaseCardWrapper = this.$('.showcase-card-wrapper')
-                    // Reset the x position
-                    gsap.set(showcaseCardWrapper, {
-                        opacity: 0,
-                        x: 0,
-                        onComplete: () => {
-                            // Animate in
-                            gsap.to(showcaseCardWrapper, {
-                                delay: 0.3,
-                                opacity: 1,
-                                duration: 0.5
-                            })
-                        }
-                    })
-                }
-            })
-        }, this.updateTime.getState()) */
 
         if (!data[nextIndex]) return
 
@@ -246,7 +236,6 @@ class Landing extends PlainComponent {
 
     renderNodeView(service) {
         setTimeout(() => {
-            //this.drawNodeConnectionBetween('a', 'b')
             this.drawConnections()
         }, 100)
 
@@ -288,10 +277,6 @@ class Landing extends PlainComponent {
                     }
                 })
             }
-
-            /* if (website) {
-                nodes.push(buildDataTree(website))
-            } */
             
             return node ? node : null
         }

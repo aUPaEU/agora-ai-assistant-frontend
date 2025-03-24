@@ -45,6 +45,15 @@
     transform: translateX(-2rem);
 }
 
+.showcase-metagora-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 60%;
+}
+
 .agora-landing-wrapper:empty {
     display: none;
 }
@@ -122,7 +131,6 @@ agora-greetings {
 
     display: none;
 
-    margin-block: -1rem;
     margin-top: -2.5rem;
     margin-left: -2.5rem;
 
@@ -215,14 +223,68 @@ agora-greetings {
     gap: 1rem;
 }
 
+/* SHOWCASE BENTO */
+.showcase-bento {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 3rem;
+}
+
+.extra-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    gap: 1rem;
+
+    width: 30%;
+
+    transition: 300ms;
+}
+
+.tip {
+    display: none;
+    flex: 1;
+
+    max-height: 300px;
+    width: 100%;
+
+    border-radius: 10pt;
+    background-color: var(--text-accent-color);
+
+    border-radius: 10pt;
+    
+    transition: 300ms;
+}
+
+.tip-alliance {
+    flex: 1;
+
+    max-height: 100px;
+    max-width: 100px;
+    aspect-ratio: 1;
+
+    align-self: flex-end;
+
+    border-radius: 10pt;
+
+    background-color: var(--primary-color);
+    transition: 300ms;
+}
+
 /* NODE VISUALIZATION */
 .node-view-label, .search-tags-label {
-    display: none; /* REMOVED TEMPORARY */
     margin-bottom: -1.5rem;
     box-sizing: border-box;
 
     color: var(--text-tertiary-color);
     font-size: 0.8rem;
+}
+
+.node-view-label {
+    display: none;
 }
 
 .node-view-label:has(+ .node-wrapper:empty) {
