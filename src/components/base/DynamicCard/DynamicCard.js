@@ -67,11 +67,16 @@ class DynamicCard extends PlainComponent {
             ? html`<span class="card-summary">${this.data.getState().content}</span>`
             : null
 
-        const origin = this.data.getState().university_origin
-            ? html`<span class="card-origin">${this.data.getState().university_origin[1]}</span>`
+        const origin = this.data.getState().university_origin || this.data.getState().home_partner_institution
+            ? html`<span class="card-origin">${
+                this.data.getState().university_origin ?? 
+                this.data.getState().home_partner_institution
+            }</span>`
             : null
 
-        const publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
+        let publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
+        if (isNaN(publicScore) || publicScore === 0) publicScore = 1
+
 
         const model = this.getAttribute('model') ?? null
         const websites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
