@@ -20,7 +20,7 @@ class Searchbar extends PlainComponent {
     super('agora-searchbar', `${PATHS.BASE_COMPONENTS}/Searchbar/Searchbar.css`)
 
     //this.defaultTreshold = 0.45
-    this.defaultTreshold = 0.1
+    this.defaultTreshold = 0.05
 
     this.configContext = new PlainContext('config', this, false)
     this.resultContext = new PlainContext('result', this, false)
@@ -161,6 +161,7 @@ class Searchbar extends PlainComponent {
           featured_fields: result.featured_fields || ['web_link', 'url', 'website'],
           featured: result.featured || false, 
           data: result.data,
+          roots: result.roots,
           score: {
             absolute: Number(result.score / this.getMaxScore(response.results)).toFixed(2) || 1.00,
             relative: Number(result.score / this.getGroupMaxScore(response.results, result.service)).toFixed(2) || 1.00
