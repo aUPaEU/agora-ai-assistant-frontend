@@ -51,8 +51,10 @@ class LayoutV2 extends PlainComponent {
             }
 
             <!-- Pin Box -->
+            <!--
             <div class="pinbox-unfold-button">${BOOKMARK}</div>
             <agora-pin-box></agora-pin-box>
+            -->
 
             <!-- Carousel -->
             <agora-card-info-carousel></agora-card-info-carousel>
@@ -69,7 +71,9 @@ class LayoutV2 extends PlainComponent {
     }
 
     listeners() {
-        this.$('.pinbox-unfold-button').onclick = () => this.tooglePinBox()
+        if (this.$('.pinbox-unfold-button')) {
+            this.$('.pinbox-unfold-button').onclick = () => this.tooglePinBox()
+        }
     }
 
     tooglePinBox() {

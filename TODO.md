@@ -101,6 +101,8 @@
 - [ ] When the metagora is selected, hide the navigator and show another widget like a european map with the location of each alliance.
 - [ ] Keep the greetings until the user makes the first click or scrolls down ¿?
 - [ ] Animate the metagora navigator buttons on click.
+- [ ] Improve pinbox on desktop display
+- [ ] Improve elasticsearch query with partial matches and stemming implementation.
 - [ ] Solve greetings animation bug when changing to the showcase.
 - [ ] Remove greetings if there are results to be displayed.
 - [ ] Make results permanent. 
