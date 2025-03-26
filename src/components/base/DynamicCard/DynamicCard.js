@@ -75,18 +75,12 @@ class DynamicCard extends PlainComponent {
             : null
 
         let publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
-        if (isNaN(publicScore) || publicScore === 0) publicScore = 1
-
-
-        const model = this.getAttribute('model') ?? null
-        const websites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
-        const flatWebsites = websites.flatMap(website => website.websites)
-        const modelVerboseName = flatWebsites.find(website => website.model === model).name
+        if (isNaN(publicScore) || publicScore === 0) publicScore = '~'
 
         const isFeatured = this.data.getState().featured
 
         return html`
-            <div class="catalogue">${modelVerboseName}</div>
+            <div class="catalogue">${this.getAttribute('model-verbose-name')}</div>
             ${image}
             <div class="card-content">
                 ${origin}
