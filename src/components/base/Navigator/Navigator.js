@@ -86,6 +86,7 @@ class Navigator extends PlainComponent {
                                         ? `animation-delay: ${index * 0.2}s;`
                                         : ``
                                 }"
+                                data-component='${data.fields.components.fields.name}'
                                 data-name='${data.fields.name}'
                                 data-info='${JSON.stringify(data.fields, stringifyReplacer)}'
                                 data-type='${ITEM_TYPE.ACCELERATION_SERVICE}'>
