@@ -88,7 +88,7 @@
 - [x] Make color variations on the default images for dynamic cards (based on title hash ¿?).
 
 <!-- FROM 19th March -->
-- [ ] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial (ejemplo: 'acoustics' vs 'acoustic'). The issue is that the partial match takes into account more letters ie. 'acoustic' returns 'acoustic-s' as a match but not the reverse 'acoustics' does not return 'acoustic' as a match.
+- [x] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial (ejemplo: 'acoustics' vs 'acoustic'). The issue is that the partial match takes into account more letters ie. 'acoustic' returns 'acoustic-s' as a match but not the reverse 'acoustics' does not return 'acoustic' as a match.
 - [ ] Display showcase card when hovering the navigator (it should be implemented with a debouncer).
 - [ ] Make carousel cards more big.
 - [ ] Implement a breadcrumb within the carousel card Service >> Sub-service >> Catalogue.
@@ -99,10 +99,10 @@
 - [ ] Ensure the proper work of the metagora data fetching when fetching from different hosts (ie. CIVIS).
 - [ ] The partial matches are not being highlighted properly.
 - [ ] When the metagora is selected, hide the navigator and show another widget like a european map with the location of each alliance.
-- [ ] Keep the greetings until the user makes the first click or scrolls down ¿?
-- [ ] Animate the metagora navigator buttons on click.
+- [ ] Keep the greetings until the user makes the first click or scrolls down ¿? or at least until the services are loaded.
+- [x] Animate the metagora navigator buttons on click.
 - [ ] Improve pinbox on desktop display
-- [ ] Improve elasticsearch query with partial matches and stemming implementation.
-- [ ] Solve greetings animation bug when changing to the showcase.
+- [x] Improve elasticsearch query with partial matches and stemming implementation.
+- [x] Solve greetings animation bug when changing to the showcase.
 - [ ] Remove greetings if there are results to be displayed.
 - [ ] Make results permanent. 
