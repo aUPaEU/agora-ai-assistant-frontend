@@ -1,4 +1,4 @@
-import { PlainComponent, PlainContext } from "plain-reactive"
+import { PlainComponent, PlainContext, PlainState } from "plain-reactive"
 
 /* Constants */
 import { PATHS } from "../../../constants/paths.const"
@@ -13,6 +13,13 @@ class Greetings extends PlainComponent {
         this.companyContext = new PlainContext('company', this, true)
         this.configContext = new PlainContext('config', this, false)
         this.resultContext = new PlainContext('result', this, true)
+
+        this.setInitialLoading()
+    }
+
+    setInitialLoading() {
+        this.wrapper.classList.add('initial-loading')
+        
     }
 
     template() {

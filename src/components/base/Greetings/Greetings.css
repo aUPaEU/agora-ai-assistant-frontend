@@ -19,7 +19,9 @@
 
     font-size: 40px;
     font-weight: bold;
+}
 
+.initial-loading {
     animation-name: fade-in;
     animation-duration: 1s;
     animation-fill-mode: forwards;

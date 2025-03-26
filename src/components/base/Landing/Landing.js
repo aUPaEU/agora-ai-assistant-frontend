@@ -7,7 +7,7 @@ import { gsap } from "gsap/gsap-core"
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
-import { BOOST, WEBSITE_LINK, METAGORA_LOGO } from "../../../icons/icons"
+import { BOOST, WEBSITE_LINK, METAGORA_LOGO, CALENDAR, BOOK_PILE, WEBSITE } from "../../../icons/icons"
 
 class Landing extends PlainComponent {
     constructor() {
@@ -36,7 +36,6 @@ class Landing extends PlainComponent {
 
     template() {
         /* GREETING RENDERING */
-        console.log(this.isGreeted.getState(), this.isGreeting.getState())
         if (!this.isGreeted.getState() && !this.isGreeting.getState()) {
             this.isGreeting.setState(true, false)
 
@@ -53,7 +52,10 @@ class Landing extends PlainComponent {
             }, this.greetingsDuration.getState())
         }
 
-        if (this.isGreeting.getState() && !this.isGreeted.getState()) return html`
+        if (
+            this.isGreeting.getState() && !this.isGreeted.getState() ||
+            this.servicesContext.getData('services').length === 0 // TODO: Check if this works properly
+        ) return html`
             <agora-greetings></agora-greetings>
         ` 
 
@@ -76,8 +78,6 @@ class Landing extends PlainComponent {
         console.log(currentAgora)
         if (!displayedService) return ''
 
-        console.log("DISPLAYED SERVICE", displayedService)
-
         const suggestedSearchTerms = Array.from(new Set(displayedService.fields.suggested_search_terms.split(','))).map(term => term.trim())
 
         const learnMoreButton = displayedService.fields.website && !(displayedService.fields.website instanceof Array) && displayedService.fields.website.fields.domain
@@ -86,6 +86,20 @@ class Landing extends PlainComponent {
                     href="${displayedService.fields.website.fields.domain}"
                 >Learn more</agora-text-button>`
             : html``
+
+        const serviceIcon = (() => {
+            console.log(displayedService)
+            switch (displayedService.fields.components.fields.name) {
+                case 'Showcase':
+                    return WEBSITE
+                case 'Catalogues':
+                    return BOOK_PILE
+                case 'Events':
+                    return CALENDAR
+                default:
+                    return BOOST
+            }
+        })()
 
         const card = html`
             <div class="showcase-card-wrapper first-fade-in ${isMetagora ? 'showcase-metagora-display' : ''}">
@@ -99,7 +113,7 @@ class Landing extends PlainComponent {
                         ${
                             isMetagora 
                                 ? html`<img src="${this.configContext.getData('host')}${currentAgora.agora.fields.image}" alt="${currentAgora.agora.fields.name}" />`
-                                : BOOST
+                                : serviceIcon
                         }
                     </span>
                 </div>
@@ -166,7 +180,7 @@ class Landing extends PlainComponent {
     }
 
     getServiceParentAgora(displayedService) {
-        const metagora = this.metagoraContext.getData('data')
+        const metagora = this.metagoraContext.getData('data') ?? {agoras: []}
         const mappedServices = metagora.agoras.map(agora => {
             return {
                 agora: agora,
