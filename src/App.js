@@ -57,6 +57,7 @@ class App extends PlainComponent {
         this.metagoraContext = new PlainContext('metagora', this, false)
         this.chatContext = new PlainContext('chat', this, false)
         this.configContext = new PlainContext('config', this, false)
+        this.languageContext = new PlainContext('language', this, false, 'local')
 
         this.layout = new PlainState('main', this)
 

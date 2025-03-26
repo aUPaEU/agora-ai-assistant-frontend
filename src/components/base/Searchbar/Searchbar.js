@@ -26,16 +26,61 @@ class Searchbar extends PlainComponent {
     this.resultContext = new PlainContext('result', this, false)
     this.serviceContext = new PlainContext('service', this, false)
     this.searchContext = new PlainContext('search', this, false, 'local') // We'll use this to autocomplete queries
+    this.languageContext = new PlainContext('language', this, false, 'local')
 
     this.currentSource = new PlainState('all', this)
+    this.currentQueryLanguage = new PlainState({label: 'English', value: 'en'}, this)
+    this.queryLanguages = new PlainState([
+      {label: 'English', value: 'en'},
+      {label: 'Spanish', value: 'es'},
+      {label: 'Catalan', value: 'ca'},
+      {label: 'German', value: 'de'},
+      {label: 'Italian', value: 'it'},
+      {label: 'Portuguese', value: 'pt'},
+      {label: 'Swedish', value: 'sv'},
+      {label: 'French', value: 'fr'},
+      {label: 'Fisnnish', value: 'fi'},
+      {label: 'Polish', value: 'pl'}
+    ], this)
 
     this.signals = new PlainSignal(this)
     this.signals.register('results-updated')
     this.signals.register('no-results')
+
+    this.loadPreferredLanguage()
   }
 
   template() {
     return html`
+        <!-- Query Language Selector -->
+        <div class="language-selector">
+          <!-- Language Options -->
+          
+          <ul class="query-language-selector hidden">
+            ${
+              this.queryLanguages.getState().map((language, index) => {
+                const label = language.label
+                const value = language.value
+                return html`
+                  <li 
+                    class="query-language-option slide-in" 
+                    data-value=${value}
+                    style="animation-delay: ${index * 0.02}s"
+                  >
+                    <span class="query-language-option-label">${label}</span>
+                  </li>
+                `
+              }).join('')
+            }
+          </ul>
+
+          <!-- Language Label -->
+          <div class="query-language-selector-label-wrapper">
+            <span class="query-language-selector-label">${this.currentQueryLanguage.getState()?.label ?? 'English'}</span>
+            <span class="query-language-selector-hint">Select your search language for better results</span>
+          </div>
+        </div>
+
         <!-- Score Treshold -->
         <div class="treshold">
           ${
@@ -61,6 +106,8 @@ class Searchbar extends PlainComponent {
 
         <!-- Autocomplete Dropdown -->
         <ul class="autocomplete-dropdown"></ul>
+
+        
     `
   }
 
@@ -75,6 +122,29 @@ class Searchbar extends PlainComponent {
     if (this.$('#treshold')) {
       this.$('#treshold').oninput = (e) => this.$('.treshold-label').innerHTML = `A: ${e.target.value}`
     }
+
+    /* Query Language Selector Options */
+    this.$('.query-language-selector-label').onclick = () => this.toggleLanguageSelector()
+    this.$$('.query-language-option').forEach(option => {
+      option.onclick = () => this.changeQueryLanguage(option.textContent, option.dataset.value)
+    })
+  }
+
+  changeQueryLanguage(label, value) {
+    this.$('.query-language-selector-label').textContent = label
+    this.toggleLanguageSelector()
+    this.languageContext.setData({ label: label, value: value }, false)
+    this.currentQueryLanguage.setState({ label: label, value: value }, false)
+  }
+
+  loadPreferredLanguage() {
+    const label = this.languageContext.getData('label')
+    const value = this.languageContext.getData('value')
+    this.currentQueryLanguage.setState({ label: label, value: value }, false)
+  }
+
+  toggleLanguageSelector() {
+    this.$('.query-language-selector').classList.toggle('hidden')
   }
 
   /* Search & Query Handling */
@@ -82,8 +152,10 @@ class Searchbar extends PlainComponent {
     // If there's no text in the input we just return
     if (this.$('.searchbar-input').value.length === 0) return
 
+    const queryLanguage = this.currentQueryLanguage.getState()?.value ?? 'en'
+
     /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
-    const translatedQuery = await translate(this.$('.searchbar-input').value)
+    const translatedQuery = await translate(this.$('.searchbar-input').value, queryLanguage, 'en')
     console.log(translatedQuery)
 
     // We extract all the availablel models in the Agora from the service context
