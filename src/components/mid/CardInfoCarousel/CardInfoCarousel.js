@@ -43,7 +43,10 @@ class CardInfoCarousel extends PlainComponent {
                 <div class="card-info-content">
                     <!-- Card Service -->
                     <span class="card-info-service"></span>
-                    <span class="card-info-origin"></span>
+                    <span class="card-info-origin-wrapper">
+                        <span class="card-info-origin"></span>
+                        <span class="card-info-breadcrumb"></span>
+                    </span>
                     <span class="card-info-name"></span>
                     <span class="card-info-lastname"></span>
                     <span class="card-info-summary"></span>
@@ -126,11 +129,16 @@ class CardInfoCarousel extends PlainComponent {
 
     updateCardConent(cardData, detailUrl) {
         this.$('.card-info-service').textContent = cardData.service ?? ''
+        this.$('.card-info-breadcrumb').innerHTML = html`
+            <span class="root">${cardData.service}</span>
+            <span class="separator">></span>
+            <a class="leaf" href="${cardData.model_view_url}" target="_blank">${cardData.model_verbose_name}</span>
+        `
         this.$('.card-info-image').src = `${this.configContext.getData('host')}/web/image?model=${cardData.model}&id=${cardData.data.id}&field=image` ?? ''
         this.$('.card-info-name').textContent = cardData.data.name ?? ''
         this.$('.card-info-lastname').innerHTML = cardData.data.lastname ?? ''
         this.$('.card-info-summary').innerHTML = cardData.data.summary ?? cardData.data.description ?? cardData.data.content ?? ''
-        this.$('.card-info-origin').textContent = ''//cardData.data.university_origin ?? ''
+        this.$('.card-info-origin').textContent = cardData.data.university_origin ?? cardData.data.home_partner_institution ?? ''
         this.$('.card-info-explore-button').dataset['url'] = detailUrl ?? ''
 
         this.$('.card-info-content').scrollTo(0, 0)

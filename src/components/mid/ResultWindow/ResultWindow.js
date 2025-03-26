@@ -89,6 +89,7 @@ class ResultWindow extends PlainComponent {
                                                     href="${`${this.configContext.getData('host')}/offering/${card.view_id}/${card.id.split('-')[1]}`}"
                                                     type="${card.type}"
                                                     model="${card.model}"
+                                                    model-verbose-name="${card.model_verbose_name}"
                                                     service="${card.service}"
                                                     data-data='${card.dataset}'
                                                     featured-fields="${card.featured_fields}"
@@ -177,6 +178,7 @@ class ResultWindow extends PlainComponent {
             type: CARD_TYPE.ITEM,
             id: `element-${record.data.id}`,
             model: record.model,
+            model_verbose_name: record.model_verbose_name,
             service: record.service,
             featured_fields: record.featured_fields || [],
             dataset: JSON.stringify(record.data, stringifyReplacer),
@@ -197,105 +199,6 @@ class ResultWindow extends PlainComponent {
         return data
     }
 
-    addCard(card) {
-        let featuredCards = this.resultContext.getData('data')
-            ? extractObjectsWithMatchingKey(this.resultContext.getData('data'), 'featured_element_ids')
-            : []
-
-        featuredCards = featuredCards[0]
-            ? featuredCards[0].featured_element_ids
-            : []
-
-        const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
-        availableWebsites.forEach(item => {
-            item.websites.forEach(website => {
-                if (website.model === card.model) {
-                    card.view_id = website.view_id
-                }
-            })
-        })
-
-        const newCard = document.createElement('agora-dynamic-card')
-        newCard.id = card.id
-        newCard.setAttribute('href', `${this.configContext.getData('host')}/offering/${card.view_id}/${card.id.split('-')[1]}`)
-        newCard.setAttribute('type', card.type)
-        newCard.setAttribute('model', card.model)
-        newCard.setAttribute('service', card.service)
-        newCard.setAttribute('data-data', card.dataset)
-        newCard.setAttribute('featured-fields', card.featured_fields)
-        newCard.classList.add('fade-in')
-
-        if (featuredCards.includes(Number(card.id.split('-')[1]))) {
-            newCard.setAttribute('featured', true)
-        }
-
-        // newCard.setAttribute('featured', true)
-
-        const serviceName = card.service.toLowerCase().replace(/ /g, '-').replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '')
-        const serviceWrapper = this.$(`.${serviceName}-wrapper > .movable-wrapper`)
-        serviceWrapper.appendChild(newCard)
-
-        this.handleCardWrapperScroll(serviceWrapper)
-    }
-
-    // Old function (This fetch could be done in elasticsearch aswell)
-    async fetchResults() {
-        console.log("FETCHING RESULTS")
-        let timerDelay = 1000
-        // We get the data for each item from the resultContext
-        // and we set it in the builtResults state
-        const results = this.resultContext.getData('data')
-
-        results
-        .sort((a, b) => a.service.localeCompare(b.service))
-        .forEach((result) => {
-            result.element_ids.forEach(async (element) => {
-                const response = await api.fetchElement(this.configContext.getData('host'), result.model, element, result.featured_fields)
-                if (!response.id) return
-
-                console.log("This is the format of the response we need", response)
-
-                const newCard = {
-                    type: CARD_TYPE.ITEM,
-                    id: `element-${response.id}`,
-                    model: result.model,
-                    service: result.service,
-                    featured_fields: result.featured_fields,
-                    dataset: JSON.stringify(response, stringifyReplacer)
-                }
-
-                const parsedCard = {...newCard, dataset: response}
-                const updatedBuiltResults = this.builtResults.getState()
-                updatedBuiltResults.push(parsedCard)
-                this.builtResults.setState(updatedBuiltResults, false)
-
-                timerDelay += 500
-
-                // This timeout is used to add the card to the DOM after a delay 
-                // Just for aesthetic and animation purposes
-                setTimeout(() => {
-                    this.addCard(newCard)
-                    this.signals.emit('cards-fetched')
-                    console.log("CARDS FETCHED SIGNAL EMITTED")
-
-                    if (
-                        result === results.at(-1) && 
-                        Number(newCard.id.split('-')[1]) === Number(result.element_ids.at(-1))
-                    ) {
-                            // We set the loading state to false after the last card has been added
-                            setTimeout(() => {
-                                this.isLoading.setState(false, false)
-                                this.setLoading(false)
-                                this.$('.show-more').style.display = 'grid'
-                                this.$('.show-more').classList.add('opacity-fade-in')
-                            }, 500)
-                    }
-                }, timerDelay)
-            })
-        })
-        
-    }
-
     countResults(service) {
         const results = this.resultContext.getData('data').find(result => result.service === service)
         const numElementIds = results.element_ids.length
@@ -306,28 +209,6 @@ class ResultWindow extends PlainComponent {
             numElementIds,
             numFeaturedElementIds,
             notFeaturedElementIds
-        }
-    }
-
-    /* UI State Management */
-    showResults() {
-        /* if (!this.configContext.getData('enabled_ai')) return  */
-        this.wrapper.classList.add('showing-results')
-        this.isLoading.setState(true, false)
-        
-        this.fetchResults() 
-    }
-
-    hideResults() {
-        this.wrapper.classList.remove('showing-results')
-    }
-
-    setLoading(state) {
-        if (state) {
-            this.$('agora-base-loader').wrapper.classList.add('fade-in')
-        } else {
-            this.$('agora-base-loader').wrapper.classList.remove('fade-in')
-            this.$('agora-base-loader').wrapper.classList.add('fade-out')
         }
     }
 

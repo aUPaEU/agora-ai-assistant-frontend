@@ -20,7 +20,7 @@ class Searchbar extends PlainComponent {
     super('agora-searchbar', `${PATHS.BASE_COMPONENTS}/Searchbar/Searchbar.css`)
 
     //this.defaultTreshold = 0.45
-    this.defaultTreshold = 0.05
+    this.defaultTreshold = 0.135
 
     this.configContext = new PlainContext('config', this, false)
     this.resultContext = new PlainContext('result', this, false)
@@ -151,20 +151,36 @@ class Searchbar extends PlainComponent {
         result.service = resultService
     })
 
+    const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
+    const flatWebsites = availableWebsites.flatMap(website => website.websites)
+
+    console.log(flatWebsites)
+    
+
     // Sort results by score and give the expected format to the data
     const sortedResults = response.results
       .sort((a, b) => b.score - a.score)
       .map(result => {
+        /* const modelView = {
+          website: flatWebsites.find(website => website.model === record.model).website,
+          url: flatWebsites.find(website => website.model === record.model).url
+        } */
+        const modelVerboseName = flatWebsites.find(website => website.model === result.model).name
+        const modelWebsite = flatWebsites.find(website => website.model === result.model).website
+        const modelUrl = flatWebsites.find(website => website.model === result.model).url
+
         return {
           model: result.model,
+          model_verbose_name: modelVerboseName,
+          model_view_url: `${modelWebsite}${modelUrl}`,
           service: result.service,
           featured_fields: result.featured_fields || ['web_link', 'url', 'website'],
           featured: result.featured || false, 
           data: result.data,
           roots: result.roots,
           score: {
-            absolute: Number(result.score / this.getMaxScore(response.results)).toFixed(2) || 1.00,
-            relative: Number(result.score / this.getGroupMaxScore(response.results, result.service)).toFixed(2) || 1.00
+            absolute: Number(result.score / this.getMaxScore(response.results)).toFixed(2),
+            relative: Number(result.score / this.getGroupMaxScore(response.results, result.service)).toFixed(2)
           }
         }
       })
