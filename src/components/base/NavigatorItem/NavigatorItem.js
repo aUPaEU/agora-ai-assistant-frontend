@@ -8,7 +8,7 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
-import { ADD, SUBTRACT, CATALOGUE, BOOST, NAGIVATE_TO_WEBSITE, SIMPLE_INFO } from "../../../icons/icons"
+import { ADD, SUBTRACT, CATALOGUE, BOOST, NAGIVATE_TO_WEBSITE, WEBSITE, SIMPLE_INFO, BOOK_PILE, CALENDAR } from "../../../icons/icons"
 
 class NavigatorItem extends PlainComponent {
     constructor() {
@@ -28,10 +28,19 @@ class NavigatorItem extends PlainComponent {
         const showcase = this.info.getState().website ? this.info.getState().website.fields : null
         
         const typeIcon = html`
-            <div class="type-icon">${ (() => {
+            <div class="type-icon" title="${this.getAttribute('data-component')}">${ (() => {
                     switch (this.type.getState()) {
                         case ITEM_TYPE.ACCELERATION_SERVICE:
-                            return BOOST
+                            switch (this.getAttribute('data-component')) {
+                                case 'Showcase':
+                                    return WEBSITE
+                                case 'Catalogues':
+                                    return BOOK_PILE
+                                case 'Events':
+                                    return CALENDAR
+                                default:
+                                    return BOOST
+                            }
                         case ITEM_TYPE.ACCELERATION_SUB_SERVICE:
                             return BOOST
                         case ITEM_TYPE.CATALOGUE:
