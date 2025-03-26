@@ -88,8 +88,7 @@ class Landing extends PlainComponent {
             : html``
 
         const serviceIcon = (() => {
-            console.log(displayedService)
-            switch (displayedService.fields.components.fields.name) {
+            switch (displayedService.fields.components?.fields?.name) {
                 case 'Showcase':
                     return WEBSITE
                 case 'Catalogues':
