@@ -29,6 +29,7 @@ class ResultWindow extends PlainComponent {
 
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
+        this.isFiltered = new PlainState(false, this)
 
         this.scrollInterval = null
         this.currentScrollSpeed = 0
@@ -44,7 +45,7 @@ class ResultWindow extends PlainComponent {
             ? [...new Set(this.resultContext.getData('data').map(result => result.service))].sort()
             : []
 
-        const data = (() => {
+        let data = (() => {
             return services.map(service => {
                 const items = this.resultContext.getData('data').filter(result => result.service === service)
                 return {
@@ -53,6 +54,16 @@ class ResultWindow extends PlainComponent {
                 }
             })
         })()
+
+        // Filter data if it's filtered
+        if (this.isFiltered.getState()) {
+            const serviceFilters = this.resultContext.getData('filters').filter(filter => filter.service).map(filter => filter.service)
+            const modelFilters = this.resultContext.getData('filters').filter(filter => filter.model).map(filter => filter.model)
+            data = data.filter(group => {
+                return serviceFilters.includes(group.service)
+            })
+
+        }
 
         // Condition to hide the component if there are no results
         if (data.length === 0) {
@@ -166,8 +177,16 @@ class ResultWindow extends PlainComponent {
     }
 
     clear() {
-        this.resultContext.setData({data: [], grouped: []})
+        console.log("CLEARING RESULTS")
+        this.resultContext.setData({data: [], grouped: [], filters: []})
         this.builtResults.setState([])
+    }
+
+    filterResults() {
+        const filters = this.resultContext.getData('filters')
+        filters.length > 0 
+            ? this.isFiltered.setState(true)
+            : this.isFiltered.setState(false)
     }
 
     /* Card Creation & Management */

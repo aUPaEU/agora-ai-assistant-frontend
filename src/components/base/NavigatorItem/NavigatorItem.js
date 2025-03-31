@@ -8,25 +8,35 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
-import { ADD, SUBTRACT, CATALOGUE, BOOST, NAGIVATE_TO_WEBSITE, WEBSITE, SIMPLE_INFO, BOOK_PILE, CALENDAR } from "../../../icons/icons"
+import { ADD, SUBTRACT, CATALOGUE, BOOST, NAGIVATE_TO_WEBSITE, WEBSITE, SIMPLE_INFO, BOOK_PILE, CALENDAR, FILLED_SELECTION_SQUARE, EMPTY_SELECTION_SQUARE } from "../../../icons/icons"
 
 class NavigatorItem extends PlainComponent {
     constructor() {
         super('agora-navigator-item', `${PATHS.BASE_COMPONENTS}/NavigatorItem/NavigatorItem.css`)
 
         this.configContext = new PlainContext('config', this, false)
+        this.resultContext = new PlainContext('result', this, false)
 
         this.name = new PlainState(this.dataset.name, this)
         this.info = new PlainState(JSON.parse(this.dataset.info), this)
         this.type = new PlainState(this.dataset.type, this)
         this.unfolded = new PlainState(false, this)
+        this.selected = new PlainState(this.classList.contains('selected'), this)
     }
 
     template() {
         const name = this.name.getState()
         const info = this.info.getState()
         const showcase = this.info.getState().website ? this.info.getState().website.fields : null
+
+        let selectedIcon = this.selected.getState()
+            ? html`<div class="selection-icon" title="Filter by this service">${FILLED_SELECTION_SQUARE}</div>`
+            : html`<div class="selection-icon ${this.classList.contains('unselectable') ? 'unselectable' : ''}" title="Filter by this service">${EMPTY_SELECTION_SQUARE}</div>`
         
+        selectedIcon = this.resultContext.getData('data').length > 0 
+            ? selectedIcon 
+            : ''
+
         const typeIcon = html`
             <div class="type-icon" title="${this.getAttribute('data-component')}">${ (() => {
                     switch (this.type.getState()) {
@@ -70,10 +80,6 @@ class NavigatorItem extends PlainComponent {
                 ? null
                 : html`<div class="info-icon">${SIMPLE_INFO}</div>`
 
-        /* const moreInfoIcon = this.isEmptyService()
-                ? html`<div class="unfold-icon">${BOOST}</div>`
-                : `` */
-
         return html`
             <!-- Item -->
             <li class="item ${this.type.getState().toLowerCase().replace(' ', '-')} ${info && showcase || info && info.url ? 'has-showcase': ''}">
@@ -111,6 +117,7 @@ class NavigatorItem extends PlainComponent {
                     ${infoIcon}
                     ${showcaseIcon}
                     ${unfoldIcon}
+                    ${selectedIcon}
                 </div>
 
                 <!-- Description -->
@@ -128,6 +135,41 @@ class NavigatorItem extends PlainComponent {
         this.$('.label').onclick = () => this.navigateToShowcase()
         this.$('.unfold-icon') ? this.$('.unfold-icon').onclick = () => this.unfold() : null
         this.$('.showcase-icon') ? this.$('.showcase-icon').onclick = () => this.navigateToShowcase() : null
+        this.$('.selection-icon') ? this.$('.selection-icon').onclick = () => this.toogleSelect() : null
+    }
+
+    toogleSelect() {
+        if (!this.selected.getState() && !this.$('.type-icon').classList.contains('unselected')) {
+            // This codes needs to be refactored
+            // It's like this because the initial state of the component is selected but 
+            // it displays the selected icon as unselected or empty.
+        } else {
+            this.$('.type-icon').classList.toggle('unselected')
+        }
+
+        this.selected.setState(!this.selected.getState(), false)
+        this.$('.selection-icon').innerHTML = this.selected.getState() ? FILLED_SELECTION_SQUARE : EMPTY_SELECTION_SQUARE
+        this.selected.getState()
+            ? this.addToFilters()
+            : this.removeFromFilters()
+    }
+
+    addToFilters() {
+        const filter = this.type.getState() === ITEM_TYPE.ACCELERATION_SERVICE
+            ? {service: this.name.getState() ?? null}
+            : {model: this.info.getState().model ?? null}
+        
+        if (!this.parentComponent) return
+        this.parentComponent.addFilter(filter)
+    }
+
+    removeFromFilters() {
+        const filter = this.type.getState() === ITEM_TYPE.ACCELERATION_SERVICE
+            ? {service: this.name.getState() ?? null}
+            : {model: this.info.getState().model ?? null}
+
+        if (!this.parentComponent) return
+        this.parentComponent.removeFilter(filter)
     }
 
     unfold() {
@@ -173,21 +215,10 @@ class NavigatorItem extends PlainComponent {
         }
     }
 
-    /* isEmptyService() {
-        const showcase = this.info.getState().website ? this.info.getState().website.fields : null
-        const subservices = this.info.getState().sub_acceleration_services ?? null
-        const catalogues = this.info.getState().catalogues.websites ?? null
-
-        console.log(showcase, subservices, catalogues)
-
-        if (!showcase && subservices.length === 0 && catalogues) return true
-        return false
-    } */
-
     navigateToShowcase() {
         const label = this.$('.label')
-        window.open(label.getAttribute('href'), '_blank').focus();
-        /* window.location.href = label.getAttribute('href') */
+        if (!label.getAttribute('href')) return
+        window.open(label.getAttribute('href'), '_blank').focus()
     }
 }
 

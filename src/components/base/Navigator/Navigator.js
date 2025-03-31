@@ -22,6 +22,7 @@ class Navigator extends PlainComponent {
 
         this.signals = new PlainSignal(this)
         this.signals.register('changed-agora')
+        this.signals.register('changed-filters')
 
         this.companyContext = new PlainContext('company', this, false)
         this.configContext = new PlainContext('config', this, false)
@@ -32,6 +33,7 @@ class Navigator extends PlainComponent {
         this.error = new PlainState(null, this)
         this.items = new PlainState(null, this)
         this.initialLoad = new PlainState(true, this)
+        this.filters = new PlainState([], this)
 
         this.ensureConfig()
         this.fetchItems()
@@ -73,6 +75,15 @@ class Navigator extends PlainComponent {
             return services.includes(serviceName)
         }
 
+        const serviceSelected = (serviceName) => {
+            const results = this.resultContext.getData('data')
+            if (!results || results.length === 0) return ''
+
+            return services.includes(serviceName) 
+                ? 'selected'
+                : 'unselectable'
+        }
+
         return html`
             <div class="menu-unfold-button">${UNFOLD}</div>
             <ul class="menu">
@@ -80,7 +91,7 @@ class Navigator extends PlainComponent {
                     ([index, data]) => {
                         return html`
                             <agora-navigator-item 
-                                class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'} ${this.initialLoad.getState() ? 'initial-load' : ''}"
+                                class="${servicesInResult(data.fields.name) ? '' : 'not-in-result'} ${this.initialLoad.getState() ? 'initial-load' : ''} ${serviceSelected(data.fields.name)}"
                                 style="${
                                     this.initialLoad.getState()
                                         ? `animation-delay: ${index * 0.2}s;`
@@ -103,6 +114,13 @@ class Navigator extends PlainComponent {
     }
 
     listeners() {
+        this.$$('agora-navigator-item').forEach(item => {
+            item.selected.getState()
+                ? item.addToFilters()
+                : item.removeFromFilters()
+        })
+
+
         if (this.$('.menu-unfold-button')) {
             this.$('.menu-unfold-button').onclick = () => this.toogleMenu()
         }
@@ -145,8 +163,9 @@ class Navigator extends PlainComponent {
     }
 
     updateAgora(agoraIndex, isMetagora=false) {
+        console.log("Updating Agora")
         this.initialLoad.setState(true, false)
-        this.resultContext.setData({data: [], grouped: []}, false)
+        this.resultContext.setData({data: [], grouped: [], filters: []}, false)
 
         const metagoraData = this.metagoraContext.getData('data')
         const agora = metagoraData.agoras[agoraIndex]
@@ -233,6 +252,35 @@ class Navigator extends PlainComponent {
             console.log("ITEM", item)
             item.classList.remove('not-in-result')
         })
+    }
+
+    /* FILTERING */
+    addFilter(filter) {
+        if (!filter) return
+        if (this.filters.getState().find(f => f.service === filter.service)) return
+        this.filters.setState([...this.filters.getState(), filter], false)
+        this.updateFilterContext()
+    }
+
+    removeFilter(filter) {
+        if (!filter) return
+        if (!filter.service) return
+        if (this.resultContext.getData('data').length === 0 && this.filters.getState().length === 0) return
+
+        // Remove search term highlights from breadcrumb 
+
+        this.filters.setState(this.filters.getState().filter(f => f.service !== filter.service), false)
+        this.updateFilterContext()
+    }
+
+    updateFilterContext() {
+        this.resultContext.setData({
+            data: this.resultContext.getData('data') ?? [],
+            grouped: this.resultContext.getData('grouped') ?? [],
+            filters: this.filters.getState()
+        })
+
+        this.signals.emit('changed-filters')
     }
 }
 
