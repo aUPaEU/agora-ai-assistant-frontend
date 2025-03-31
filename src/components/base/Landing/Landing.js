@@ -24,7 +24,7 @@ class Landing extends PlainComponent {
         this.servicesContext.setData({services: []})
 
         this.lastShown = new PlainState(-1, this)
-        this.updateTime = new PlainState(10000, this)
+        this.updateTime = new PlainState(1000000, this)
         this.serviceTree = new PlainState(null, this)
         this.isAnimating = new PlainState(false, this)
 
@@ -75,7 +75,6 @@ class Landing extends PlainComponent {
 
         const displayedService = this.displayOrderedService(services)
         const currentAgora = this.getServiceParentAgora(displayedService)
-        console.log(currentAgora)
         if (!displayedService) return ''
 
         const suggestedSearchTerms = Array.from(new Set(displayedService.fields.suggested_search_terms.split(','))).map(term => term.trim())
@@ -197,9 +196,6 @@ class Landing extends PlainComponent {
             }
         })
 
-        console.log(mappedServices)
-        console.log(displayedService)
-
         return mappedServices.find(agora => {
             return agora.services.find(service => {
                 return service.id === displayedService.id && service.name === displayedService.fields.name
@@ -233,7 +229,6 @@ class Landing extends PlainComponent {
         setTimeout(() => {
             const card = this.$('.showcase-card-wrapper')
             if (!card) return
-            console.log(card)
             // Animate the component to exit it and when animation ends, re-render it
             gsap.to(card, {
                 opacity: 0,
