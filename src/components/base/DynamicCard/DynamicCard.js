@@ -168,7 +168,8 @@ class DynamicCard extends PlainComponent {
             const defaultImage = document.createElement('div')
             defaultImage.classList.add('card-image')
             /* defaultImage.classList.add('default-image') */
-            defaultImage.classList.add(`default-image-${this.getDefaultImageIndex()}`)
+            /* defaultImage.classList.add(`default-image-${this.getDefaultImageIndex()}`) */
+            defaultImage.classList.add(`default-image-0`)
 
             image.remove()
             this.wrapper.insertBefore(defaultImage, this.wrapper.firstChild)
