@@ -15,8 +15,6 @@ export const translate = async (value, from="auto", to="en") => {
         
         const data = await res.json()
 
-        console.log(data)
-    
         if (!data || !data.translatedText) return value
     
         return data.translatedText
