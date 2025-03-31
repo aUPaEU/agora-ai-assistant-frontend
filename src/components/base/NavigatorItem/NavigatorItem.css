@@ -288,6 +288,7 @@
 
 .info-icon,
 .showcase-icon,
+.selection-icon,
 .unfold-icon {
     flex: 1;
 
@@ -315,6 +316,8 @@
     display: grid;
     place-content: center;
 
+    backdrop-filter: blur(10px);
+
     /* border-top-left-radius: 5pt;
     border-bottom-left-radius: 5pt; */
 
@@ -339,6 +342,36 @@
     color: var(--text-accent-color);
 }
 
+.selection-icon svg {
+    height: 16px;
+    width: 16px;
+    color: var(--text-accent-color);
+}
+
+.selection-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 10px;
+    height: 10px;
+
+    background-color: rgb(from var(--text-accent-color) r g b / 0);
+
+    opacity: 0.5;
+    transition: 300ms;
+}
+
+.type-icon.unselected {
+    background-color: rgb(from var(--text-tertiary-color) r g b / 0.3) !important;
+}
+
+.type-icon:has(+ .label + .label.hover + .actions  > .unselectable) {
+    background-color: rgb(from var(--text-tertiary-color) r g b / 0.3);
+}
+
 /* HOVER */
 .item.has-showcase:hover {
     box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
@@ -351,6 +384,7 @@
 
 .info-icon:hover,
 .showcase-icon:hover,
+.selection-icon:hover,
 .unfold-icon:hover {
     background-color: var(--primary-color);
 }
@@ -364,6 +398,19 @@
     animation-duration: 500ms;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
+}
+
+.selection-icon:hover::after {
+    background-color: rgb(from var(--text-accent-color) r g b / 0.65);
+}
+
+.selection-icon.unselectable {
+    pointer-events: none;
+}
+
+.selection-icon.unselectable svg {
+    color: var(--text-tertiary-color);
+    opacity: 0.2;
 }
 
 /* HIGHLIGHT */

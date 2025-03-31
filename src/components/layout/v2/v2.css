@@ -126,7 +126,7 @@ agora-result-window {
     bottom: 2rem;
     right: 2rem;
 
-    z-index: 20;
+    z-index: 150;
 }
 
 /* FAKE HEADER */
@@ -154,7 +154,7 @@ agora-card-info-carousel {
 
     background: linear-gradient(to top, var(--bg-color), rgba(255, 255, 255, 0));
 
-    z-index: 10;
+    z-index: 100;
 }
 
 /* MAP VISUALIZER */
