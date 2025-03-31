@@ -106,3 +106,7 @@
 - [x] Solve greetings animation bug when changing to the showcase.
 - [ ] Remove greetings if there are results to be displayed.
 - [ ] Make results permanent. 
+
+- [x] Add filtering on a service level.
+- [ ] Add filtering on a service level into the query.
+- [ ] Add filtering on a model level.
