@@ -104,6 +104,13 @@ class Searchbar extends PlainComponent {
         <span class="agora-logo">${AUPAEU_LOGO}</span>
         <button class="searchbar-button">${SEARCH}</button>
 
+        <!-- Searchbar Spinner -->
+        <div class="searchbar-spinner">
+          <div class="ball-1"></div>
+          <div class="ball-2"></div>
+          <div class="ball-3"></div>
+        </div>
+
         <!-- Autocomplete Dropdown -->
         <ul class="autocomplete-dropdown"></ul>
 
@@ -156,12 +163,20 @@ class Searchbar extends PlainComponent {
 
     /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
     const translatedQuery = await translate(this.$('.searchbar-input').value, queryLanguage, 'en')
-    console.log(translatedQuery)
 
     // We extract all the availablel models in the Agora from the service context
+    let services = this.serviceContext.getData('services')
+    /* const serviceFilters = this.resultContext.getData('filters').filter(filter => filter.service).map(filter => filter.service)
+    if (serviceFilters.length > 0) {
+        services = services.filter(service => serviceFilters.includes(service.fields.name))
+    } */
+
     const models = this.currentSource.getState() === 'all' 
-        ? extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'model').map(model => model.model)
+        ? extractObjectsWithMatchingKey(services, 'model').map(model => model.model)
         : [this.currentSource.getState()]
+
+    const modelFilters = this.resultContext.getData('filters').filter(filter => filter.model).map(filter => filter.model)
+
 
     // We call the elasticsearch api to get search results
     try {
@@ -170,9 +185,12 @@ class Searchbar extends PlainComponent {
         translated: translatedQuery
       }
 
+      console.log("Implement here a loader while searching in the searchbar")
       const response = await api.search(this.configContext.getData('host'), query.translated, models)
 
+      console.log("Remove the greetings if they're showing")
       this.handleResponse(query, response)
+      console.log("Remove the loader")
 
       /* this.$('.searchbar-input').placeholder = this.searchContext.getData('current').join(' ').replace(/\/$/, '') */
       this.$('.searchbar-input').placeholder = query.raw
@@ -197,7 +215,7 @@ class Searchbar extends PlainComponent {
       // Update the result context with the new results
       this.resultContext.setData({
         grouped: groupedData,
-        data: filteredResults
+        data: filteredResults,
       }, true)
       
       this.signals.emit('no-results')
@@ -225,10 +243,7 @@ class Searchbar extends PlainComponent {
 
     const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
     const flatWebsites = availableWebsites.flatMap(website => website.websites)
-
-    console.log(flatWebsites)
     
-
     // Sort results by score and give the expected format to the data
     const sortedResults = response.results
       .sort((a, b) => b.score - a.score)
@@ -276,7 +291,7 @@ class Searchbar extends PlainComponent {
     // Update the result context with the new results
     this.resultContext.setData({
       grouped: groupedData,
-      data: filteredResults
+      data: filteredResults,
     }, true)
 
     this.signals.emit('results-updated', groupedData)

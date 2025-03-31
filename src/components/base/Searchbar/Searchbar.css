@@ -7,13 +7,90 @@
     align-items: center;
 
     border-radius: 10pt;
-    border-top-right-radius: 0;
+    border-top-right-radius: 10pt;
 
     box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
 
     transition: 300ms;
 
     position: relative;
+}
+
+/* SEARCHBAR SPINNER */
+.searchbar-spinner {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+
+    transform: translateX(calc(-100% - 1rem));
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    z-index: 100;
+}
+
+.searchbar-spinner .ball-1 {
+    animation: ball-1-scale 1s 0.24s ease-in-out infinite;
+
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    background-color: var(--text-accent-color);
+}
+
+.searchbar-spinner .ball-2 {
+    animation: ball-2-scale 1s 0.12s ease-in-out infinite;
+
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    background-color: var(--text-accent-color);
+}
+
+.searchbar-spinner .ball-3 {
+    animation: ball-3-scale 1s 0s ease-in-out infinite;
+
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    background-color: var(--text-accent-color);
+}
+
+@keyframes ball-1-scale {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes ball-2-scale {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes ball-3-scale {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 /* SEARCHBAR INPUT */
@@ -301,6 +378,8 @@
 
 /* LANGUAGE SELECTOR */
 .language-selector {
+    pointer-events: none;
+
     position: absolute;
     bottom: 60px;
     right: 0.5rem;
@@ -313,6 +392,7 @@
 }
 
 .query-language-selector {
+    pointer-events: all;
     list-style: none;
     padding: 0;
 
@@ -327,6 +407,7 @@
  }
 
  .query-language-selector.hidden {
+    pointer-events: none;
     transform: translateX(125%);
  }
 
@@ -363,6 +444,7 @@
 }
 
 .query-language-selector-label {
+    pointer-events: all;
     cursor: pointer;
 
     font-size: 0.8rem;
@@ -422,10 +504,6 @@
 
     .query-language-selector-label-wrapper {
         align-items: flex-start;
-    }
-
-    .language-selector-label {
-
     }
 }
 
