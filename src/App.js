@@ -1,3 +1,4 @@
+import { CONFIG } from "../agora.config"
 import { PlainComponent, PlainState, PlainContext} from "plain-reactive"
 
 /* Constants */
@@ -45,7 +46,7 @@ import './components/base/PinCard/PinCard'
 import './components/mid/ResultWindow/ResultWindow'
 import './components/mid/CardInfoCarousel/CardInfoCarousel'
 import './components/mid/PinBox/PinBox'
-import { CONFIG } from "../agora.config"
+import './components/mid/ResultMapWindow/ResultMapWindow' 
 
 class App extends PlainComponent {
     constructor() {
@@ -166,6 +167,9 @@ class App extends PlainComponent {
 
         if (metagoraNavigator && navigator)
             navigator.signals.connect(metagoraNavigator, 'changed-agora', (params) => navigator.updateAgora(params.index, params.isMetagora))
+
+        if (navigator && resultWindow)
+            resultWindow.signals.connect(navigator, 'changed-filters', () => resultWindow.filterResults())
     }
 
     openInfoDialog(payload) {
