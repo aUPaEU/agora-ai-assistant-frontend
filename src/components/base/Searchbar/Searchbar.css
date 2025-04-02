@@ -26,7 +26,7 @@
 
     transform: translateX(calc(-100% - 1rem));
 
-    display: flex;
+    display: none;
     justify-content: flex-end;
     align-items: center;
 
