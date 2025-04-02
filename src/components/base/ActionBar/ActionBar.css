@@ -1,0 +1,58 @@
+.action-bar-container {
+    display: flex;
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-button {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 5pt;
+
+    border: none;
+    color: var(--primary-color, #333);
+
+    font-size: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgb(from var(--primary-color) r g b / 0);
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+.action-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.action-button:hover {
+    color: var(--text-accent-color);
+    background-color: rgb(from var(--primary-color) r g b / 0.8);
+}
+
+.action-button:active {
+    transform: scale(0.95);
+}
+
+.map-button {
+    color: var(--text-secondary-color);
+}
+
+.refresh-button {
+    color: var(--text-secondary-color);
+} 
