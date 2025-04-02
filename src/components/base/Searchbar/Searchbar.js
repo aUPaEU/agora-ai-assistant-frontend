@@ -28,6 +28,7 @@ class Searchbar extends PlainComponent {
     this.searchContext = new PlainContext('search', this, false, 'local') // We'll use this to autocomplete queries
     this.languageContext = new PlainContext('language', this, false, 'local')
 
+    this.isLoading = new PlainState(false, this)
     this.currentSource = new PlainState('all', this)
     this.currentQueryLanguage = new PlainState({label: 'English', value: 'en'}, this)
     this.queryLanguages = new PlainState([
@@ -113,8 +114,6 @@ class Searchbar extends PlainComponent {
 
         <!-- Autocomplete Dropdown -->
         <ul class="autocomplete-dropdown"></ul>
-
-        
     `
   }
 
@@ -177,7 +176,6 @@ class Searchbar extends PlainComponent {
 
     const modelFilters = this.resultContext.getData('filters').filter(filter => filter.model).map(filter => filter.model)
 
-
     // We call the elasticsearch api to get search results
     try {
       const query = {
@@ -185,12 +183,15 @@ class Searchbar extends PlainComponent {
         translated: translatedQuery
       }
 
-      console.log("Implement here a loader while searching in the searchbar")
+      // Show spinner while searching
+      this.showSpinner()
+
       const response = await api.search(this.configContext.getData('host'), query.translated, models)
 
-      console.log("Remove the greetings if they're showing")
+      // Hide spinner after search is complete
+      this.hideSpinner()
+
       this.handleResponse(query, response)
-      console.log("Remove the loader")
 
       /* this.$('.searchbar-input').placeholder = this.searchContext.getData('current').join(' ').replace(/\/$/, '') */
       this.$('.searchbar-input').placeholder = query.raw
@@ -198,6 +199,9 @@ class Searchbar extends PlainComponent {
     }
 
     catch(error) {
+      // Hide spinner in case of error
+      this.hideSpinner()
+      console.log("Error: ", error)
       const errorData = JSON.parse(error.message)
 
       if (errorData.missing_model) {
@@ -207,6 +211,18 @@ class Searchbar extends PlainComponent {
         this.query()
       }
     }
+  }
+
+  showSpinner() {
+    this.isLoading.setState(true, false)
+    this.$('.searchbar-spinner').style.display = 'flex'
+    this.$('.searchbar-button').style.display = 'none'
+  }
+
+  hideSpinner() {
+    this.isLoading.setState(false, false)
+    this.$('.searchbar-spinner').style.display = 'none'
+    this.$('.searchbar-button').style.display = 'flex'
   }
 
   handleResponse(query, response) {
