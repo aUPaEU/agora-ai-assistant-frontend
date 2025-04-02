@@ -75,6 +75,15 @@
     width: 100%;
 }
 
+/* ACTION BAR */
+agora-action-bar {
+    position: fixed;
+    right: 2rem;
+    top: 0;
+    
+    z-index: 1000;
+}
+
 .navigator-wrapper {
     z-index: 100;
     position: sticky;

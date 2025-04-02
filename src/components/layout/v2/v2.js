@@ -19,6 +19,12 @@ class LayoutV2 extends PlainComponent {
     template() {
         return html`
             <main class="main">
+                <!-- Action Bar -->
+                <agora-action-bar></agora-action-bar>
+
+                <!-- Agora Result Map -->
+                <agora-result-map></agora-result-map>
+
                 <!-- Left Side -->
                 <div class="left">
                     <!-- Navigator -->
