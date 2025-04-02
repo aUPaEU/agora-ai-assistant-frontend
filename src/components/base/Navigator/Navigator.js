@@ -106,7 +106,7 @@ class Navigator extends PlainComponent {
                 }).join('')}
             </ul>
             ${
-                this.items.getState().length === 0
+                this.items.getState()?.length === 0
                     ? html`<span >There are no currently available services for this Agora.</span>`
                     : ''
             }
@@ -223,11 +223,11 @@ class Navigator extends PlainComponent {
     updateServiceContext(agora, extend=false) {
         let services = []
 
-        if (agora.fields.sub_acceleration_services.length === undefined) {
+        if (agora.fields.sub_acceleration_services?.length === undefined) {
             services = [agora.fields.sub_acceleration_services]
         }
 
-        else if (agora.fields.sub_acceleration_services.length > 1) {
+        else if (agora.fields.sub_acceleration_services?.length > 1) {
             services = [...agora.fields.sub_acceleration_services]
         }
 
@@ -265,7 +265,7 @@ class Navigator extends PlainComponent {
     removeFilter(filter) {
         if (!filter) return
         if (!filter.service) return
-        if (this.resultContext.getData('data').length === 0 && this.filters.getState().length === 0) return
+        if (this.resultContext.getData('data')?.length === 0 && this.filters.getState()?.length === 0) return
 
         // Remove search term highlights from breadcrumb 
 

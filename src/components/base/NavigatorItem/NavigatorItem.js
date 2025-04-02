@@ -33,7 +33,7 @@ class NavigatorItem extends PlainComponent {
             ? html`<div class="selection-icon" title="Filter by this service">${FILLED_SELECTION_SQUARE}</div>`
             : html`<div class="selection-icon ${this.classList.contains('unselectable') ? 'unselectable' : ''}" title="Filter by this service">${EMPTY_SELECTION_SQUARE}</div>`
         
-        selectedIcon = this.resultContext.getData('data').length > 0 
+        selectedIcon = this.resultContext.getData('data')?.length > 0 
             ? selectedIcon 
             : ''
 
