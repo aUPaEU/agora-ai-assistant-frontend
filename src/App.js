@@ -22,6 +22,7 @@ import './components/base/MapVisualizer/MapVisualizer'
 
 /* Buttons */
 import './components/base/TextButton/TextButton'
+import './components/base/ActionBar/ActionBar'
 
 /* Chat */
 import './components/complex/Chat/Chat'
