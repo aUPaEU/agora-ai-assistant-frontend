@@ -251,31 +251,26 @@ class CardInfoCarousel extends PlainComponent {
     highlightSearchTerms(terms) {
         let searchTerms = this.searchContext.getData('current') || []
         searchTerms = terms
+
+        /* Temporary fix for the search terms (unresolved issue) */
         searchTerms = searchTerms.filter(term => {
             if (!['i', 'I'].includes(term)) return term
         })
 
-        let content = this.$('.card-info-content').innerHTML
+        let cardName = this.$('.card-info-name').innerHTML
+        let cardLastname = this.$('.card-info-lastname').innerHTML
+        let cardSummary = this.$('.card-info-summary').innerHTML
         
         searchTerms.forEach(term => {
             const searchRegex = new RegExp(`\\b${term}\\w*\\b`, 'gi')
-            content = content.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
-            /* content = content.replace(searchRegex, match => {
-                const split = splitAndKeepDelimiter(match, term)
-                let result = ''
-                split.forEach(slice => {
-                    if (slice.toLowerCase().includes(term.toLowerCase())) {
-                        result += `<span class="highlight">${slice}</span>`
-                    } else {
-                        result += slice
-                    }
-                })
-                return result
-            }) */
-         
+            cardName = cardName.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
+            cardLastname = cardLastname.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
+            cardSummary = cardSummary.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
         })
         
-        this.$('.card-info-content').innerHTML = content
+        this.$('.card-info-name').innerHTML = cardName
+        this.$('.card-info-lastname').innerHTML = cardLastname
+        this.$('.card-info-summary').innerHTML = cardSummary
     }
 
     handleAnimation(e, direction) {
