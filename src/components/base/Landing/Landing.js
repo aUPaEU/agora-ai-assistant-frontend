@@ -24,7 +24,7 @@ class Landing extends PlainComponent {
         this.servicesContext.setData({services: []})
 
         this.lastShown = new PlainState(-1, this)
-        this.updateTime = new PlainState(1000000, this)
+        this.updateTime = new PlainState(10000, this)
         this.serviceTree = new PlainState(null, this)
         this.isAnimating = new PlainState(false, this)
 
