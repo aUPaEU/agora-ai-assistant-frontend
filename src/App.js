@@ -73,6 +73,7 @@ class App extends PlainComponent {
             "company_id": this.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": this.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
             "ai_host": this.getAttribute('ai_host') ?? CONFIG.ai_host,
+            "translation_host": this.getAttribute('translation_host') ?? CONFIG.translation_host,
             "current_version": CONFIG.current_version
         }
 

@@ -46,7 +46,8 @@ class Navigator extends PlainComponent {
             "host": app.getAttribute('host') ?? CONFIG.host,
             "company_id": app.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": app.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
-            "ai_host": app.getAttribute('ai_host') ?? CONFIG.ai_host
+            "ai_host": app.getAttribute('ai_host') ?? CONFIG.ai_host,
+            "translation_host": app.getAttribute('translation_host') ?? CONFIG.translation_host
         }
 
         this.configContext.setData(customConfig)

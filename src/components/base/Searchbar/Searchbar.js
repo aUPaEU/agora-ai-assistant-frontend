@@ -158,10 +158,13 @@ class Searchbar extends PlainComponent {
     // If there's no text in the input we just return
     if (this.$('.searchbar-input').value.length === 0) return
 
+    // Show spinner while searching
+    this.showSpinner()
+
     const queryLanguage = this.currentQueryLanguage.getState()?.value ?? 'en'
 
     /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
-    const translatedQuery = await translate(this.$('.searchbar-input').value, queryLanguage, 'en')
+    const translatedQuery = await translate(this.configContext.getData('translation_host'), this.$('.searchbar-input').value, queryLanguage, 'en')
 
     // We extract all the availablel models in the Agora from the service context
     let services = this.serviceContext.getData('services')
@@ -182,9 +185,6 @@ class Searchbar extends PlainComponent {
         raw: this.$('.searchbar-input').value,
         translated: translatedQuery
       }
-
-      // Show spinner while searching
-      this.showSpinner()
 
       const response = await api.search(this.configContext.getData('host'), query.translated, models)
 

@@ -1,6 +1,6 @@
-export const translate = async (value, from="auto", to="en") => {
+export const translate = async (serviceHost, value, from="auto", to="en") => {
     try {
-        const res = await fetch("http://localhost:5000/translate", {
+        const res = await fetch(`${serviceHost}/translate`, {
             method: "POST",
             body: JSON.stringify({
                 q: value,
