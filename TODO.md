@@ -1,112 +1,132 @@
-<!-- FEATURES -->
-- [ ] Open info dialog through the app component when clicking on a pin card.
-- [ ] Implement card layouts depending on the type of card.
-- [ ] Implement a method to detect which kind of card it is based on the fetched data.
-- [ ] Translate service highlight responsibility to the navigator component.
-- [ ] Add a component to display the result count of the search.
-- [ ] Add a timeout to loaders.
-- [-] Implement a system to resend the message if the bot response is not received or there's an error. WHile avoiding sending new messages.
-- [-] Implement a method to check if the image that is being fetched is not a placeholder.
+# TODO AGORA AI ASSISTANT FRONTEND
 
-- [x] Implement an API call to fetch company data from agora.config.js.
-- [x] Implement left and right arrows to navigate throught the info dialog as a carousel.
-- [x] Add service name to the card view within the carousel.
-- [x] Add a "close" button to the carousel component.
-- [x] Add a feature to highlight search terms on the card view within the carousel.
-- [x] Empty result context when no results are found.
-- [x] Create a search context to save all the search that return results.
-- [x] Add a debug mode where the user can modify the treshold of the score to display results and view detailed info about the scores.
-- [x] Make configuration dynamic based on the html attributes given to the component.
-- [x] Implement the greetings display within the "landing" component.
-- [x] Implement a feature to make the horizontal scrolling of the card containers smooth (based on cursor position).
-- [x] Manage fetch exceptions and display a message to the user.
-- [x] Implement a feature to autocomplete searchs.
-- [x] Create a showcase component.
-- [x] Implement a node view to the "service content" within the showcase component.
-- [x] Add suggested search terms to each service in the showcase component.
-- [x] Implement the UI within DEV environment.
-- [x] Encapsulate the info dialog carousel in a component.
-- [x] Order results by service name before fetching them.
-- [x] Implement chat history autoloading at startup.
-- [x] Implemet a chat clear button.
-- [x] Unfold chat window on load automatically when there is a chat history.
-- [x] Implement company context (it's loaded from the config file).
-- [x] Make navigator sticky and scrollable.
-- [x] Add selectable default prompts to the chat window.
-- [x] Add featured identifier to featured elements.
-- [X] Add markdown library to display formatted bot responses.
-- [x] Add a fold-unfold button to display or hide the not featured results.
+## PENDING TASKS
 
-<!-- BACKEND -->
-- [ ] Check the single element api endpoint to retrieve url or null on the image field just like in the service.
-- [ ] Look for a solution to fetch the fields that contains an id to get some basic data about the entity. Like "university_origin". 
-- [-] Perhaps, bot responses could have a key called 'explanation' and this text could be displayed in a tooltip when hovering result containers.
+### 🚀 FEATURES
+- [ ] Open info dialog through the app component when clicking on a pin card
+- [ ] Implement card layouts depending on the type of card
+- [ ] Implement a method to detect which kind of card it is based on the fetched data
+- [ ] Translate service highlight responsibility to the navigator component
+- [ ] Add a component to display the result count of the search
+- [ ] Add a timeout to loaders
+- [ ] Display showcase card when hovering the navigator (with debouncer)
+- [ ] Make carousel cards bigger
+- [ ] Implement a breadcrumb within the carousel card (Service >> Sub-service >> Catalogue)
+- [ ] Make navigator menu dynamic to be always visible when scrolling up and down
+- [ ] Add a checkbox to the navigator items to use them as a filter
+- [ ] Change the config 'host' to a list for metagora and check related business logic
+- [ ] Ensure proper work of metagora data fetching from different hosts (ie. CIVIS)
+- [ ] When metagora is selected, hide navigator and show European map with alliance locations
+- [ ] Keep greetings until user makes first click/scroll or until services are loaded
+- [ ] Remove greetings if there are results to be displayed
+- [ ] Make results permanent
+- [ ] Add filtering on a model level
+- [ ] Reimplement Opik
+- [ ] Adapt interface to recover chat
 
-- [x] Automatize the ingest of data into elastic search when making write operations on Odoo.
-- [x] Add a field within the acceleration services module to add suggested search terms.
-- [x] Add a field within the acceleration services module to add an image.
+### 🔧 BACKEND
+- [ ] Check single element API endpoint to retrieve url or null on image field
 
-<!-- STYLING -->
-- [ ] Make fades visibility blend with the background (somehow).
-- [x] Improve usability on the navigator component.
-- [x] Adapt style to make it coherent.
-- [x] Display the images of the acceleration services within the showcase component.
-- [x] Display in a user friendly way the score of each result.
-- [x] Make the color of the score dynamic based on the score.
-- [x] Make a display adaption for mobile devices.
-- [x] Correct autoscroll down on the chat window.
-- [x] Improve responsiveness.
-- [x] Correct 'clear chat' button positioning.
-
-<!-- BUGS -->
-- [ ] Drag and drop does not work on mobile displays.
-- [ ] Solve a bug where "next" and "previous" buttons in carousel are mixing results from different services (wrappers).
-- [x] Solve issue when the CDN cache is not being purged properly (mainly with css files).
-- [x] Solve "highlight search terms" bug when the query is just one letter.
-- [x] Solve style bug where some texts are blurry (maybe due to the font size).
-- [x] Solve bug where the showcase cards are being rendered twice.
-- [x] Solve style issues within the dev environment.
-- [x] Solve issue when url in the carousel window is not being build correctly.
-- [x] Avoid rendering greetings if there was previous results.
-- [x] Solve pointer events issue when the Chat component is over some card and the ChatWindow is hidden. 
-
-<!-- FROM 13th March -->
-- [x] Add translation to the query sent to the search engine.
-    - [x] Install LibreTranslate service within the docker container.
-- [x] Add 'tab' word to the placeholder in the searchbar.
-    - [x] Add 'tab' word to the autocomplete dropdown items.
-- [x] Truncate carousel cards descriptions.
-- [x] Solve service info display once result cards are displayed.
-- [x] Remove extra fields temporarily from the carousel cards.
-- [x] Rediseño visual.
-- [x] Create a new repo within aUPaEU organization to host common utilities like LibreTranslate or HTMLExtractor.
-- [x] Open all the links in new tabs.
-- [x] Add metagora data fetching.
-- [x] Make the metagora navigator render conditionally.
-- [x] Make showcase cards less wide.
-- [x] Each time the pages re-renders, the selected agora button is not maintaining its state.
-- [x] Make color variations on the default images for dynamic cards (based on title hash ¿?).
-
-<!-- FROM 19th March -->
-- [x] Revisar los matches parciales porque no están funcionando... quizás es porque ahora hay una condición must para la primera palabra de la query y esta no acepta el match parcial (ejemplo: 'acoustics' vs 'acoustic'). The issue is that the partial match takes into account more letters ie. 'acoustic' returns 'acoustic-s' as a match but not the reverse 'acoustics' does not return 'acoustic' as a match.
-- [ ] Display showcase card when hovering the navigator (it should be implemented with a debouncer).
-- [ ] Make carousel cards more big.
-- [ ] Implement a breadcrumb within the carousel card Service >> Sub-service >> Catalogue.
-- [ ] Make navigator menu dynamic to be always visible when scrolling up and down.
-- [ ] Add a checkbox to the navigator items to use them as a filter. If you check one the rest uncheck, then you can check others.
-- [ ] Add a button near the searchbar to clear the filtering.
-- [ ] Change the config 'host' to a list in the case of the metagora and check all the business logic related to that. 
-- [ ] Ensure the proper work of the metagora data fetching when fetching from different hosts (ie. CIVIS).
-- [ ] The partial matches are not being highlighted properly.
-- [ ] When the metagora is selected, hide the navigator and show another widget like a european map with the location of each alliance.
-- [ ] Keep the greetings until the user makes the first click or scrolls down ¿? or at least until the services are loaded.
-- [x] Animate the metagora navigator buttons on click.
+### 🎨 STYLING
+- [ ] Make fades visibility blend with the background
 - [ ] Improve pinbox on desktop display
-- [x] Improve elasticsearch query with partial matches and stemming implementation.
-- [x] Solve greetings animation bug when changing to the showcase.
-- [ ] Remove greetings if there are results to be displayed.
-- [ ] Make results permanent. 
 
-- [x] Add filtering on a service level.
-- [ ] Add filtering on a service level into the query.
-- [ ] Add filtering on a model level.
+### 🐞 BUGS
+- [ ] Drag and drop does not work on mobile displays
+- [ ] Solve bug where "next" and "previous" buttons in carousel mix results from different services
+- [ ] The partial matches are not being highlighted properly
+
+## ⏳ IN PROGRESS
+
+- [-] Implement system to resend message if bot response not received/error (while avoiding sending new messages)
+- [-] Implement method to check if fetched image is not a placeholder
+- [-] Bot responses could have 'explanation' key displayed in tooltip when hovering result containers
+- [-] Add filtering on a service level into the query
+
+## ✅ COMPLETED TASKS
+
+### FEATURES
+- [x] Look for solution to fetch fields containing IDs to get basic entity data (e.g., "university_origin")
+- [x] Implement an API call to fetch company data from agora.config.js
+- [x] Implement left/right arrows to navigate through info dialog as carousel
+- [x] Add service name to card view within carousel
+- [x] Add "close" button to carousel component
+- [x] Add feature to highlight search terms on card view within carousel
+- [x] Empty result context when no results found
+- [x] Create search context to save searches that return results
+- [x] Add debug mode for threshold modification and detailed score info
+- [x] Make configuration dynamic based on component HTML attributes
+- [x] Implement greetings display within "landing" component
+- [x] Implement smooth horizontal scrolling for card containers
+- [x] Manage fetch exceptions and display user message
+- [x] Implement search autocomplete
+- [x] Create showcase component
+- [x] Implement node view for "service content" in showcase
+- [x] Add suggested search terms to each service in showcase
+- [x] Implement UI within DEV environment
+- [x] Encapsulate info dialog carousel in component
+- [x] Order results by service name before fetching
+- [x] Implement chat history autoloading at startup
+- [x] Implement chat clear button
+- [x] Unfold chat window on load when chat history exists
+- [x] Implement company context from config file
+- [x] Make navigator sticky and scrollable
+- [x] Add selectable default prompts to chat window
+- [x] Add featured identifier to featured elements
+- [x] Add markdown library for formatted bot responses
+- [x] Add fold-unfold button to display/hide non-featured results
+- [x] Add translation to search engine queries
+- [x] Add 'tab' word to searchbar placeholder and autocomplete dropdown
+- [x] Truncate carousel cards descriptions
+- [x] Add metagora data fetching
+- [x] Make metagora navigator render conditionally
+- [x] Add filtering on service level
+- [x] Add language selector to searchbar
+- [x] Add refresh logic to page
+- [x] Add first implementation of map
+- [x] Avoid search term highlight in breadcrumb
+
+### BACKEND
+- [x] Automatize ingest of data into elastic search for Odoo write operations
+- [x] Add field in acceleration services module for suggested search terms
+- [x] Add field in acceleration services module for images
+- [x] Install LibreTranslate service in docker container
+- [x] Create new repo in aUPaEU organization for common utilities (LibreTranslate, HTMLExtractor)
+- [x] Improve elasticsearch query with partial matches and stemming
+- [x] Solved bug where href attributes were being translated
+
+### STYLING
+- [x] Improve navigator component usability
+- [x] Adapt style for coherence
+- [x] Display acceleration services images in showcase
+- [x] Display result scores in user-friendly way
+- [x] Make score color dynamic based on value
+- [x] Create mobile display adaptation
+- [x] Fix chat window autoscroll
+- [x] Improve responsiveness
+- [x] Fix 'clear chat' button positioning
+- [x] Make showcase cards less wide
+- [x] Make color variations on default images for dynamic cards
+- [x] Animate metagora navigator buttons on click
+
+### BUGS
+- [x] Fix CDN cache purging (mainly CSS files)
+- [x] Fix "highlight search terms" bug with single-letter queries
+- [x] Fix blurry text styling (possibly font size related)
+- [x] Fix double rendering of showcase cards
+- [x] Fix styling issues in dev environment
+- [x] Fix incorrect URL building in carousel
+- [x] Avoid rendering greetings with previous results
+- [x] Fix pointer events when Chat component over cards with hidden ChatWindow
+- [x] Fix service info display with result cards
+- [x] Remove extra fields temporarily from carousel cards
+- [x] Fix metagora button state persistence
+- [x] Fix partial matches functionality
+- [x] Fix greetings animation bug when changing to showcase
+
+## 📊 PROGRESS SUMMARY
+- Total tasks: 84
+- Completed: 59 (70%)
+- In progress: 4 (5%)
+- Pending: 21 (25%)
+
