@@ -13,7 +13,7 @@ class ActionBar extends PlainComponent {
     template() {
         return html`
             <div class="action-bar-container">
-                <button class="action-button map-button">
+                <button class="action-button map-button" disabled title="Resource map will be available soon">
                     ${MAP}
                 </button>
                 <button class="action-button refresh-button">

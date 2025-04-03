@@ -40,13 +40,18 @@
     height: 20px;
 }
 
-.action-button:hover {
+.action-button:not(:disabled):hover {
     color: var(--text-accent-color);
     background-color: rgb(from var(--primary-color) r g b / 0.8);
 }
 
 .action-button:active {
     transform: scale(0.95);
+}
+
+.action-button:disabled {
+    opacity: 0.5;
+    cursor: auto;
 }
 
 .map-button {

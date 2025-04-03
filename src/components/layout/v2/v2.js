@@ -23,7 +23,7 @@ class LayoutV2 extends PlainComponent {
                 <agora-action-bar></agora-action-bar>
 
                 <!-- Agora Result Map -->
-                <agora-result-map></agora-result-map>
+                <!-- <agora-result-map></agora-result-map> -->
 
                 <!-- Left Side -->
                 <div class="left">
