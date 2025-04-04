@@ -253,8 +253,14 @@ class Searchbar extends PlainComponent {
 
     // We map the results to the correct service
     response.results.forEach(result => {
-        const resultService = serviceModels.find(service => service.models.includes(result.model)).service
-        result.service = resultService
+        const serviceMatch = serviceModels.find(service => service.models.includes(result.model))
+        const resultService = serviceMatch ? serviceMatch.service : undefined
+        if (resultService) {
+            result.service = resultService
+        } else {
+            console.warn(`No service found for model: ${result.model}`)
+            result.service = 'unknown'
+        }
     })
 
     const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
