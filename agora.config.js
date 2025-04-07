@@ -1,7 +1,7 @@
 // This could be fetched automatically from the server depending on an environment variable,
 // a cookie or the domain name.
 
-const CURRENT_VERSION = "1.1.5"
+const CURRENT_VERSION = "1.1.6"
 
 export const ENV = {
     LOCAL: {
@@ -55,4 +55,4 @@ export const ENV = {
     }
 }
 
-export const CONFIG = ENV.UNITE
+export const CONFIG = ENV.LOCAL
