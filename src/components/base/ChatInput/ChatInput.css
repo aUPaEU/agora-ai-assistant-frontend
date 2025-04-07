@@ -68,7 +68,7 @@ input {
 
     border-radius: 10pt;
 
-    background-color: var(--text-accent-color);
+    background-color: rgb(from var(--text-accent-color) r g b / 0.5);
 
     opacity: 0;
     transition: 300ms;

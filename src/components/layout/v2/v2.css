@@ -125,7 +125,7 @@ agora-result-window {
     bottom: 2rem;
     right: 2rem;
 
-    z-index: 20;
+    z-index: 1000;
 }
 
 .searchbar {
