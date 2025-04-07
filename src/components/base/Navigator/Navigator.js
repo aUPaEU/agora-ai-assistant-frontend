@@ -8,7 +8,7 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
-import { gsap } from "gsap"
+import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 
 /* Icons */
 import { UNFOLD, FOLD } from "../../../icons/icons"
@@ -159,7 +159,7 @@ class Navigator extends PlainComponent {
 
         catch (error) {
             this.error.setState(error)
-            console.error("Exception manage when fetching services have to be implemented", error)
+            console.error(`ERROR WHEN LOADING SERVICES\n${error}\nProbably the service is down or is being restarted.`)
         }
     }
 
@@ -242,10 +242,15 @@ class Navigator extends PlainComponent {
         services = services.filter(service => service.fields.stage === 'active')
 
         if (extend) services = [...this.serviceContext.getData('services'), ...services]
+
+        // Get all the available data models
+        const availableModels = extractObjectsWithMatchingKey(services, 'model').map(model => model.model)
+        console.log("Available models: ", availableModels)
         
         this.items.setState(services)
         if (!extend) this.initialLoad.setState(false, false)
         this.serviceContext.setData({services: services}, true)
+        this.serviceContext.setData({models: availableModels})
     }
 
     initialDisplay() {

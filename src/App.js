@@ -152,8 +152,10 @@ class App extends PlainComponent {
         if (resultWindow && chatWindow)
             resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
 
-        if (resultWindow && searchbar)
+        if (resultWindow && searchbar) {
             resultWindow.signals.connect(searchbar, 'no-results', () => resultWindow.displayNoResultsMessage())
+            resultWindow.signals.connect(searchbar, 'no-data-models', () => resultWindow.displayNoDataModelsMessage())
+        }
 
         if (navigator && chatWindow)
             navigator.signals.connect(chatWindow, 'results-updated', () => navigator.render())
@@ -172,6 +174,13 @@ class App extends PlainComponent {
 
         if (navigator && resultWindow)
             resultWindow.signals.connect(navigator, 'changed-filters', () => resultWindow.filterResults())
+
+        // Connect ResultWindow signals to Landing
+        if (resultWindow && landing) {
+            landing.signals.connect(resultWindow, 'display-no-results', () => landing.hide())
+            landing.signals.connect(resultWindow, 'display-no-data-models', () => landing.hide())
+            landing.signals.connect(resultWindow, 'clear-error-messages', () => landing.show())
+        }
     }
 
     openInfoDialog(payload) {

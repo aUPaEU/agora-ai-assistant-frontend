@@ -147,6 +147,12 @@
     transition: 300ms;
 }
 
+.searchbar-button.disabled {
+    cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .searchbar-button::before {
     box-sizing: border-box;
 

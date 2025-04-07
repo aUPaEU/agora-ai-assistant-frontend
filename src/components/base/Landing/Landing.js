@@ -425,6 +425,14 @@ class Landing extends PlainComponent {
         this.isGreeting.setState(false, false)
         this.isGreeted.setState(false, true)
     }
+
+    hide() {
+        this.style.display = 'none'
+    }
+
+    show() {
+        this.style.display = 'block'
+    }
 }
 
 export default window.customElements.define("agora-landing", Landing)

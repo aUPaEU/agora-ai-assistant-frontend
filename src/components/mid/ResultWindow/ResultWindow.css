@@ -27,7 +27,8 @@ agora-base-loader {
 }
 
 /* NO RESULTS MESSAGE */
-.no-results-message {
+.no-results-message,
+.no-data-models-message {
     padding-top: 50%;
     box-sizing: border-box;
 
@@ -44,14 +45,15 @@ agora-base-loader {
     text-align: center;
 }
 
-.no-results-message h1 {
+.no-results-message h1,
+.no-data-models-message h1 {
     color: var(--text-secondary-color);
     font-size: 1.5rem;
 }
 
-.no-results-message p {
+.no-results-message p,
+.no-data-models-message p {
     margin: 0;
-    
     color: var(--text-tertiary-color);
     font-size: 1rem;
 }

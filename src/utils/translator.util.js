@@ -21,7 +21,7 @@ export const translate = async (serviceHost, value, from="auto", to="en") => {
     }
     
     catch (error) {
-        console.error(error)
+        console.warn(`TRANSLATION SERVICE INFO\nThe translation service is not available.\nThe query will be searched in the original language.\nMore information: ${error}.\nProbably the host is blocking the request or doesn't have the service running.`)
         return value
     }
 }

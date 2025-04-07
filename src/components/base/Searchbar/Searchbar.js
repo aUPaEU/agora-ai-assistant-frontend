@@ -47,6 +47,7 @@ class Searchbar extends PlainComponent {
     this.signals = new PlainSignal(this)
     this.signals.register('results-updated')
     this.signals.register('no-results')
+    this.signals.register('no-data-models')
 
     this.loadPreferredLanguage()
   }
@@ -165,9 +166,15 @@ class Searchbar extends PlainComponent {
 
     /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
     const translatedQuery = await translate(this.configContext.getData('translation_host'), this.$('.searchbar-input').value, queryLanguage, 'en')
+   
 
     // We extract all the availablel models in the Agora from the service context
     let services = this.serviceContext.getData('services')
+    if (!services || services.length === 0) {
+      this.signals.emit('no-data-models') // We should change this in the future to emit a message that says there's no services available (not only models)
+      this.hideSpinner()
+      return
+    }
     /* const serviceFilters = this.resultContext.getData('filters').filter(filter => filter.service).map(filter => filter.service)
     if (serviceFilters.length > 0) {
         services = services.filter(service => serviceFilters.includes(service.fields.name))
@@ -177,56 +184,89 @@ class Searchbar extends PlainComponent {
         ? extractObjectsWithMatchingKey(services, 'model').map(model => model.model)
         : [this.currentSource.getState()]
 
-    const modelFilters = this.resultContext.getData('filters').filter(filter => filter.model).map(filter => filter.model)
+    if (models.length === 0) {
+      this.signals.emit('no-data-models')
+      this.hideSpinner()
+      return
+    }
+    
+    // We apply filters at the model level
+    // const modelFilters = this.resultContext.getData('filters').filter(filter => filter.model).map(filter => filter.model)
 
     // We call the elasticsearch api to get search results
-    try {
-      const query = {
-        raw: this.$('.searchbar-input').value,
-        translated: translatedQuery
-      }
-
-      const response = await api.search(this.configContext.getData('host'), query.translated, models)
-
-      // Hide spinner after search is complete
-      this.hideSpinner()
-
-      this.handleResponse(query, response)
-
-      /* this.$('.searchbar-input').placeholder = this.searchContext.getData('current').join(' ').replace(/\/$/, '') */
-      this.$('.searchbar-input').placeholder = query.raw
-      this.$('.searchbar-input').value = ''
+    const query = {
+      raw: this.$('.searchbar-input').value,
+      translated: translatedQuery
     }
 
-    catch(error) {
-      // Hide spinner in case of error
-      this.hideSpinner()
+    // We try to get the response from the API (Search service)
+    let response
+    try {
+      response = await api.search(this.configContext.getData('host'), query.translated, models)
+    } catch(error) {
+      // If the error is a JSON, we try to ingest the missing model if it contains a missing_model key
       try {
         const errorData = JSON.parse(error.message)
 
         if (errorData.missing_model) {
-          await api.ingest(this.configContext.getData('host'), errorData.missing_model)
-          console.warn(`Ingesting missing data from the model: '${errorData.missing_model}' into Elasticsearch`)
+          const error = await this.requestModelDataIngestion(errorData.missing_model)
 
-            this.query()
+          // If the ingestion fails, we just log the error and return
+          if (error) {
+            console.error(`ELASTICSEARCH INGESTION ERROR\n${error}`)
+            this.hideSpinner()
+            return
           }
-      } catch (error) {
+
+          // Try to query again
+          this.query()
+        }
+
+      } catch (subError) {
         // If the error is not a JSON, we just log it
-        console.error("Error: ", error)
+        throw error
       }
+
+      // Hide spinner in case of error
+      this.hideSpinner()
+      return
+    }
+
+    // Hide spinner after search is complete
+    this.hideSpinner()
+
+    try {
+      // Handle the response
+      this.handleResponse(query, response)
+    } catch(error) {
+      console.error("Error while handling the response: ", error)
+    }
+
+    /* this.$('.searchbar-input').placeholder = this.searchContext.getData('current').join(' ').replace(/\/$/, '') */
+    this.$('.searchbar-input').placeholder = query.raw
+    this.$('.searchbar-input').value = ''
+  }
+
+  async requestModelDataIngestion(model) {
+    try {
+      console.warn(`ELASTICSEARCH IS INGESTING\nIngesting missing data from the model: '${model}' into Elasticsearch`)
+      await api.ingest(this.configContext.getData('host'), model)
+      return null
+    } catch(error) {
+      return error
     }
   }
 
   showSpinner() {
     this.isLoading.setState(true, false)
     this.$('.searchbar-spinner').style.display = 'flex'
-    this.$('.searchbar-button').style.display = 'none'
+    this.$('.searchbar-button').classList.add('disabled')
   }
 
   hideSpinner() {
     this.isLoading.setState(false, false)
     this.$('.searchbar-spinner').style.display = 'none'
-    this.$('.searchbar-button').style.display = 'flex'
+    this.$('.searchbar-button').classList.remove('disabled')
   }
 
   handleResponse(query, response) {

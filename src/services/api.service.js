@@ -154,7 +154,8 @@ export const ingest = async (host, model) => {
         const response = await fetch(url)
 
         if (!response.ok) {
-            throw new Error('Something went wrong while ingesting data into Elasticsearch')
+            const errorData = await response.json()
+            throw new Error(errorData.message)
         }
 
         const data = await response.json()

@@ -67,7 +67,7 @@ class NavigatorItem extends PlainComponent {
                 ${
                     Object.entries(info.sub_acceleration_services).length > 0 || Object.entries(info.catalogues).length > 0
                         ? html`<div class="unfold-icon">${ADD}</div>`
-                        : ``
+                        : html``
                 }
             `
             : ``

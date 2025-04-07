@@ -26,6 +26,9 @@ class ResultWindow extends PlainComponent {
 
         this.signals = new PlainSignal(this)
         this.signals.register('cards-fetched') // This signal is used to send the data of a card to the carousel component
+        this.signals.register('display-no-results')
+        this.signals.register('display-no-data-models')
+        this.signals.register('clear-error-messages')
 
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
@@ -77,6 +80,17 @@ class ResultWindow extends PlainComponent {
             <div class="no-results-message" style="display: none;">
                 <h1>No results found</h1>
                 <p>Try changing the search terms.</p>
+            </div>
+
+            <div class="no-data-models-message" style="display: none;">
+                <h1>No data models found</h1>
+                <p>Contact the service provider or the administrator to get access to the data.</p>
+                <br>
+                <p>
+                    Model views should be configured in the acceleration services module.<br>
+                    If a model doesn't have a view (website) assigned, it will not be displayed in the results<br>
+                    since its elements wouldn't be accessible beyond the search interface.
+                </p>
             </div>
 
             <!-- Result counter -->
@@ -177,9 +191,11 @@ class ResultWindow extends PlainComponent {
     }
 
     clear() {
-        console.log("CLEARING RESULTS")
         this.resultContext.setData({data: [], grouped: [], filters: []})
         this.builtResults.setState([])
+        this.$('.no-results-message').style.display = 'none'
+        this.$('.no-data-models-message').style.display = 'none'
+        this.signals.emit('clear-error-messages')
     }
 
     filterResults() {
@@ -340,6 +356,15 @@ class ResultWindow extends PlainComponent {
     displayNoResultsMessage() {
         this.style.display = 'block'
         this.$('.no-results-message').style.display = 'grid'
+        this.$('.no-data-models-message').style.display = 'none'
+        this.signals.emit('display-no-results')
+    }
+
+    displayNoDataModelsMessage() {
+        this.style.display = 'block'
+        this.$('.no-data-models-message').style.display = 'grid'
+        this.$('.no-results-message').style.display = 'none'
+        this.signals.emit('display-no-data-models')
     }
 }
 
