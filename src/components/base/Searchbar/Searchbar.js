@@ -201,14 +201,18 @@ class Searchbar extends PlainComponent {
     catch(error) {
       // Hide spinner in case of error
       this.hideSpinner()
-      console.log("Error: ", error)
-      const errorData = JSON.parse(error.message)
+      try {
+        const errorData = JSON.parse(error.message)
 
-      if (errorData.missing_model) {
-        await api.ingest(this.configContext.getData('host'), errorData.missing_model)
-        console.warn(`Ingesting missing data from the model: '${errorData.missing_model}' into Elasticsearch`)
+        if (errorData.missing_model) {
+          await api.ingest(this.configContext.getData('host'), errorData.missing_model)
+          console.warn(`Ingesting missing data from the model: '${errorData.missing_model}' into Elasticsearch`)
 
-        this.query()
+            this.query()
+          }
+      } catch (error) {
+        // If the error is not a JSON, we just log it
+        console.error("Error: ", error)
       }
     }
   }
