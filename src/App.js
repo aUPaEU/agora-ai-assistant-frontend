@@ -46,6 +46,7 @@ import './components/base/DynamicCard/DynamicCard'
 import './components/base/PinCard/PinCard'
 import './components/mid/ResultWindow/ResultWindow'
 import './components/mid/CardInfoCarousel/CardInfoCarousel'
+import './components/mid/CardInfoCarouselV2/CardInfoCarouselV2'
 import './components/mid/PinBox/PinBox'
 import './components/mid/ResultMapWindow/ResultMapWindow' 
 
@@ -145,6 +146,7 @@ class App extends PlainComponent {
         const searchbar = this.configContext.getData('enabled_ai') ? null : this.$('agora-layout-v2').$('agora-searchbar')
         const navigator = this.$('agora-layout-v2').$('agora-navigator')
         const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
+        const carouselV2 = this.$('agora-layout-v2').$('agora-card-info-carousel-v2')
         const landing = this.$('agora-layout-v2').$('agora-landing')
         const metagoraNavigator = this.$('agora-layout-v2').$('agora-metagora-navigator')
 
@@ -183,10 +185,18 @@ class App extends PlainComponent {
         }
     }
 
+    openCarousel(id) {
+        const carouselV2 = this.$('agora-layout-v2').$('agora-card-info-carousel-v2')
+        carouselV2.setDisplayedCardId(id)
+    }
+
     openInfoDialog(payload) {
         const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
+        const carouselV2 = this.$('agora-layout-v2').$('agora-card-info-carousel-v2')
 
-        carousel.show(payload.id, payload.href, payload.has_image)
+        carouselV2.setDisplayedCardId(payload.id)
+
+        //carousel.show(payload.id, payload.href, payload.has_image)
         return
     }
 

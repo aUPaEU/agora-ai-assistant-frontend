@@ -64,6 +64,7 @@ class LayoutV2 extends PlainComponent {
 
             <!-- Carousel -->
             <agora-card-info-carousel></agora-card-info-carousel>
+            <agora-card-info-carousel-v2></agora-card-info-carousel-v2>
 
             <!-- Bottom Fade -->
             <div class="bottom-fade"></div>
