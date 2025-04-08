@@ -126,21 +126,8 @@ class DynamicCard extends PlainComponent {
     }
 
     openInfoDialog() {
-        const app = document.querySelector('agora-app')
-        const payload = {
-            id: this.data.getState().id,
-            src: `${this.configContext.getData('host')}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image` ?? '',
-            name: this.data.getState().name ?? '',
-            lastname: this.data.getState().lastname ?? '',
-            summary: this.data.getState().summary ?? this.data.getState().description ?? '',
-            university_origin: this.data.getState().university_origin ? this.data.getState().university_origin[1] : '',
-            href: this.getAttribute('href') ?? '',
-            additional_fields: this.parseAdditionalFields(),
-            data: this.data.getState(),
-            has_image: !this.wrapper.classList.contains('no-image')
-        }
-
-        app.openInfoDialog(payload)
+        const app = document.querySelector('agora-app') // Conectar al V2
+        app.openCarousel(this.data.getState().id)
     }
 
     parseAdditionalFields() {
