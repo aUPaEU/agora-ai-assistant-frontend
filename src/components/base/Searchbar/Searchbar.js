@@ -322,13 +322,16 @@ class Searchbar extends PlainComponent {
         const modelWebsite = flatWebsites.find(website => website.model === result.model).website
         const modelUrl = flatWebsites.find(website => website.model === result.model).url
 
+        // If there's no domain configured in the website where the page belongs, we return null or localhost
+        const modelViewUrl = modelWebsite ? `${modelWebsite}${modelUrl}` : `${this.configContext.getData('host')}${modelUrl}`
+
         // TODO: Revisar porque el modelWebsite está devolviendo false en algunso casos.
         // Las DynamicCards estan cargando datos con el modelWebsite como false.
 
         return {
           model: result.model,
           model_verbose_name: modelVerboseName,
-          model_view_url: `${modelWebsite}${modelUrl}`,
+          model_view_url: modelViewUrl,
           service: result.service,
           featured_fields: result.featured_fields || ['web_link', 'url', 'website'],
           featured: result.featured || false, 
