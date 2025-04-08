@@ -37,12 +37,10 @@ class DynamicCard extends PlainComponent {
         this.wrapper.ondragend = (e) => this.handleDrop(e)
 
         this.wrapper.onclick = () => this.openInfoDialog()
-        //this.$('.card-image').onload = () => this.replaceImageIfItsPlaceholder()
     }
 
     build() {
         this.data.setState(JSON.parse(this.dataset.data), false)
-        console.log("Building the dynamic card with data: ", this.data.getState())
 
         // Helper method to find property with a specific pattern in the name
         const findPropertyByPattern = (pattern) => {
@@ -170,33 +168,6 @@ class DynamicCard extends PlainComponent {
 
     parseAdditionalFields() {
         return this.getAttribute('featured-fields').split(',')
-    }
-    
-    async replaceImageIfItsPlaceholder() {
-        // TODO: This method have to be more solid. The conditions to see if it's a placeholder are these:
-        /* 
-            File Extension = png
-            Image Size = 256x256
-            Content Length = 6078
-        */
-        // To get all this data, we should fetch the image with HEAD method so they don't get loaded twice,
-        // but in order to fetch theme from the script, we need to enable CORS headers in the server.
-        // So this is a temporary solution.
-        
-        const image = this.$('.card-image')
-
-        if (image.naturalWidth === 256 && image.naturalHeight === 256) {
-            this.wrapper.classList.add('no-image')
-
-            const defaultImage = document.createElement('div')
-            defaultImage.classList.add('card-image')
-            /* defaultImage.classList.add('default-image') */
-            /* defaultImage.classList.add(`default-image-${this.getDefaultImageIndex()}`) */
-            defaultImage.classList.add(`default-image-0`)
-
-            image.remove()
-            this.wrapper.insertBefore(defaultImage, this.wrapper.firstChild)
-        }
     }
 
     getDefaultImageIndex() {
