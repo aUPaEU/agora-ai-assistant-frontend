@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "create-component": "node ./node_modules/plain-reactive/scripts/create.cjs",
     "build": "webpack --mode production",
     "dev": "webpack serve --mode development --open"
   },
