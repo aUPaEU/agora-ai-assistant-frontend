@@ -322,6 +322,9 @@ class Searchbar extends PlainComponent {
         const modelWebsite = flatWebsites.find(website => website.model === result.model).website
         const modelUrl = flatWebsites.find(website => website.model === result.model).url
 
+        // TODO: Revisar porque el modelWebsite está devolviendo false en algunso casos.
+        // Las DynamicCards estan cargando datos con el modelWebsite como false.
+
         return {
           model: result.model,
           model_verbose_name: modelVerboseName,
