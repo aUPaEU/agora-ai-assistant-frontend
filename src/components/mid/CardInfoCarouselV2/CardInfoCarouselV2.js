@@ -89,7 +89,12 @@ class CardInfoCarouselV2 extends PlainComponent {
                         >Explore</button>
                     </div>
                 </div>
+            </div>
 
+            <!-- Carousel Controls -->
+            <div class="controls-wrapper">
+                <span class="prev-control">${ARROW_LEFT}</span>
+                <span class="next-control">${ARROW_RIGHT}</span>
             </div>
         `
         const templateNoCardDisplayed = html`
@@ -109,6 +114,9 @@ class CardInfoCarouselV2 extends PlainComponent {
 
     listeners() {
         this.wrapper.onclick = (e) => this.close(e)
+
+        if (this.$('.prev-control')) this.$('.prev-control').onclick = () => this.setPreviousCardId()
+        if (this.$('.next-control')) this.$('.next-control').onclick = () => this.setNextCardId()
 
         if (this.$('.card-explore-button')) this.$('.card-explore-button').onclick = () => this.navigateToDetail()
 
@@ -168,16 +176,60 @@ class CardInfoCarouselV2 extends PlainComponent {
 
         this.displayedCardGroup.setState(newData.service, false)
         this.data.setState(newData)
+        this.updateNavigationButtonsVisibility(id)
         this.show()
     }
 
+    updateNavigationButtonsVisibility(cardId) {
+        const currentGroup = this.resultContext.getData('grouped')
+            .find(group => group.service === this.displayedCardGroup.getState())
+        const currentIndex = currentGroup?.items
+            .findIndex(item => item.data.id === cardId)
+        const groupLength = currentGroup?.items?.length
+
+        // Reset visibility
+        this.$('.prev-control')?.classList.remove('hidden')
+        this.$('.next-control')?.classList.remove('hidden')
+
+        // Hide prev button if we're at the first item
+        if (currentIndex === 0) {
+            this.$('.prev-control')?.classList.add('hidden')
+        }
+
+        // Hide next button if we're at the last item
+        if (currentIndex === groupLength - 1) {
+            this.$('.next-control')?.classList.add('hidden')
+        }
+    }
+
     setNextCardId() {
-        // Here we check within the grouped data
+        const currentGroup = this.resultContext.getData('grouped')
+            .find(group => group.service === this.displayedCardGroup.getState())
+        const currentCardIndex = currentGroup?.items
+            .findIndex(item => item.data.id === this.displayedCardId.getState())
+        const nextCard = currentGroup?.items[currentCardIndex + 1]
+
+        if (nextCard) {
+            this.displayedCardId.setState(nextCard.data.id, false)
+            this.data.setState(nextCard)
+            this.updateNavigationButtonsVisibility(nextCard.data.id)
+            this.show()
+        }
     }
 
     setPreviousCardId() {
-        // Here we check within the grouped data
+        const currentGroup = this.resultContext.getData('grouped')
+            .find(group => group.service === this.displayedCardGroup.getState())
+        const currentCardIndex = currentGroup?.items
+            .findIndex(item => item.data.id === this.displayedCardId.getState())
+        const previousCard = currentGroup?.items[currentCardIndex - 1]
 
+        if (previousCard) {
+            this.displayedCardId.setState(previousCard.data.id, false)
+            this.data.setState(previousCard)
+            this.updateNavigationButtonsVisibility(previousCard.data.id)
+            this.show()
+        }
     }
 }
 

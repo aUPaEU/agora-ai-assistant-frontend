@@ -86,12 +86,18 @@
 }
 
 .default-image {
+    padding: 2rem;
+    box-sizing: border-box;
+
     display: grid;
     place-content: center;
 
     color: var(--primary-color);
     font-weight: bold;
     font-size: 3rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     background-image: 
         radial-gradient(ellipse at top, #0080ff, #009aff, #00aef8, #00bfe6, #00ccd3),
@@ -212,7 +218,7 @@
     text-wrap: pretty;
 }
 
-/* Card Actions */
+/* CARD ACTIONS */
 .card-actions {
     margin-top: auto;
     width: 100%;
@@ -304,6 +310,51 @@
 
 .close-button:hover {
     background-color: var(--primary-color);
+}
+
+/* CAROUSEL CONTROLS */
+.controls-wrapper {
+    width: fit-content;
+    height: fit-content;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+
+    transition: 300ms;
+}
+
+.controls-wrapper .prev-control, 
+.controls-wrapper .next-control {
+    cursor: pointer;
+
+    height: 50px;
+    width: 50px;
+
+    display: grid;
+    place-content: center;
+
+    border-radius: 100pt;
+
+    background-color: rgb(from var(--primary-color) r g b / 0.5);
+    backdrop-filter: blur(10px);
+
+    color: var(--text-accent-color);
+
+    transition: 300ms;
+}
+
+.controls-wrapper .prev-control:hover, 
+.controls-wrapper .next-control:hover {
+    background-color: var(--primary-color);
+}
+
+.prev-control.hidden,
+.next-control.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* RESPONSIVE */
