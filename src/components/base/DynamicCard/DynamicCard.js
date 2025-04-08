@@ -37,47 +37,70 @@ class DynamicCard extends PlainComponent {
         this.wrapper.ondragend = (e) => this.handleDrop(e)
 
         this.wrapper.onclick = () => this.openInfoDialog()
-        this.$('.card-image').onload = () => this.replaceImageIfItsPlaceholder()
+        //this.$('.card-image').onload = () => this.replaceImageIfItsPlaceholder()
     }
 
     build() {
         this.data.setState(JSON.parse(this.dataset.data), false)
+        console.log("Building the dynamic card with data: ", this.data.getState())
 
-        const image = true
-            ? html`<img class="card-image" src="${this.configContext.getData('host')}/web/image?model=${this.getAttribute('model')}&id=${this.id.split('-')[1]}&field=image"/>`
+        // Helper method to find property with a specific pattern in the name
+        const findPropertyByPattern = (pattern) => {
+            const state = this.data.getState();
+            if (!state) return null;
+            
+            // Convert single pattern to array for unified processing
+            const patterns = Array.isArray(pattern) ? pattern : [pattern];
+            
+            for (const currentPattern of patterns) {
+                // Look for exact match first
+                if (state[currentPattern]) return state[currentPattern];
+                
+                // Then look for properties containing the pattern
+                for (const key in state) {
+                    if (key.includes(currentPattern)) {
+                        return state[key];
+                    }
+                }
+            }
+            
+            return null;
+        };
+
+        const image = findPropertyByPattern('image')
+            ? html`<img class="card-image" src="${this.configContext.getData('host')}${findPropertyByPattern('image')}"/>`
+            : html`<div class="card-image default-image-0"></div>`
+
+        const name = findPropertyByPattern('name')
+            ? html`<span class="card-name">${findPropertyByPattern('name')}</span>`
             : null
 
-        const name = this.data.getState().name
-            ? html`<span class="card-name">${this.data.getState().name}</span>`
+        const lastname = findPropertyByPattern('lastname')
+            ? html`<span class="card-lastname">${findPropertyByPattern('lastname')}</span>`
             : null
 
-        const lastname = this.data.getState().lastname
-            ? html`<span class="card-lastname">${this.data.getState().lastname}</span>`
+        const summary = findPropertyByPattern(['summary', 'abstract'])
+            ? html`<span class="card-summary">${findPropertyByPattern(['summary', 'abstract'])}</span>`
             : null
 
-        const summary = this.data.getState().summary
-            ? html`<span class="card-summary">${this.data.getState().summary}</span>`
+        const description = findPropertyByPattern(['description', 'info', 'details'])
+            ? html`<span class="card-summary">${findPropertyByPattern(['description', 'info', 'details'])}</span>`
             : null
 
-        const description = this.data.getState().description
-            ? html`<span class="card-summary">${this.data.getState().description}</span>`
+        const content = findPropertyByPattern(['content', 'text', 'body'])
+            ? html`<span class="card-summary">${findPropertyByPattern(['content', 'text', 'body'])}</span>`
             : null
 
-        const content = this.data.getState().content
-            ? html`<span class="card-summary">${this.data.getState().content}</span>`
-            : null
-
-        const origin = this.data.getState().university_origin || this.data.getState().home_partner_institution
-            ? html`<span class="card-origin">${
-                this.data.getState().university_origin ?? 
-                this.data.getState().home_partner_institution
-            }</span>`
+        // For origin, we use multiple patterns
+        const originValue = findPropertyByPattern(['university_origin', 'home_partner_institution', 'origin', 'institution']);
+        const origin = originValue
+            ? html`<span class="card-origin">${originValue}</span>`
             : null
 
         let publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
         if (isNaN(publicScore) || publicScore === 0) publicScore = '~'
 
-        const isFeatured = this.data.getState().featured
+        const isFeatured = findPropertyByPattern(['featured', 'highlight', 'premium'])
 
         return html`
             <div class="catalogue">${this.getAttribute('model-verbose-name')}</div>
