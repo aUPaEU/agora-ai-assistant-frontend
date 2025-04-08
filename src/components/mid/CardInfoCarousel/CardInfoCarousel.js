@@ -6,7 +6,6 @@ import { PATHS } from "../../../constants/paths.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
-import { splitAndKeepDelimiter } from "../../../utils/parsingHelper.util"
 
 /* Icons */
 import { ARROW_LEFT, ARROW_RIGHT, CLOSE } from "../../../icons/icons"
