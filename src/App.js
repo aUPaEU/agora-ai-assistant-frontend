@@ -9,6 +9,7 @@ import { ARROW_LEFT, ARROW_RIGHT } from "./icons/icons"
 
 /* Utils */
 import { html } from "./utils/templateTags.util"
+import { translateServiceIsAvailable } from "./utils/translator.util"
 
 /* Components */
 import './components/base/Navbar/Navbar'
@@ -49,6 +50,9 @@ import './components/mid/CardInfoCarouselV2/CardInfoCarouselV2'
 import './components/mid/PinBox/PinBox'
 import './components/mid/ResultMapWindow/ResultMapWindow' 
 
+/* User Info */
+import './components/base/Toast/Toast'
+
 class App extends PlainComponent {
     constructor() {
         super('agora-app', `${PATHS.SRC}/App.css`)
@@ -66,18 +70,37 @@ class App extends PlainComponent {
         this.setupConfig()
     }
 
-    setupConfig() {
+    async setupConfig() {
         const customConfig = {
             "name": this.getAttribute('name') ?? CONFIG.name,
             "host": this.getAttribute('host') ?? CONFIG.host,
             "company_id": this.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": this.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
             "ai_host": this.getAttribute('ai_host') ?? CONFIG.ai_host,
-            "translation_host": this.getAttribute('translation_host') ?? CONFIG.translation_host,
+            "translation_host": await this.checkTranslationService(),
             "current_version": CONFIG.current_version
         }
 
         this.configContext.setData(customConfig)
+    }
+
+    async checkTranslationService() {
+        console.log('Checking translation service...')
+        const translationHost = this.getAttribute('translation_host') ?? CONFIG.translation_host
+
+        if (!translationHost) {
+            console.log('No translation host found')
+            return null
+        }
+
+        const isAvailable = await translateServiceIsAvailable(translationHost)
+        if (!isAvailable) {
+            console.log('Translation service is not available')
+            return null
+        }
+
+        console.log('Translation service is available')
+        return translationHost
     }
 
     template() {

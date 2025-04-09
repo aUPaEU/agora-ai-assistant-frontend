@@ -9,6 +9,7 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+import { translateServiceIsAvailable } from "../../../utils/translator.util"
 
 /* Icons */
 import { UNFOLD, FOLD } from "../../../icons/icons"
@@ -39,7 +40,7 @@ class Navigator extends PlainComponent {
         this.fetchItems()
     }
 
-    ensureConfig() {
+    async ensureConfig() {
         const app = window.document.querySelector('agora-app')
         const customConfig = {
             "name": app.getAttribute('name') ?? CONFIG.name,
@@ -47,7 +48,8 @@ class Navigator extends PlainComponent {
             "company_id": app.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": app.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
             "ai_host": app.getAttribute('ai_host') ?? CONFIG.ai_host,
-            "translation_host": app.getAttribute('translation_host') ?? CONFIG.translation_host
+            "translation_host": app.getAttribute('translation_host'),
+            "current_version": CONFIG.current_version
         }
 
         this.configContext.setData(customConfig)

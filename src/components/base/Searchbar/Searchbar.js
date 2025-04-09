@@ -55,7 +55,10 @@ class Searchbar extends PlainComponent {
   template() {
     return html`
         <!-- Query Language Selector -->
-        <div class="language-selector">
+        <div 
+          class="language-selector"
+          style="${this.configContext.getData('translation_host') ? '' : 'display: none !important'}"
+        >
           <!-- Language Options -->
           
           <ul class="query-language-selector hidden">
@@ -165,7 +168,9 @@ class Searchbar extends PlainComponent {
     const queryLanguage = this.currentQueryLanguage.getState()?.value ?? 'en'
 
     /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
-    const translatedQuery = await translate(this.configContext.getData('translation_host'), this.$('.searchbar-input').value, queryLanguage, 'en')
+    const translatedQuery = this.configContext.getData('translation_host')
+      ? await translate(this.configContext.getData('translation_host'), this.$('.searchbar-input').value, queryLanguage, 'en')
+      : this.$('.searchbar-input').value
    
 
     // We extract all the availablel models in the Agora from the service context
