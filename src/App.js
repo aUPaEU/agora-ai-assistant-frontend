@@ -4,19 +4,14 @@ import { PlainComponent, PlainState, PlainContext} from "plain-reactive"
 /* Constants */
 import { PATHS } from "./constants/paths.const"
 
-/* Icons */
-import { ARROW_LEFT, ARROW_RIGHT } from "./icons/icons"
-
 /* Utils */
 import { html } from "./utils/templateTags.util"
 import { translateServiceIsAvailable } from "./utils/translator.util"
 
 /* Components */
-import './components/base/Navbar/Navbar'
 import './components/base/Navigator/Navigator'
 import './components/base/MetagoraNavigator/MetagoraNavigator'
 import './components/base/NavigatorItem/NavigatorItem'
-import './components/base/Showcase/Showcase'
 import './components/base/Greetings/Greetings'
 import './components/base/Landing/Landing'
 import './components/base/MapVisualizer/MapVisualizer'
@@ -35,7 +30,6 @@ import './components/base/ChatInput/ChatInput'
 import './components/base/Searchbar/Searchbar'
 
 /* Layouts */
-import './components/layout/v1/v1'
 import './components/layout/v2/v2'
 
 /* Spinners */
@@ -75,7 +69,7 @@ class App extends PlainComponent {
             "name": this.getAttribute('name') ?? CONFIG.name,
             "host": this.getAttribute('host') ?? CONFIG.host,
             "company_id": this.getAttribute('company_id') ?? CONFIG.company_id,
-            "enabled_ai": this.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
+            "enabled_ai": this.getAttribute('enabled_ai') ?? CONFIG.enabled_ai,
             "ai_host": this.getAttribute('ai_host') ?? CONFIG.ai_host,
             "translation_host": await this.checkTranslationService(),
             "current_version": CONFIG.current_version
