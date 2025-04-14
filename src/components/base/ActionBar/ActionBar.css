@@ -20,7 +20,7 @@
     border-radius: 5pt;
 
     border: none;
-    color: var(--primary-color, #333);
+    /* color: var(--primary-color, #333); */
 
     font-size: 18px;
 
@@ -61,3 +61,12 @@
 .refresh-button {
     color: var(--text-secondary-color);
 } 
+
+.ai-assistant-button {
+    color: var(--text-secondary-color);
+}
+
+.ai-assistant-button svg {
+    width: 32px;
+    height: 32px;
+}

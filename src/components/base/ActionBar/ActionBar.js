@@ -1,7 +1,7 @@
 import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
 import { html } from "../../../utils/templateTags.util"
 import { PATHS } from "../../../constants/paths.const"
-import { MAP, REFRESH } from "../../../icons/icons"
+import { MAP, REFRESH, AI_ASSISTANT, AI_CHAT } from "../../../icons/icons"
 
 class ActionBar extends PlainComponent {
     constructor() {
@@ -19,6 +19,9 @@ class ActionBar extends PlainComponent {
                 <button class="action-button refresh-button">
                     ${REFRESH}
                 </button>
+                <button class="action-button ai-assistant-button">
+                    ${AI_CHAT}
+                </button>
             </div>
         `
     }
@@ -29,6 +32,9 @@ class ActionBar extends PlainComponent {
         
         // Refrescar la página
         this.$('.refresh-button').onclick = () => window.location.reload()
+
+        // Abrir el asistente de IA
+        this.$('.ai-assistant-button').onclick = () => this.openAIAssistant()
     }
 
     refresh() {
@@ -46,6 +52,11 @@ class ActionBar extends PlainComponent {
         if (mapWindow) {
             mapWindow.toogleMapWindow()
         }
+    }
+
+    openAIAssistant() {
+        // TODO: Implementar la lógica para abrir el asistente de IA
+        console.log('Opening AI Assistant...')
     }
 }
 
