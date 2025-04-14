@@ -14,19 +14,6 @@ export const fetchAccelerationServices = async () => {
     }
 }
 
-export const fetchAccelerationServicesV1 = async () => {
-    try {
-        const response = ACCELERATION_SERVICES
-        /* const data = await response.json()
-        return data */
-        return response
-    }
-
-    catch (error) {
-        throw error
-    }
-}
-
 export const fetchMetagoraServices = async (host) => {
     try {
         const url = `${host}/catalogue-api/v1/agoras`
