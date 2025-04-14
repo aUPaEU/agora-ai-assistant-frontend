@@ -154,53 +154,6 @@ class App extends PlainComponent {
         const carouselV2 = this.$('agora-layout-v2').$('agora-card-info-carousel-v2')
         carouselV2.setDisplayedCardId(id)
     }
-
-    openInfoDialog(payload) {
-        const carousel = this.$('agora-layout-v2').$('agora-card-info-carousel')
-        const carouselV2 = this.$('agora-layout-v2').$('agora-card-info-carousel-v2')
-
-        carouselV2.setDisplayedCardId(payload.id)
-
-        //carousel.show(payload.id, payload.href, payload.has_image)
-        return
-    }
-
-    displayAdditionalFieldsInDialog(dialog, payload) {
-        const additionalFields = payload.additional_fields
-        const data = payload.data
-        // Delete the container for the additional fields if it exists and there's no additional fields
-        if (additionalFields.length === 0) {
-            if (dialog.querySelector('.card-info-additional-fields')) {
-                dialog.querySelector('.card-info-additional-fields').remove()
-                return 
-            }
-        }
-
-        // Create a container for the additional fields if it does not exist and there's any additional field
-        if (!dialog.querySelector('.card-info-additional-fields')) {
-            const additionalFieldsContainer = document.createElement('div')
-            additionalFieldsContainer.classList.add('card-info-additional-fields')
-            dialog.querySelector('.card-info-content').appendChild(additionalFieldsContainer)
-        } else {
-            dialog.querySelector('.card-info-additional-fields').innerHTML = ''
-        }
-
-        // Map the additional fields and add them to the container
-        additionalFields.forEach(field => {
-            if (!data[field]) return
-            
-            let fieldName = field.replace(/_/g, ' ')
-            fieldName = fieldName.toUpperCase()
-
-            const additionalField = html`
-                <div class="additional-field">
-                    <span class="field-name">${fieldName}</span>
-                    <span class="field-value">${data[field]}</span>
-                </div>
-            `
-            dialog.querySelector('.card-info-additional-fields').innerHTML += additionalField
-        })
-    }
 }
 
 export default window.customElements.define('agora-app', App)
