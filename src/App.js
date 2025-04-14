@@ -105,60 +105,11 @@ class App extends PlainComponent {
 
     template() {
         return html`
-            <!-- <agora-navigator></agora-navigator> -->
-            <!-- <agora-navbar></agora-navbar> -->
-            <!-- <agora-layout-v1></agora-layout-v1> -->
-            
             <agora-layout-v2></agora-layout-v2>
-
-            <!-- Element Info Dialog -->
-            <dialog class="card-info-dialog">
-                <!-- Card Content -->
-                <div class="card-info-dialog-wrapper">
-                    <!-- Card Image -->
-                    <div class="card-info-image-container">
-                        <img class="card-info-image" src="">
-                    </div>
-
-                    <!-- Card Main Content -->
-                    <div class="card-info-content">
-                        <span class="card-info-origin"></span>
-                        <span class="card-info-name"></span>
-                        <span class="card-info-lastname"></span>
-                        <span class="card-info-summary"></span>
-                    </div>
-
-                    <!-- Card Actions -->
-                    <div class="card-info-actions">
-                        <button class="card-info-explore-button">Explore</button>
-                    </div>
-                </div>
-
-                <!-- Carousel Controls -->
-                <div class="carousel-controls">
-                    <span class="prev-control">${ARROW_LEFT}</span>
-                    <span class="next-control">${ARROW_RIGHT}</span>
-                </div>
-            </dialog>
-            <!-- This element could be encapsulated in a component -->
         `
     }
 
     listeners() {
-        this.$('.card-info-dialog').onclick = (e) => this.closeInfoDialog(e)
-        this.$('.card-info-dialog').onanimationend = () => this.$('.card-info-dialog').classList.remove('fade-in')
-        this.$('.card-info-explore-button').onclick = () => window.open(this.$('.card-info-explore-button').dataset.url, '_blank')
-
-        this.wrapper.onclick = (e) => {
-            if (e.target.tagName !== 'AGORA-NAVBAR') {
-                const navbar = this.$('agora-navbar')
-                if (!navbar) return
-                navbar.foldAllSubmenus()
-            }
-        }
-
-        this.$('.prev-control').onclick = (e) => this.handleCarouselControls(e, 'prev')
-        this.$('.next-control').onclick = (e) => this.handleCarouselControls(e, 'next')
     }
 
     connectors() {
@@ -249,57 +200,6 @@ class App extends PlainComponent {
             `
             dialog.querySelector('.card-info-additional-fields').innerHTML += additionalField
         })
-    }
-
-    closeInfoDialog(e) {
-        if (
-            !["BUTTON", "SVG", "PATH", "svg", "path"].includes(e.target.tagName) &&
-            !e.target.classList.contains('carousel-controls') &&
-            !e.target.classList.contains('prev-control') &&
-            !e.target.classList.contains('next-control')
-        ) {
-            this.$('.card-info-dialog').close()
-        }
-    }
-
-    handleCarouselControls(e, direction) {
-        e.preventDefault()
-
-        this.$('.card-info-dialog').classList.remove('fade-in')
-        this.$('.card-info-dialog').classList.remove('fade-left')
-        this.$('.card-info-dialog').classList.remove('fade-right')
-
-        if (direction === 'prev') {
-            this.$('.card-info-dialog').classList.add('fade-left')
-            this.$('.carousel-controls').style.opacity = 0
-            this.$('.card-info-dialog').style.overflowY = 'hidden'
-            this.$('.card-info-dialog').onanimationend = () => {
-                this.$('.card-info-dialog').classList.remove('fade-left')
-                this.$('.card-info-dialog').classList.add('fade-in')
-                this.$('.card-info-dialog').onanimationend = () => {
-                    this.$('.card-info-dialog').classList.remove('fade-in')
-                    this.$('.carousel-controls').style.opacity = 1
-                    this.$('.card-info-dialog').style.overflowY = 'auto'
-                }
-            }
-        }
-
-        if (direction === 'next') {
-            this.$('.card-info-dialog').classList.add('fade-right')
-            this.$('.carousel-controls').style.opacity = 0
-            this.$('.card-info-dialog').style.overflowY = 'hidden'
-            this.$('.card-info-dialog').onanimationend = () => {
-                this.$('.card-info-dialog').classList.remove('fade-right')
-                this.$('.card-info-dialog').classList.add('fade-in')
-                this.$('.card-info-dialog').onanimationend = () => {
-                    this.$('.card-info-dialog').classList.remove('fade-in')
-                    this.$('.carousel-controls').style.opacity = 1
-                    this.$('.card-info-dialog').style.overflowY = 'auto'
-                }
-            }
-        }
-
-        return 
     }
 }
 
