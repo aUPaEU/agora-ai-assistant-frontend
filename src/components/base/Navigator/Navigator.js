@@ -10,6 +10,7 @@ import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 import { translateServiceIsAvailable } from "../../../utils/translator.util"
+import { throwToast, TOAST_TYPES } from "../../../utils/errorHandling.util"
 
 /* Icons */
 import { UNFOLD, FOLD } from "../../../icons/icons"
@@ -160,6 +161,10 @@ class Navigator extends PlainComponent {
         }
 
         catch (error) {
+            throwToast(
+                `There was an error while loading the services.\nProbably the service is down or is being restarted.`, 
+                TOAST_TYPES.ERROR
+            )
             this.error.setState(error)
             console.error(`ERROR WHEN LOADING SERVICES\n${error}\nProbably the service is down or is being restarted.`)
         }

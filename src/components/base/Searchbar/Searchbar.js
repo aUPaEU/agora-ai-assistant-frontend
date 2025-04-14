@@ -8,6 +8,7 @@ import { html } from "../../../utils/templateTags.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 import { isDebugMode } from "../../../utils/core.util"
 import { translate } from "../../../utils/translator.util"
+import { throwToast, TOAST_TYPES } from "../../../utils/errorHandling.util"
 
 /* Icons */
 import { SEARCH, AUPAEU_LOGO} from "../../../icons/icons"
@@ -218,6 +219,10 @@ class Searchbar extends PlainComponent {
 
           // If the ingestion fails, we just log the error and return
           if (error) {
+            throwToast(
+              `There was an error while ingesting the missing model data.\nCheck the logs for more information.`, 
+              TOAST_TYPES.ERROR
+            )
             console.error(`ELASTICSEARCH INGESTION ERROR\n${error}`)
             this.hideSpinner()
             return
@@ -229,6 +234,10 @@ class Searchbar extends PlainComponent {
 
       } catch (subError) {
         // If the error is not a JSON, we just log it
+        throwToast(
+          `There was an error while searching for the query.\nCheck the logs for more information.`, 
+          TOAST_TYPES.ERROR
+        )
         throw error
       }
 
@@ -244,6 +253,10 @@ class Searchbar extends PlainComponent {
       // Handle the response
       this.handleResponse(query, response)
     } catch(error) {
+      throwToast(
+        `There was an error while handling the response.\nCheck the logs for more information.`, 
+        TOAST_TYPES.ERROR
+      )
       console.error("Error while handling the response: ", error)
     }
 
@@ -254,6 +267,10 @@ class Searchbar extends PlainComponent {
 
   async requestModelDataIngestion(model) {
     try {
+      throwToast(
+        `Elasticsearch is ingesting the missing model data.\nIngesting missing data from the model: '${model}' into Elasticsearch`, 
+        TOAST_TYPES.WARNING
+      )
       console.warn(`ELASTICSEARCH IS INGESTING\nIngesting missing data from the model: '${model}' into Elasticsearch`)
       await api.ingest(this.configContext.getData('host'), model)
       return null

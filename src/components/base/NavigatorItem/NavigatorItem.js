@@ -94,6 +94,7 @@ class NavigatorItem extends PlainComponent {
                     ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
                     <div class="label-content">
+                        ${showcaseIcon}
                         <span class="label-title">${name}</span>
                         <div class="label-subtitle">
                             <span>${this.type.getState()}</span>
@@ -115,7 +116,6 @@ class NavigatorItem extends PlainComponent {
                     style="${!showcaseIcon && !infoIcon ? 'display: none;' : ''}"
                 >
                     ${infoIcon}
-                    ${showcaseIcon}
                     ${unfoldIcon}
                     ${selectedIcon}
                 </div>

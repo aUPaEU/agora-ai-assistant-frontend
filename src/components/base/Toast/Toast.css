@@ -1,8 +1,7 @@
 .agora-toast-wrapper {
     position: fixed;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
 
     z-index: 1000000000;
 
@@ -92,7 +91,7 @@
 .content {
     font-size: 0.9rem;
     text-wrap: pretty;
-    /* color: white; */
+    white-space: pre-line;
 }
     
 .progress-bar {
@@ -126,11 +125,11 @@
 
 @keyframes fade-down {
     0% {
-        transform: translate(-50%, -100%);
+        transform: translate(0, -100%);
     }
 
     100% {
-        transform: translate(-50%, 0%);
+        transform: translate(0, 0%);
     }
 }
 
@@ -143,11 +142,11 @@
 
 @keyframes fade-up {
     0% {
-        transform: translate(-50%, 0%);
+        transform: translate(0, 0%);
     }
 
     100% {
-        transform: translate(-50%, -100%);
+        transform: translate(0, -100%);
     }
 }
 

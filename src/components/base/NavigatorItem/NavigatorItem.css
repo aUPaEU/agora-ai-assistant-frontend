@@ -184,6 +184,7 @@
 }
 
 .label-content {
+    position: relative;
     height: 100%;
     
     padding: 1rem;
@@ -280,6 +281,16 @@
     gap: 0.25rem;
 }
 
+.actions:has(> .info-icon + .selection-icon) {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 1fr;
+}
+
+.actions:has(> .info-icon + .selection-icon) > .info-icon {
+    height: 100%;
+}
+
 .actions:has(> .info-icon:hover) + .description {
     opacity: 1;
     transform: translateY(calc(100% + 0.5rem));
@@ -304,6 +315,12 @@
     color: var(--text-accent-color);
 
     transition: 300ms;
+}
+
+.showcase-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .type-icon {
@@ -337,6 +354,9 @@
 }
 
 .showcase-icon svg {
+    top: 0;
+    right: 0;
+
     height: 16px;
     width: 16px;
     color: var(--text-accent-color);
