@@ -34,7 +34,7 @@
 .inner-wrapper {
     position: relative;
 
-    min-width: 300px;
+    min-width: 500px;
     min-height: 100px;
 
     border-radius: 5pt;
@@ -150,6 +150,13 @@
     }
 }
 
+/* Responsive */
+
+@media (max-width: 500px) {
+    .inner-wrapper {
+        width: 100%;
+    }
+}
 
 
 
