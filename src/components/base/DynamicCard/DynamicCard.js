@@ -50,20 +50,8 @@ class DynamicCard extends PlainComponent {
             ? html`<span class="card-name">${findPropertyByPattern(this.data.getState(), 'name')}</span>`
             : null
 
-        const lastname = findPropertyByPattern(this.data.getState(), 'lastname')
-            ? html`<span class="card-lastname">${findPropertyByPattern(this.data.getState(), 'lastname')}</span>`
-            : null
-
-        const summary = findPropertyByPattern(this.data.getState(), ['summary', 'abstract'])
-            ? html`<span class="card-summary">${findPropertyByPattern(this.data.getState(), ['summary', 'abstract'])}</span>`
-            : null
-
-        const description = findPropertyByPattern(this.data.getState(), ['description', 'info', 'details'])
-            ? html`<span class="card-summary">${findPropertyByPattern(this.data.getState(), ['description', 'info', 'details'])}</span>`
-            : null
-
-        const content = findPropertyByPattern(this.data.getState(), ['content', 'text', 'body'])
-            ? html`<span class="card-summary">${findPropertyByPattern(this.data.getState(), ['content', 'text', 'body'])}</span>`
+        const summary = findPropertyByPattern(this.data.getState(), ['summary', 'abstract', 'description', 'info', 'details', 'content', 'text', 'body'])
+            ? html`<span class="card-summary">${findPropertyByPattern(this.data.getState(), ['summary', 'abstract', 'description', 'info', 'details', 'content', 'text', 'body'])}</span>`
             : null
 
         // For origin, we use multiple patterns
@@ -83,11 +71,8 @@ class DynamicCard extends PlainComponent {
             <div class="card-content">
                 ${origin}
                 ${name}
-                ${lastname}
                 <div class="separator"></div>
                 ${summary}
-                ${description}
-                ${content}
                 <div class="fill-space"></div>
 
                 <div class="additional-info">
