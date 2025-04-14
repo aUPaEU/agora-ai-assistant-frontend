@@ -152,6 +152,11 @@ agora-card-info-carousel {
     z-index: 1000000;
 }
 
+agora-card-info-carousel-v2 {
+    position: fixed;
+    z-index: 1000000;
+}
+
 .bottom-fade {
     pointer-events: none;
     position: fixed;
