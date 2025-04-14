@@ -26,10 +26,14 @@ class ChatBubble extends PlainComponent {
     }
 
     formatTime(time) { 
+        console.log('Time:', time)
         const hours = time.split(':')[0]
         const minutes = time.split(':')[1]
         const ampm = time.split(' ')[1]
-        return `${hours}:${minutes} ${ampm.toLowerCase()}`
+        console.log('Hours:', hours)
+        console.log('Minutes:', minutes)
+        console.log('AMPM:', ampm)
+        return `${hours}:${minutes} ${ampm?.toLowerCase() ?? ''}`
     }
 
     formatMarkdown(html) {

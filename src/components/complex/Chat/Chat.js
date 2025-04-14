@@ -6,6 +6,7 @@ import { PATHS } from "../../../constants/paths.const"
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
+import { throwToast, TOAST_TYPES } from "../../../utils/errorHandling.util"
 
 /* Services */
 import * as api from "../../../services/api.service"
@@ -67,16 +68,13 @@ class Chat extends PlainComponent {
     }
 
     async sendMessage(message) {
-        const availableModels = extractObjectsWithMatchingKey(
-            this.serviceContext.getData('services'),
-            'model'
-        ).map(model => {
+        const availableModels = this.serviceContext.getData('models').map(model => {
             const featuredElementIds = this.resultContext.getData('data') ? this.resultContext.getData('data').find(result => {
                 return result.model === model.model 
             }) : null
 
             return {
-                "model": model.model,
+                "model": model,
                 "description": "This is the model description",
                 "featured_element_ids": featuredElementIds ? featuredElementIds.featured_element_ids : []
             }
@@ -85,25 +83,26 @@ class Chat extends PlainComponent {
         const formattedChatHistory = this.formatChatHistoryForLLM()
 
         this.$('agora-chat-window').addMessage(message, 'user')
-        this.storeMessageInContext(message, 'user')
         this.setLoading(true)
 
-        const botResponse = await api.sendMessage(this.configContext.getData('host'), message, availableModels, formattedChatHistory)
+        try {
+            const botResponse = await api.sendMessage(
+                this.configContext.getData('host'), 
+                message, 
+                availableModels, 
+                formattedChatHistory
+            )
+    
+            this.handleBotResponse(botResponse.result)
+            this.storeMessageInContext(message, 'user')
+        }
 
-        this.handleBotResponse(botResponse.result)
-        
-        // This is for testing purposes with a mock response
-        /* const botResponses = LLM_CHAT_HISTORY
-        setTimeout(() => {
-            if (this.mockBotResponse.getState() < botResponses.length - 1) {
-                this.mockBotResponse.setState(
-                    this.mockBotResponse.getState() + 1,
-                    false
-                )
-            }
-
-            this.handleBotResponse(botResponses[this.mockBotResponse.getState()])
-        }, 1500) */
+        catch (error) {
+            throwToast('Error sending message to the AI server.\nPlease try again later.', TOAST_TYPES.ERROR)
+            // TODO: Aquí añadiríamos un boton en el útlimo chatBubble para que el usuario pueda intentar enviar el mensaje de nuevo
+            console.error('Error sending message:', error)
+            this.setLoading(false)
+        }
         
     }
 

@@ -90,7 +90,11 @@ class ChatWindow extends PlainComponent {
             author: author
         }
 
+        console.log('Adding message:', newMessage)
+
         this.messages.setState([...this.messages.getState(), newMessage])
+
+        console.log('Messages:', this.messages.getState())
         this.scrollToBottom(true)
     }
 

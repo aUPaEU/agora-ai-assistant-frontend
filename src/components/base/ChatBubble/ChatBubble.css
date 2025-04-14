@@ -24,6 +24,7 @@
 
 .bubble {
     padding: 1rem;
+    padding-inline: 1.5rem;
     box-sizing: border-box;
 
     max-width: 275px;
