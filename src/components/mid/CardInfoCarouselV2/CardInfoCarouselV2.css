@@ -21,6 +21,8 @@
 }
 
 .card {
+    position: relative;
+
     pointer-events: all;
     height: 82%;
     aspect-ratio: 12/10;
@@ -220,6 +222,11 @@
 
 /* CARD ACTIONS */
 .card-actions {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
     margin-top: auto;
     width: 100%;
     padding: 1rem;
@@ -231,6 +238,8 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
+
+    z-index: 10;
 }
 
 .card-explore-button {
