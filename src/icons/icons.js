@@ -58,6 +58,7 @@ export const EYE = html`
     <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
 `
+
 export const WEBSITE = html`
 <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -290,3 +291,58 @@ export const REFRESH = html`
     </g>
     </svg>
 `
+
+export const AI_CHAT = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <g transform="scale(0.1875)">
+            <!-- Parte superior y derecha del borde -->
+            <path d="M38 20h52c9.941 0 18 8.059 18 18v20" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  stroke-width="8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            
+            <!-- Parte izquierda e inferior del borde -->
+            <path d="M20 38v52c0 9.941 8.059 18 18 18h35" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  stroke-width="8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            
+            <!-- Letra A -->
+            <path d="m49.7 43.72-12 37.44A1.39 1.39 0 0 0 39 83h3.36a1.39 1.39 0 0 0 1.33-1l1.88-6H62l-.23-.37L63.83 82a1.39 1.39 0 0 0 1.33 1h3.36a1.39 1.39 0 0 0 1.33-1.82l-12-37.44a1.4 1.4 0 0 0-1.33-1H51a1.39 1.39 0 0 0-1.3.98ZM47.57 70l6.19-19.27L60 70Z" fill="currentColor"/>
+            
+            <!-- Letra I -->
+            <rect width="6" height="40.24" x="79" y="42.75" rx="1.4" fill="currentColor"/>
+            
+            <!-- Estrella -->
+            <path d="m111.73 101.8 9.06-3.57a1 1 0 0 0 0-1.86l-9.06-3.57a12.61 12.61 0 0 1-7.09-7.09l-3.57-9a1 1 0 0 0-.93-.63 1 1 0 0 0-.93.63l-3.57 9a12.58 12.58 0 0 1-7.09 7.09l-9 3.57a1 1 0 0 0 0 1.86l9 3.57a12.58 12.58 0 0 1 7.09 7.09l3.57 9a1 1 0 0 0 .93.64 1 1 0 0 0 .93-.64l3.57-9a12.61 12.61 0 0 1 7.09-7.09Z" fill="currentColor"/>
+        </g>
+    </svg>
+`
+
+export const WARNING = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3L2 21H22L12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 17H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+
+export const ERROR = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+
+export const SUCCESS = html`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+`
+
