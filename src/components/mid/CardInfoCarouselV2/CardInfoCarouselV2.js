@@ -82,6 +82,7 @@ class CardInfoCarouselV2 extends PlainComponent {
                     </span>
 
                     <!-- Inner Actions -->
+                    <div class="card-actions__separator"></div>
                     <div class="card-actions__inner">
                         <button 
                             class="card-explore-button"

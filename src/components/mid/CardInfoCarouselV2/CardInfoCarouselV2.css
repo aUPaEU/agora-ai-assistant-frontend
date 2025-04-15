@@ -243,12 +243,26 @@
 }
 
 .card-actions__inner {
+    padding: 1rem;
+    box-sizing: border-box;
+
     height: fit-content;
     width: 100%;
 
     display: none;
     justify-content: center;
     align-items: center;
+}
+
+.card-actions__separator {
+    display: none;
+    flex: 1;
+    width: 100%;
+}
+
+.card-actions__inner .card-explore-button {
+    position: initial;
+    transform: translateX(0);
 }
 
 .card-explore-button {
@@ -272,11 +286,6 @@
 
     transition: 300ms;
     z-index: 10;
-}
-
-.card-actions__inner .card-explore-button {
-    position: inherit;
-    transform: translateX(0);
 }
 
 .card-explore-button:hover {
@@ -398,6 +407,10 @@
 
     .card-actions__inner {
         display: flex;
+    }
+
+    .card-actions__separator {
+        display: block;
     }
 
     .default-image {
