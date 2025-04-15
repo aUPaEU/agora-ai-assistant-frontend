@@ -1,7 +1,7 @@
 // This could be fetched automatically from the server depending on an environment variable,
 // a cookie or the domain name.
 
-const CURRENT_VERSION = "1.1.7"
+const CURRENT_VERSION = "1.1.8"
 
 export const ENV = {
     LOCAL: {
@@ -9,6 +9,16 @@ export const ENV = {
         "host": "http://localhost:8000",
         "company_id": 1,
         "enabled_ai": false,
+        "ai_host": "http://localhost:2000",
+        "translation_host": "http://localhost:5000",
+        "current_version": CURRENT_VERSION
+    },
+
+    LOCAL_AI: {
+        "name": "Unite!",
+        "host": "http://localhost:8000",
+        "company_id": 1,
+        "enabled_ai": true,
         "ai_host": "http://localhost:2000",
         "translation_host": "http://localhost:5000",
         "current_version": CURRENT_VERSION
