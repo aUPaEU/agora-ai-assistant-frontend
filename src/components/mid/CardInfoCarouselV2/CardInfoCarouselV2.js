@@ -127,7 +127,9 @@ class CardInfoCarouselV2 extends PlainComponent {
         if (this.$('.prev-control')) this.$('.prev-control').onclick = () => this.setPreviousCardId()
         if (this.$('.next-control')) this.$('.next-control').onclick = () => this.setNextCardId()
 
-        if (this.$('.card-explore-button')) this.$('.card-explore-button').onclick = () => this.navigateToDetail()
+        if (this.$('.card-explore-button')) Array.from(this.$$('.card-explore-button')).forEach(button => {
+            button.onclick = () => this.navigateToDetail()
+        })
 
         document.addEventListener('keydown', (e) => this.handleKeyDown(e))
     }
