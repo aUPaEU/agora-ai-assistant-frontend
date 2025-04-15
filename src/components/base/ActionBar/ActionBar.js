@@ -1,7 +1,7 @@
 import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
 import { html } from "../../../utils/templateTags.util"
 import { PATHS } from "../../../constants/paths.const"
-import { MAP, REFRESH, AI_ASSISTANT, AI_CHAT } from "../../../icons/icons"
+import { MAP, REFRESH, AI_CHAT, SEARCH } from "../../../icons/icons"
 
 class ActionBar extends PlainComponent {
     constructor() {
@@ -19,9 +19,15 @@ class ActionBar extends PlainComponent {
                 <button class="action-button refresh-button">
                     ${REFRESH}
                 </button>
-                <button class="action-button ai-assistant-button">
-                    ${AI_CHAT}
-                </button>
+
+                <div class="action-toogle ai-searcher-toogle" style="display: none;">
+                    <button class="action-button ai-assistant-button selected">
+                        ${AI_CHAT}
+                    </button>
+                    <button class="action-button search-button">
+                        ${SEARCH}
+                    </button>
+                </div>
             </div>
         `
     }
@@ -33,8 +39,9 @@ class ActionBar extends PlainComponent {
         // Refrescar la página
         this.$('.refresh-button').onclick = () => window.location.reload()
 
-        // Abrir el asistente de IA
-        this.$('.ai-assistant-button').onclick = () => this.openAIAssistant()
+        // Toggle the ai-searcher-toogle
+        this.$('.ai-assistant-button').onclick = () => this.toggle(this.$('.ai-searcher-toogle'))
+        this.$('.search-button').onclick = () => this.toggle(this.$('.ai-searcher-toogle'))
     }
 
     refresh() {
@@ -44,6 +51,16 @@ class ActionBar extends PlainComponent {
             grouped: [],
             filters: []
         }, true)
+    }
+
+    toggle(toggler) {
+        const selected = toggler.querySelector('.action-button.selected')
+        const unselected = toggler.querySelector('.action-button:not(.selected)')
+
+        console.log(selected, unselected)
+
+        selected.classList.remove('selected')
+        unselected.classList.add('selected')
     }
 
     openMapWindow() {
