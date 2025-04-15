@@ -65,12 +65,9 @@ class App extends PlainComponent {
     }
 
     async setupConfig() {
-        let currentHost = window.location.href
-        currentHost = currentHost.substring(0, currentHost.length -1)
-
         const customConfig = {
             "name": this.getAttribute('name') ?? CONFIG.name,
-            "host": this.getAttribute('host') ?? currentHost ?? CONFIG.host,
+            "host": this.getAttribute('host') ?? window.location.origin ?? CONFIG.host,
             "company_id": this.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": this.getAttribute('enabled_ai') ?? CONFIG.enabled_ai,
             "ai_host": this.getAttribute('ai_host') ?? CONFIG.ai_host,
