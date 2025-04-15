@@ -112,7 +112,7 @@ class DynamicCard extends PlainComponent {
 
     openInfoDialog() {
         const app = document.querySelector('agora-app') // Conectar al V2
-        app.openCarousel(this.data.getState().id)
+        app.openCarousel(this.data.getState().id, this.getAttribute('service'))
     }
 
     parseAdditionalFields() {

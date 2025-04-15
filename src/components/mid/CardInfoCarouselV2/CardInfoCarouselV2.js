@@ -168,10 +168,10 @@ class CardInfoCarouselV2 extends PlainComponent {
         window.open(this.$('.card-explore-button').dataset.url, '_blank')
     }
 
-    setDisplayedCardId(id) {
+    setDisplayedCardId(id, group) {
         this.displayedCardId.setState(id, false)
         const newData = this.resultContext.getData('data').find(card => {
-            return card.data.id === id
+            return card.data.id === id && card.service === group
         })
 
         this.displayedCardGroup.setState(newData.service, false)

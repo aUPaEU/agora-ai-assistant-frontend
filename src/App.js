@@ -144,9 +144,9 @@ class App extends PlainComponent {
         }
     }
 
-    openCarousel(id) {
+    openCarousel(id, group) {
         const carouselV2 = this.$('agora-layout-v2').$('agora-card-info-carousel-v2')
-        carouselV2.setDisplayedCardId(id)
+        carouselV2.setDisplayedCardId(id, group)
     }
 }
 
