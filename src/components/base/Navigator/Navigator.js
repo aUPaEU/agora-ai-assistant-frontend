@@ -43,9 +43,13 @@ class Navigator extends PlainComponent {
 
     async ensureConfig() {
         const app = window.document.querySelector('agora-app')
+
+        let currentHost = window.location.href
+        currentHost = currentHost.substring(0, currentHost.length -1)
+
         const customConfig = {
             "name": app.getAttribute('name') ?? CONFIG.name,
-            "host": app.getAttribute('host') ?? CONFIG.host,
+            "host": app.getAttribute('host') ?? currentHost ?? CONFIG.host,
             "company_id": app.getAttribute('company_id') ?? CONFIG.company_id,
             "enabled_ai": app.hasAttribute('enabled_ai') ?? CONFIG.enabled_ai,
             "ai_host": app.getAttribute('ai_host') ?? CONFIG.ai_host,
