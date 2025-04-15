@@ -80,6 +80,14 @@ class CardInfoCarouselV2 extends PlainComponent {
                             ['summary', 'abstract', 'description', 'info', 'details', 'content', 'text', 'body']
                         )}
                     </span>
+
+                    <!-- Inner Actions -->
+                    <div class="card-actions__inner">
+                        <button 
+                            class="card-explore-button"
+                            data-url="${this.buildDetailUrl()}"
+                        >Explore</button>
+                    </div>
                 </div>
 
                 <!-- Card Actions -->
