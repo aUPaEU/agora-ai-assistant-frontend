@@ -83,6 +83,8 @@
 /* TOOGLES */
 .action-toogle {
     position: relative;
+    margin-left: 0.5rem;
+
 
     height: 40px;
 
@@ -91,7 +93,7 @@
     align-content: center;
     justify-content: center;
 
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
 
     border-radius: 5pt;
 

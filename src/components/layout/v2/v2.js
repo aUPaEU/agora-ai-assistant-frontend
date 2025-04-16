@@ -50,11 +50,8 @@ class LayoutV2 extends PlainComponent {
             </main>
 
             <!-- Chat or Searchbar -->
-            ${
-                this.configContext.getData('enabled_ai')
-                ? html`<agora-chat class="chat"></agora-chat>`
-                : html`<agora-searchbar class="searchbar"></agora-searchbar>`
-            }
+            <agora-chat class="chat ${this.configContext.getData('enabled_ai') ? 'active' : ''}"></agora-chat>
+            <agora-searchbar class="searchbar ${this.configContext.getData('enabled_ai') ? '' : 'active'}"></agora-searchbar>
 
             <!-- Pin Box -->
             <!--
@@ -85,6 +82,23 @@ class LayoutV2 extends PlainComponent {
     tooglePinBox() {
         this.$('.pinbox-unfold-button').classList.toggle('unfolded')
         this.$('agora-pin-box').toogleFold()
+    }
+
+    toogleSearchbar() {
+        const searchbar = this.$('.searchbar')
+        const chat = this.$('.chat')
+
+        if (searchbar.classList.contains('active')) {
+
+            searchbar.classList.add('inactive')
+            searchbar.classList.remove('active')
+            chat.classList.add('active')
+
+        } else {
+            chat.classList.add('inactive')
+            chat.classList.remove('active')
+            searchbar.classList.add('active')
+        }
     }
 }
 

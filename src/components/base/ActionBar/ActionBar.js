@@ -8,6 +8,7 @@ class ActionBar extends PlainComponent {
         super('agora-action-bar', `${PATHS.BASE_COMPONENTS}/ActionBar/ActionBar.css`)
 
         this.resultContext = new PlainContext('result', this)
+        this.configContext = new PlainContext('config', this)
     }
 
     template() {
@@ -20,11 +21,11 @@ class ActionBar extends PlainComponent {
                     ${REFRESH}
                 </button>
 
-                <div class="action-toogle ai-searcher-toogle" style="display: none;">
-                    <button class="action-button ai-assistant-button selected">
+                <div class="action-toogle ai-searcher-toogle">
+                    <button class="action-button ai-assistant-button ${this.configContext.getData('enabled_ai') ? 'selected' : ''}">
                         ${AI_CHAT}
                     </button>
-                    <button class="action-button search-button">
+                    <button class="action-button search-button ${this.configContext.getData('enabled_ai') ? '' : 'selected'}">
                         ${SEARCH}
                     </button>
                 </div>
@@ -61,6 +62,8 @@ class ActionBar extends PlainComponent {
 
         selected.classList.remove('selected')
         unselected.classList.add('selected')
+
+        this.parentComponent.toogleSearchbar()
     }
 
     openMapWindow() {
