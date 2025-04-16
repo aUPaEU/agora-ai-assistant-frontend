@@ -119,6 +119,8 @@ agora-result-window {
 }
 
 .chat {
+    display: none;
+
     width: 400px;
 
     position: fixed;
@@ -128,7 +130,10 @@ agora-result-window {
     z-index: 1000;
 }
 
+
 .searchbar {
+    display: none;
+
     width: fit-content;
 
     position: fixed;
@@ -281,6 +286,13 @@ agora-metagora-navigator {
         width: 100%;
     }
 
+    .chat {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+    }
+
     .searchbar {
         width: 100%;
         bottom: 0;
@@ -291,5 +303,47 @@ agora-metagora-navigator {
         pointer-events: all;
         display: grid;
         place-content: center;
+    }
+}
+
+/* ANIMATIONS */
+.searchbar.active {
+    display: block;
+    opacity: 0;
+    animation: slide-up 300ms ease-in-out;
+    animation-delay: 300ms;
+    animation-fill-mode: forwards;
+}
+
+.chat.active {
+    display: block;
+    opacity: 0;
+    animation: slide-up 350ms ease-in-out;
+    animation-delay: 375ms;
+    animation-fill-mode: forwards;
+}
+
+.slide-right {
+    animation-name: slide-right;
+    animation-duration: 300ms;
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-right {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(100%);
     }
 }
