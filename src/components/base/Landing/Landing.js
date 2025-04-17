@@ -3,7 +3,10 @@ import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-rea
 import { PATHS } from "../../../constants/paths.const"
 
 /* Utils */
-import { gsap } from "gsap/gsap-core"
+import { gsap } from "gsap"
+import { CSSPlugin } from "gsap/CSSPlugin"
+gsap.registerPlugin(CSSPlugin)
+
 import { html } from "../../../utils/templateTags.util"
 
 /* Icons */
