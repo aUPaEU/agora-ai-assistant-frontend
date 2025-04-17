@@ -59,8 +59,8 @@ class Chat extends PlainComponent {
         for (let i = 0; i < chatHistory.length; i += 2) {
             const chunk = chatHistory.slice(i, i + chunkSize)
             history.push({
-                "user": chunk[0].content,
-                "assistant": chunk[1].content,
+                "user": chunk[1].content,
+                "assistant": chunk[0].content,
             })
         }
 
