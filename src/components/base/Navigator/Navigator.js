@@ -66,7 +66,7 @@ class Navigator extends PlainComponent {
         `
 
         if (!this.items.getState()) return html`
-            <agora-base-loader width="500" height="500"></agora-base-loader>
+            <agora-base-loader width="100" height="100"></agora-base-loader>
         `
 
         const services = this.resultContext.getData('data') 
