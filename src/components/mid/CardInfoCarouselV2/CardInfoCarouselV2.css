@@ -220,6 +220,30 @@
     text-wrap: pretty;
 }
 
+.ai-explanation {
+    padding: 1rem;
+    box-sizing: border-box;
+
+    display: flex;
+    gap: 1rem;
+    
+    border-radius: 5pt;
+
+    background: rgb(from var(--text-accent-color) r g b / 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.ai-explanation__text {
+    font-size: 0.8rem;
+    color: var(--text-secondary-color);
+}
+
+.ai-explanation__icon {
+    display: grid;
+    place-content: center;
+    color: var(--text-accent-color);
+}
+
 /* CARD ACTIONS */
 .card-actions {
     position: absolute;

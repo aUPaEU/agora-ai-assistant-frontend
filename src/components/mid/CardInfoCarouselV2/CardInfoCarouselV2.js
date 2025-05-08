@@ -8,7 +8,7 @@ import { html } from "../../../utils/templateTags.util"
 import { extractObjectsWithMatchingKey, findPropertyByPattern } from "../../../utils/objectHelper.util"
 
 /* Icons */
-import { ARROW_LEFT, ARROW_RIGHT, CLOSE } from "../../../icons/icons"
+import { ARROW_LEFT, ARROW_RIGHT, CLOSE, AI_CHAT } from "../../../icons/icons"
 
 class CardInfoCarouselV2 extends PlainComponent {
     constructor() {
@@ -40,6 +40,13 @@ class CardInfoCarouselV2 extends PlainComponent {
         const templateCardImage = findPropertyByPattern(this.data.getState()?.data, ['image'])
             ? html`<img class="card-image" src="${this.configContext.getData('host')}${findPropertyByPattern(this.data.getState()?.data, ['image'])}">`
             : html`<div class="card-image default-image dynamic-background">${this.data.getState()?.data?.name}</div>`
+
+        const templateAIExplanation = this.data.getState()?.data?.rag?.summary
+            ? html`<div class="ai-explanation">
+                <span class="ai-explanation__icon">${AI_CHAT}</span>
+                <span class="ai-explanation__text">${this.data.getState()?.data?.rag?.summary}</span>
+            </div>`
+            : ''
 
         const templateDefault = html`
             <!-- Close Button -->
@@ -81,6 +88,9 @@ class CardInfoCarouselV2 extends PlainComponent {
                         )}
                     </span>
 
+                    <!-- AI Explanation -->
+                    ${templateAIExplanation}
+
                     <!-- Inner Actions -->
                     <div class="card-actions__separator"></div>
                     <div class="card-actions__inner">
@@ -108,7 +118,7 @@ class CardInfoCarouselV2 extends PlainComponent {
         `
         const templateNoCardDisplayed = html`
             <div class="no-card-displayed">
-                <span class="no-card-displayed-text">No card displayed</span>
+                <span class="no-card-displayed-text">No details available</span>
             </div>
         `
 
