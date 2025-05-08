@@ -119,6 +119,9 @@ class App extends PlainComponent {
         if (resultWindow && chatWindow)
             resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
 
+        if (resultWindow && chatWindow)
+            resultWindow.signals.connect(chatWindow, 'results-updated', () => resultWindow.clear())
+
         if (resultWindow && searchbar) {
             resultWindow.signals.connect(searchbar, 'no-results', () => resultWindow.displayNoResultsMessage())
             resultWindow.signals.connect(searchbar, 'no-data-models', () => resultWindow.displayNoDataModelsMessage())
