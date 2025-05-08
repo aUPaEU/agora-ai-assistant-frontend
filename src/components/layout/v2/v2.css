@@ -121,7 +121,7 @@ agora-result-window {
 .chat {
     display: none;
 
-    width: 400px;
+    width: 500px;
 
     position: fixed;
     bottom: 2rem;
