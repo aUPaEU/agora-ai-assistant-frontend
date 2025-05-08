@@ -79,15 +79,16 @@ export const fetchElement = async (host, model, id, fields=null) => {
     }
 }
 
-export const sendMessage = async (host, message, models, history) => {
+export const sendMessage = async (host, provider, message, models, history) => {
     const payload = {
-        "user_input": message,
+        "provider": provider,
+        "query": message,
         "models": models,
-        "history_messages": history
+        "messages": history
     }
 
     try {
-        const url = `${host}/ai_assistant_app/send_message/openai`
+        const url = `${host}/ai_assistant_app/query`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
