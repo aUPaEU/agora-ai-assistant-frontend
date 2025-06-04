@@ -67,6 +67,10 @@ class ChatWindow extends PlainComponent {
         `
     }
 
+    afterRender() {
+        this.$('.chat-container').scrollTop = this.$('.chat-container').scrollHeight
+    }
+
     listeners() {
         this.$('.clear-chat-button').onclick = () => this.clear()
 
@@ -89,6 +93,12 @@ class ChatWindow extends PlainComponent {
         this.messages.setState([...this.messages.getState(), newMessage])
 
         this.scrollToBottom(true)
+    }
+
+    updateStreamingMessage(message) {
+        const lastMessage = this.messages.getState()[this.messages.getState().length - 1]
+        lastMessage.content += message
+        this.messages.setState(this.messages.getState())
     }
 
     scrollToBottom(smooth) {
