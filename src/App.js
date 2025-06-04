@@ -25,6 +25,7 @@ import './components/complex/Chat/Chat'
 import './components/mid/ChatWindow/ChatWindow'
 import './components/base/ChatBubble/ChatBubble'
 import './components/base/ChatInput/ChatInput'
+import './components/base/ChatProcessUpdate/ChatProcessUpdate'
 
 /* Searchbar */
 import './components/base/Searchbar/Searchbar'
