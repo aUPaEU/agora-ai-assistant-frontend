@@ -5,7 +5,6 @@ import { PATHS } from "../../../constants/paths.const"
 
 /* Utils */
 import { html } from "../../../utils/templateTags.util"
-import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 import { throwToast, TOAST_TYPES } from "../../../utils/errorHandling.util"
 import { processJSONBuffer } from "../../../utils/parsingHelper.util"
 
@@ -23,6 +22,7 @@ class Chat extends PlainComponent {
         this.resultContext = new PlainContext('result', this, false)
         this.chatContext = new PlainContext('chat', this, false)
         this.serviceContext = new PlainContext('service', this, false)
+        this.shouldResetResults = new PlainState(false, this)
 
         this.mockBotResponse = new PlainState(-1, this)
 
@@ -53,6 +53,27 @@ class Chat extends PlainComponent {
         `
     }
 
+    listeners() {
+        // Listen for clicks on document to detect outside clicks
+        this.boundHandleClick = this.handleClick.bind(this)
+        document.addEventListener('click', this.boundHandleClick)
+    }
+
+    handleClick(e) {
+        // Use composedPath() to get the full event path including shadow DOM
+        const path = e.composedPath()
+        
+        // Check if this component is in the event path
+        const clickedInsideComponent = path.includes(this)
+        
+        if (!clickedInsideComponent) {
+            // Only fold if the chat is currently unfolded
+            if (!this.wrapper.classList.contains('folded')) {
+                this.fold()
+            }
+        }
+    }
+
     unfold() {
         this.wrapper.classList.remove('folded')
     }
@@ -65,90 +86,7 @@ class Chat extends PlainComponent {
         this.wrapper.classList.toggle('folded')
     }
 
-    formatChatHistoryForLLM() {
-        const chatHistory = this.chatContext.getData('history')
-
-        if (!chatHistory) return []
-
-        const chunkSize = 2
-
-        let history = []
-
-        for (let i = 0; i < chatHistory.length; i += 2) {
-            const chunk = chatHistory.slice(i, i + chunkSize)
-            history.push({
-                "user": chunk[0]?.content || '',
-                "assistant": chunk[1]?.content || '',
-            })
-        }
-
-        return history
-    }
-
-    formatMessageForLLMV2(message) {
-        const chatHistory = this.chatContext.getData('history')
-
-        if (!chatHistory) return []
-
-        const formattedChatHistory = chatHistory.map(message => {
-            return {
-                "role": message.author,
-                "content": message.content
-            }
-        })
-
-        return formattedChatHistory
-    }
-
     async sendMessage(message) {
-        const availableModels = this.serviceContext.getData('models')
-        const formattedChatHistory = this.formatMessageForLLMV2(message)
-
-        this.$('agora-chat-window').addMessage(message, 'user')
-        this.setLoading(true)
-
-        try {
-            this.storeMessageInContext(message, 'user')
-
-            const botResponse = await api.sendMessage(
-                this.configContext.getData('host'), 
-                this.PROVIDERS.OPENAI,
-                message, 
-                availableModels, 
-                formattedChatHistory
-            )
-
-            if (botResponse.body instanceof ReadableStream) {
-                const reader = botResponse.body.getReader()
-                const decoder = new TextDecoder()
-
-                let streamMessageIsCreated = false
-
-                while (true) {
-                    const { done, value } = await reader.read()
-                    if (done) break
-
-                    const chunk = decoder.decode(value, { stream: true })
-                    this.handleStreamingResponse(chunk, streamMessageIsCreated)
-                    streamMessageIsCreated = true
-                }
-            }
-            else {
-                this.handleResponse(botResponse.result)
-            }
-        }
-
-        catch (error) {
-            throwToast('Error sending message to the AI server.\nPlease try again later.', TOAST_TYPES.ERROR)
-            // TODO: Aquí añadiríamos un boton en el útlimo chatBubble para que el usuario pueda intentar enviar el mensaje de nuevo
-            console.error('Error sending message:', error)
-            this.storeMessageInContext(message, 'user')
-            this.setLoading(false)
-        }
-
-    }
-
-    async sendMessageV2(message) {
         this.setLoading(true)
         this.$('agora-chat-window').addMessage(message, 'user')
 
@@ -179,17 +117,21 @@ class Chat extends PlainComponent {
                 const chunk = decoder.decode(value, { stream: true })
                 buffer += chunk
                 
-                buffer = processJSONBuffer(buffer, false, (json) => this.handleResponseV2(json))
+                buffer = processJSONBuffer(buffer, false, (json) => this.handleResponse(json))
             }
             
             // Process any remaining data in buffer
             if (buffer.trim()) {
-                processJSONBuffer(buffer, true, (json) => this.handleResponseV2(json))
+                processJSONBuffer(buffer, true, (json) => this.handleResponse(json))
             }
         }
 
         catch (error) {
             this.handleError(error)
+        }
+
+        finally {
+            this.shouldResetResults.setState(true, false)
         }
     }
 
@@ -198,177 +140,6 @@ class Chat extends PlainComponent {
         this.$('agora-chat-input').$('input').classList.toggle('blocked', state)
         this.$('agora-chat-input').$('input').disabled = state
         this.$('agora-chat-input').$('input').setAttribute('placeholder', state ? 'Waiting for response...' : 'Type your message...')
-    }
-
-    async handleStreamingResponse(stream, streamMessageIsCreated) {
-        try {
-            if (!streamMessageIsCreated) {
-                console.log("CREATING STREAMING MESSAGE")
-                this.$('agora-chat-window').addMessage('', 'bot')
-                this.setLoading(false)
-            }
-
-            const chunks = stream.split('\n').filter(line => line.trim())
-
-            if (chunks.length === 0) return
-            
-            for (const chunk of chunks) {
-                try {
-                    const response = JSON.parse(chunk);
-
-                    if (response.finished) {
-                        this.storeMessageInContext(response.content, 'bot')
-                        return 
-                    }
-                    
-                    if (response.content) {
-                        console.log("UPDATING STREAMING MESSAGE")
-                        this.$('agora-chat-window').updateStreamingMessage(response.content)
-                    }
-
-                } catch (parseError) {
-                    console.warn('Error parsing individual JSON object:', parseError);
-                }
-            }
-        } catch (error) {
-            console.error('Error handling streaming response:', error);
-        }
-    }
-
-    handleResponse(response) {
-        if (!response.message) return 
-
-        this.$('agora-chat-window').addMessage(response.message, 'bot')
-        this.setLoading(false)
-
-        this.storeMessageInContext(response.message, 'bot')
-
-        const updatedResultContext = {
-            grouped: [],
-            data: []
-        }
-
-        /* BUILD RESPONSE OBJECT */
-        // 1. The data
-        if (Object.entries(response.result).length > 0) {
-            const data = []
-            const grouped = {}
-            
-            Object.entries(response.result).forEach(([model, records]) => {
-                console.log("STRUCTURING DATA FOR MODEL", model)
-
-                let serviceData = null
-                this.serviceContext.getData('services').forEach(service => {
-                    const serviceWebsites = service.fields?.catalogues?.websites
-                    if (!serviceWebsites) return false
-
-                    const serviceModels = {}
-                    serviceWebsites.forEach(website => {
-                        if (!website.model) return
-                        if (website.model !== model) return
-                        
-                        const modelData = {
-                            model: website.model,
-                            model_verbose_name: website.model_verbose_name,
-                            model_website: website.website,
-                            model_view_url: website.url,
-                            model_view_id: website.view_id,
-                        }
-
-                        serviceModels[website.model] = modelData
-                    })
-
-                    console.log("SERVICE MODELS FOR SERVICE", service.fields.name, serviceModels)
-
-                    if (model in serviceModels) {
-                        console.log("MODEL IN SERVICE MODELS", model in serviceModels)
-
-                        serviceData = {
-                            service: service.fields.name,
-                            models: serviceModels
-                        }
-
-                    }
-                })
-
-                console.log("SERVICE", serviceData)
-
-                if (!serviceData) return
-                if (!grouped[serviceData.service]) grouped[serviceData.service] = []
-
-                records.forEach(record => {
-                    if ([false, 'false', 0, '0', null, undefined].includes(record.rag.include)) return // THIS SHOULD BE DONE EXCLUSIVELY IN THE RAG SERVICE
-
-                    const recordData = {
-                        "model": model,
-                        "model_verbose_name": serviceData.models[model].model,
-                        "model_view_url": serviceData.models[model].model_website + serviceData.models[model].model_view_url,
-                        "service": serviceData.service,
-                        "featured_fields": record.rag.relevant_fields,
-                        "featured": false,
-                        "data": {
-                            ...record.properties,
-                            id: record.properties._source_id,
-                            image: `/web/image?model=${serviceData.models[model].model}&id=${record.properties._source_id}&field=image`,
-                            rag: record.rag
-                        },
-                        "roots": [],
-                        "score": {
-                            "absolute": Number(record.rag.score) / 10,
-                            "relative": Number(record.rag.score) / 10
-                        }
-                    }
-
-                    data.push(recordData)
-                    grouped[serviceData.service].push(recordData)
-                })
-            })
-
-            updatedResultContext.data = data
-            Object.entries(grouped).forEach(([service, items]) => {
-                updatedResultContext.grouped.push({
-                    service: service,
-                    items: items
-                })
-            })
-
-            this.resultContext.setData(updatedResultContext, true)
-            this.signals.emit('results-updated', updatedResultContext.grouped)
-        }
-
-        // 2. The grouped data
-
-        // Check if the response contains results
-        // If it does, set the result context
-        if (response.result == 'nononono') {
-            console.log("1. Response contains results")
-            const results = response.result.filter(result => {
-                return result.element_ids.length > 0
-            })
-
-            console.log("2. Filtered (not empty) results are:", results)
-
-            if (results.length > 0) {
-                console.log("3. Results are not empty")
-
-                const serviceModels = [...new Set(this.serviceContext.getData('services').map((service) => {
-                    return {
-                        "service": service.fields.name,
-                        "models": extractObjectsWithMatchingKey(service, 'model').map(model => model.model)
-                    }
-                }))]
-    
-                console.log("serviceModels", serviceModels)
-
-                results.forEach(result => {
-                    const resultService = serviceModels.find(service => service.models.includes(result.model)).service
-                    result.service = resultService
-                })
-
-                this.resultContext.setData({data: response.result}, true)
-                return 
-            }
-        }
     }
 
     storeMessageInContext(message, author) {
@@ -428,7 +199,7 @@ class Chat extends PlainComponent {
     // -------------------------------
     // RESPONSE HANDLERS
     // -------------------------------
-    handleResponseV2(response) {
+    handleResponse(response) {
         switch (response.type) {
             case this.RESPONSE.MESSAGE:
                 this.handleMessage(response)
@@ -480,20 +251,19 @@ class Chat extends PlainComponent {
             data: []
         }
 
-        updatedResultContext.data = this.resultContext.getData('data') || []
-        updatedResultContext.grouped = this.resultContext.getData('grouped') || []
+        if (!this.shouldResetResults.getState()) {
+            updatedResultContext.data = this.resultContext.getData('data') || []
+            updatedResultContext.grouped = this.resultContext.getData('grouped') || []
+        }
 
-        console.log(results)
+        if (this.shouldResetResults.getState()) this.shouldResetResults.setState(false, false)
 
-        /* BUILD RESPONSE OBJECT */
-        // 1. The data
+        // Build response object
         if (results.length > 0) {
-            const data = []
-            const grouped = {}
+            const processedResults = []
             
             results.forEach((result) => {
                 const model = result.properties._source_model
-                console.log("STRUCTURING DATA FOR MODEL", model)
 
                 let serviceData = null
                 this.serviceContext.getData('services').forEach(service => {
@@ -516,28 +286,18 @@ class Chat extends PlainComponent {
                         serviceModels[website.model] = modelData
                     })
 
-                    console.log("SERVICE MODELS FOR SERVICE", service.fields.name, serviceModels)
-
                     if (model in serviceModels) {
-                        console.log("MODEL IN SERVICE MODELS", model in serviceModels)
-
                         serviceData = {
                             service: service.fields.name,
                             models: serviceModels
                         }
-
                     }
                 })
 
-                console.log("SERVICE", serviceData)
-
                 if (!serviceData) return
-                if (!grouped[serviceData.service]) grouped[serviceData.service] = []
 
-                console.log("DATA", serviceData)
-                console.log("GROUPED", grouped)
-
-                if ([false, 'false', 0, '0', null, undefined].includes(result.rag.include)) return // THIS SHOULD BE DONE EXCLUSIVELY IN THE RAG SERVICE
+                // Filter based on RAG include flag (should be done exclusively in the RAG service)
+                if ([false, 'false', 0, '0', null, undefined].includes(result.rag.include)) return 
 
                 const recordData = {
                     "model": model,
@@ -559,17 +319,32 @@ class Chat extends PlainComponent {
                     }
                 }
 
-                data.push(recordData)
-                grouped[serviceData.service].push(recordData)
+                processedResults.push(recordData)
             })
 
-            console.log("DATA", data)
+            // Add new processed results to existing data
+            updatedResultContext.data = updatedResultContext.data.concat(processedResults)
 
-            updatedResultContext.data = updatedResultContext.data.concat(data)
-            updatedResultContext.grouped = updatedResultContext.grouped.concat(grouped)
+            // Group data by service (following Searchbar logic exactly)
+            const services = [...new Set(updatedResultContext.data.map(result => result.service))].sort()
 
-            this.resultContext.setData(updatedResultContext, true)
-            this.signals.emit('results-updated', updatedResultContext.grouped)
+            const groupedData = (() => {
+                return services.map(service => {
+                    const items = updatedResultContext.data.filter(result => result.service === service)
+                    return {
+                        service: service,
+                        items: items
+                    }
+                })
+            })()
+
+            // Update the result context with the new results (exactly like Searchbar)
+            this.resultContext.setData({
+                grouped: groupedData,
+                data: updatedResultContext.data,
+            }, true)
+
+            this.signals.emit('results-updated', groupedData)
         }
     }
 

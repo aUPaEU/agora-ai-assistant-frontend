@@ -1,4 +1,4 @@
-import { PlainComponent, PlainState, PlainContext } from "plain-reactive"
+import { PlainComponent, PlainState, PlainContext, PlainSignal } from "plain-reactive"
 import { html } from "../../../utils/templateTags.util"
 import { PATHS } from "../../../constants/paths.const"
 import { MAP, REFRESH, AI_CHAT, SEARCH } from "../../../icons/icons"
@@ -6,6 +6,9 @@ import { MAP, REFRESH, AI_CHAT, SEARCH } from "../../../icons/icons"
 class ActionBar extends PlainComponent {
     constructor() {
         super('agora-action-bar', `${PATHS.BASE_COMPONENTS}/ActionBar/ActionBar.css`)
+
+        this.signals = new PlainSignal(this)
+        this.signals.register('results-updated')
 
         this.resultContext = new PlainContext('result', this)
         this.configContext = new PlainContext('config', this)
@@ -38,7 +41,7 @@ class ActionBar extends PlainComponent {
         this.$('.map-button').onclick = () => this.openMapWindow()
         
         // Refrescar la página
-        this.$('.refresh-button').onclick = () => window.location.reload()
+        this.$('.refresh-button').onclick = () => this.clear()
 
         // Toggle the ai-searcher-toogle
         this.$('.ai-assistant-button').onclick = () => this.toggle(this.$('.ai-searcher-toogle'))
@@ -77,6 +80,16 @@ class ActionBar extends PlainComponent {
     openAIAssistant() {
         // TODO: Implementar la lógica para abrir el asistente de IA
         console.log('Opening AI Assistant...')
+    }
+
+    clear() {
+        this.resultContext.setData({
+            data: [],
+            grouped: [],
+            filters: []
+        }, true)
+
+        this.signals.emit('results-updated')
     }
 }
 

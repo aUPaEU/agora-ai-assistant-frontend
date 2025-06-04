@@ -36,8 +36,7 @@ class ChatInput extends PlainComponent {
         this.animateClick()
         if (this.$('input').value.length === 0) return
 
-        //this.parentComponent.sendMessage(this.$('input').value)
-        this.parentComponent.sendMessageV2(this.$('input').value)
+        this.parentComponent.sendMessage(this.$('input').value)
 
         this.$('input').value = ''
         //this.$('agora-button').animateClick()

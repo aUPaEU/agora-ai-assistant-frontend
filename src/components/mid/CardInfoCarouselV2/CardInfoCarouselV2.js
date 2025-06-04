@@ -195,6 +195,8 @@ class CardInfoCarouselV2 extends PlainComponent {
             return card.data.id === id && card.service === group
         })
 
+        console.log("NEW DATA", newData)
+
         this.displayedCardGroup.setState(newData.service, false)
         this.data.setState(newData)
         this.updateNavigationButtonsVisibility(id)
@@ -224,12 +226,17 @@ class CardInfoCarouselV2 extends PlainComponent {
     }
 
     setNextCardId() {
+        console.log("SET NEXT CARD ID")
+        console.log("CARD DATA", this.data.getState())
+        console.log("DISPLAYED CARD ID", this.displayedCardId.getState())
+        console.log("DISPLAYED CARD GROUP", this.displayedCardGroup.getState())
         const currentGroup = this.resultContext.getData('grouped')
             .find(group => group.service === this.displayedCardGroup.getState())
         const currentCardIndex = currentGroup?.items
             .findIndex(item => item.data.id === this.displayedCardId.getState())
         const nextCard = currentGroup?.items[currentCardIndex + 1]
 
+        console.log("NEXT CARD", nextCard)
         if (nextCard) {
             this.displayedCardId.setState(nextCard.data.id, false)
             this.data.setState(nextCard)
@@ -239,12 +246,18 @@ class CardInfoCarouselV2 extends PlainComponent {
     }
 
     setPreviousCardId() {
+        console.log("SET PREVIOUS CARD ID")
+        console.log("SET NEXT CARD ID")
+        console.log("CARD DATA", this.data.getState())
+        console.log("DISPLAYED CARD ID", this.displayedCardId.getState())
+        console.log("DISPLAYED CARD GROUP", this.displayedCardGroup.getState())
         const currentGroup = this.resultContext.getData('grouped')
             .find(group => group.service === this.displayedCardGroup.getState())
         const currentCardIndex = currentGroup?.items
             .findIndex(item => item.data.id === this.displayedCardId.getState())
         const previousCard = currentGroup?.items[currentCardIndex - 1]
 
+        console.log("PREVIOUS CARD", previousCard)
         if (previousCard) {
             this.displayedCardId.setState(previousCard.data.id, false)
             this.data.setState(previousCard)

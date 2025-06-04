@@ -21,7 +21,8 @@ class ChatWindow extends PlainComponent {
             'Show me infrastructures',
             'How can you help me?',
             'I\'m looking for projects',
-            'I want the latest featured projects'
+            'I want the latest featured projects',
+            'Show me courses'
         ]
 
         this.signals = new PlainSignal(this)

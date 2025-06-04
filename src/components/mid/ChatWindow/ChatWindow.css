@@ -73,7 +73,7 @@ agora-chat-bubble[author="bot"] {
     top: 0;
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
 
