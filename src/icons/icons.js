@@ -346,3 +346,49 @@ export const SUCCESS = html`
     </svg>
 `
 
+export const CHAT_PROCESS_UPDATE = html`
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradiente central para la esfera -->
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgb(212, 249, 255)" stop-opacity="1"/>
+      <stop offset="40%" stop-color="rgb(45, 195, 255)" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="rgba(174, 205, 240, 0)" stop-opacity="0.2"/>
+    </radialGradient>
+
+    <!-- Filtro de desenfoque para nieblas -->
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+    </filter>
+  </defs>
+
+  <!-- Esfera central -->
+  <circle cx="100" cy="100" r="40" fill="url(#coreGlow)" />
+
+  <!-- Niebla 1 -->
+  <circle cx="140" cy="100" r="25" fill="#00ffff" opacity="0.2" filter="url(#blur)">
+    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="10s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Niebla 2 -->
+  <circle cx="60" cy="100" r="30" fill="#ffffff" opacity="0.15" filter="url(#blur)">
+    <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="12s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Niebla 3 -->
+  <circle cx="100" cy="40" r="20" fill="#8a2be2" opacity="0.2" filter="url(#blur)">
+    <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="14s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Niebla 4 -->
+  <circle cx="100" cy="160" r="18" fill="#ffffff" opacity="0.1" filter="url(#blur)">
+    <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="9s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Pulso interior -->
+  <circle cx="100" cy="100" r="40" fill="url(#coreGlow)" opacity="0.5">
+    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+`
+
