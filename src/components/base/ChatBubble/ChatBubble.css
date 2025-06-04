@@ -44,7 +44,7 @@
 
 .bubble.user {
     border-top-right-radius: 0;
-    background-color: rgb(from var(--text-accent-color) r g b / 0.25);
+    background-color: #a5d2ffe0
 }
 
 .bubble.bot {
