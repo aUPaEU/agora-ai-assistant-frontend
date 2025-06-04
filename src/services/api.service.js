@@ -88,14 +88,55 @@ export const sendMessage = async (host, provider, message, models, history) => {
     }
 
     try {
-        const url = `${host}/ai_assistant_app/query`
-        const response = await fetch(url, {
+        // const url = `${host}/ai_assistant_app/query`
+        /* const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload)
+        }) */
+
+        const response = await fetch(`http://localhost:2000/fetch-elements-from-db`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "query": payload.query,
+                "system": 'You are a helpful AI assistant.',
+                "models": [
+                    {
+                        "name": "student.jp",
+                        "description": "This is a database that contains information about the available joint programs of the universities in alliance."
+                    },
+                    {
+                        "name": "student.mooc",
+                        "description": "This is a database that contains information about the available MOOCs of the universities in alliance."
+                    },
+                    {
+                        "name": "student.course",
+                        "description": "This is a database that contains information about the available courses of the universities in alliance."
+                    },
+                    {
+                        "name": "staff.course",
+                        "description": "This is a database that contains information about the available courses for staff members of the universities in alliance."
+                    },
+                    {
+                        "name": "resources.infrastructure",
+                        "description": "This is a database that contains information about the available infrastructures of the universities in alliance."
+                    }
+                ],
+                "message_history": payload.messages,
+                "result_history": []
+            })
         })
+
+        if (response.body instanceof ReadableStream) {
+            console.log("STREAMING RESPONSE", response)
+            console.log("BOT RESPONSE IS STREAMING", response.body instanceof ReadableStream)
+            return response
+        }
 
         if (!response.ok) {
             throw new Error('Something went wrong while sending message')
@@ -108,6 +149,30 @@ export const sendMessage = async (host, provider, message, models, history) => {
     catch (error) {
         throw error
     }
+}
+
+export const sendMessageV2 = async (aiHost, provider, query, models, messageHistory, resultHistory) => {
+        const payload = {
+            "provider": provider,
+            "query": query,
+            "models": models,
+            "message_history": messageHistory,
+            "result_history": resultHistory
+        }
+
+        const response = await fetch(`${aiHost}/agora-assistant`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+
+        if (!response.ok) {
+            throw new Error('Something went wrong while sending message')
+        }
+
+        return response
 }
 
 export const search = async (host, query, models = [], fieldRelevance = {}, filters = {}) => {
