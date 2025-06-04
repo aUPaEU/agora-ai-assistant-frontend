@@ -37,12 +37,10 @@ class ChatWindow extends PlainComponent {
                 style="${this.messages.getState().length > 0 ? '' : 'display: none;'}"
             >
                 <!-- Clear chat button -->
-                    <div class="clear-chat-button ${this.messages.getState().length === 1 ? 'fade-in' : ''}">
+                <div class="clear-chat-button ${this.messages.getState().length === 1 ? 'fade-in' : ''}">
                     ${CLEAR_CHAT}
                 </div>
             </div>
-
-            
 
             <!-- Chat container -->
             <div class="chat-container">
@@ -66,8 +64,6 @@ class ChatWindow extends PlainComponent {
                     <span class="prompt">${prompt}</span>
                 `).join('')}
             </div>
-
-            
         `
     }
 
@@ -90,11 +86,8 @@ class ChatWindow extends PlainComponent {
             author: author
         }
 
-        console.log('Adding message:', newMessage)
-
         this.messages.setState([...this.messages.getState(), newMessage])
 
-        console.log('Messages:', this.messages.getState())
         this.scrollToBottom(true)
     }
 
