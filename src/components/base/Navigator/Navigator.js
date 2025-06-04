@@ -172,7 +172,6 @@ class Navigator extends PlainComponent {
     }
 
     updateAgora(agoraIndex, isMetagora=false) {
-        console.log("Updating Agora")
         this.initialLoad.setState(true, false)
         this.resultContext.setData({data: [], grouped: [], filters: []}, false)
 
@@ -253,17 +252,26 @@ class Navigator extends PlainComponent {
 
         // Get all the available data models
         const availableModels = extractObjectsWithMatchingKey(services, 'model').map(model => model.model)
-        console.log("Available models: ", availableModels)
-        
+
+        // Generate a dict with this structure {service: [model1, model2, ...]}
+        const modelsByService = services.reduce((acc, service) => {
+            const serviceModels = extractObjectsWithMatchingKey(service.fields, 'model')
+            acc[service.fields.name] = {
+                models: serviceModels.map(model => model.model),
+                description: service.fields.description
+            }
+            return acc
+        }, {})
+
         this.items.setState(services)
         if (!extend) this.initialLoad.setState(false, false)
         this.serviceContext.setData({services: services}, true)
         this.serviceContext.setData({models: availableModels})
+        this.serviceContext.setData({modelsByService: modelsByService}, true)
     }
 
     initialDisplay() {
         Array.from(this.$('.menu').children).forEach(item => {
-            console.log("ITEM", item)
             item.classList.remove('not-in-result')
         })
     }
