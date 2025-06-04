@@ -65,6 +65,9 @@ class CardInfoCarouselV2 extends PlainComponent {
                     <!-- Card Service -->
                     <span class="card-service">${findPropertyByPattern(this.data.getState(), ['service'])}</span>
 
+                    <!-- AI Explanation -->
+                    ${templateAIExplanation}
+
                     <!-- Card Origin -->
                     <span class="card-origin-wrapper">
                         <span class="card-origin">
@@ -87,9 +90,6 @@ class CardInfoCarouselV2 extends PlainComponent {
                             ['summary', 'abstract', 'description', 'info', 'details', 'content', 'text', 'body']
                         )}
                     </span>
-
-                    <!-- AI Explanation -->
-                    ${templateAIExplanation}
 
                     <!-- Inner Actions -->
                     <div class="card-actions__separator"></div>
