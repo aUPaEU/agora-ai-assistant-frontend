@@ -1,0 +1,32 @@
+.agora-chat-process-update-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} 
+
+.char {
+    opacity: 0.75;
+    font-size: 0.85rem;
+    color: white;
+    animation: char-animation 2s ease-in-out alternate infinite;
+    transition: color 300ms;
+}
+
+svg {
+    height: 40px;
+    width: 50px;
+    margin-right: -25px;
+}
+
+/* ANIMATIONS */
+@keyframes char-animation {
+    0% {
+        color: white;
+    }
+    25% {
+        color: var(--text-secondary-color);
+    }
+    100% {
+        color: var(--text-secondary-color);
+    }
+}
