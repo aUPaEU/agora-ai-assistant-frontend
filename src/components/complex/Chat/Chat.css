@@ -35,6 +35,14 @@ agora-chat-input {
     /* transform: translateX(200%); */
 }
 
+agora-chat-process-update {
+    position: absolute;
+    top: 5px;
+    right: 2rem;
+    z-index: 1000;
+    height: 50px;
+}
+
 @keyframes unfold {
     0% {
         transform: translateX(200%);
