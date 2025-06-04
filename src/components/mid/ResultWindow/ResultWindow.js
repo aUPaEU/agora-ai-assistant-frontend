@@ -13,9 +13,6 @@ import { clamp } from "../../../utils/mathHelper.util"
 /* Icons */
 import { SUBTRACT } from "../../../icons/icons"
 
-/* Services */
-import * as api from "../../../services/api.service"
-
 class ResultWindow extends PlainComponent {
     constructor() {
         super('agora-result-window', `${PATHS.MID_COMPONENTS}/ResultWindow/ResultWindow.css`)
@@ -33,6 +30,7 @@ class ResultWindow extends PlainComponent {
         this.builtResults = new PlainState([], this)
         this.isLoading = new PlainState(false, this)
         this.isFiltered = new PlainState(false, this)
+        this.blockedScroll = new PlainState(false, this)
 
         this.scrollInterval = null
         this.currentScrollSpeed = 0
@@ -148,6 +146,9 @@ class ResultWindow extends PlainComponent {
     }
 
     listeners() {
+        document.onmousedown = () => this.blockedScroll.setState(true, false)
+        document.onmouseup = () => this.blockedScroll.setState(false, false)
+
         // Manages the service highlightning in the navigator when the user hovers over an item
         Array.from(this.$('.card-wrapper').children).forEach(serviceWrapper => {
             const boundHandleCursorScroll = (e) => this.handleCursorScroll(e, serviceWrapper)
@@ -191,6 +192,7 @@ class ResultWindow extends PlainComponent {
     }
 
     clear() {
+        console.log('Aqui tendría que estar la lógica para añadir el update de los containers')
         this.resultContext.setData({data: [], grouped: [], filters: []})
         this.builtResults.setState([])
         this.$('.no-results-message').style.display = 'none'
@@ -274,6 +276,8 @@ class ResultWindow extends PlainComponent {
     }
 
     handleCursorScroll(e, wrapper) {
+        if (this.blockedScroll.getState()) return
+
         const movableWrapper = wrapper.querySelector('.movable-wrapper')
         const wrapperVisibleWidth = wrapper.clientWidth
 
