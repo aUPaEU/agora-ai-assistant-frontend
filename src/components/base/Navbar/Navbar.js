@@ -1,6 +1,5 @@
 import { PlainComponent, PlainState } from "plain-reactive"
 import { PATHS } from "../../../constants/paths.const"
-import { gsap } from "gsap"
 import { html } from "../../../utils/templateTags.util"
 import * as api from "../../../services/api.service"
 
