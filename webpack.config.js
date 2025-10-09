@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = {
     entry: './src/App.js',
@@ -22,6 +23,7 @@ module.exports = {
             },
         ],
     },
+    devtool: 'source-map',
     devServer: {
         static: path.join(__dirname, ''), // Serve static files from 'dist' folder
         compress: true,
@@ -34,5 +36,5 @@ module.exports = {
     ],
     resolve: {
         extensions: ['.js', '.css'], // Allow importing JS files without extension
-    }
+    },
 }
