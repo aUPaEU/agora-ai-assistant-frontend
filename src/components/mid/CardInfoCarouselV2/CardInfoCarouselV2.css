@@ -224,6 +224,8 @@
     padding: 1rem;
     box-sizing: border-box;
 
+    width: 100%;
+
     display: flex;
     gap: 1rem;
     
@@ -443,6 +445,18 @@
     .default-image {
         font-size: 1.5rem;
     }
+}
+
+/* HIGHLIGHT STYLES */
+.highlight {
+    padding: 0.25rem;
+    padding-inline: 0;
+    box-sizing: border-box;
+
+    color: var(--text-accent-color) !important;
+    font-weight: bold;
+
+    background-color: rgb(from var(--text-accent-color) r g b / 0.1);
 }
 
 /* ANIMATIONS */

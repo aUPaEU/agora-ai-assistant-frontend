@@ -22,6 +22,7 @@ class CardInfoCarouselV2 extends PlainComponent {
         this.configContext = new PlainContext('config', this, false)
         this.serviceContext = new PlainContext('service', this, false)
         this.resultContext = new PlainContext('result', this, false)
+        this.searchContext = new PlainContext('search', this, true, 'local')
 
         this.data = new PlainState(null, this)
         this.displayedCardId = new PlainState(null, this)
@@ -195,12 +196,13 @@ class CardInfoCarouselV2 extends PlainComponent {
             return card.data.id === id && card.service === group
         })
 
-        console.log("NEW DATA", newData)
-
         this.displayedCardGroup.setState(newData.service, false)
         this.data.setState(newData)
         this.updateNavigationButtonsVisibility(id)
         this.show()
+        setTimeout(() => {
+            this.highlightSearchTerms(newData.roots)
+        }, 100)
     }
 
     updateNavigationButtonsVisibility(cardId) {
@@ -226,44 +228,64 @@ class CardInfoCarouselV2 extends PlainComponent {
     }
 
     setNextCardId() {
-        console.log("SET NEXT CARD ID")
-        console.log("CARD DATA", this.data.getState())
-        console.log("DISPLAYED CARD ID", this.displayedCardId.getState())
-        console.log("DISPLAYED CARD GROUP", this.displayedCardGroup.getState())
         const currentGroup = this.resultContext.getData('grouped')
             .find(group => group.service === this.displayedCardGroup.getState())
         const currentCardIndex = currentGroup?.items
             .findIndex(item => item.data.id === this.displayedCardId.getState())
         const nextCard = currentGroup?.items[currentCardIndex + 1]
 
-        console.log("NEXT CARD", nextCard)
         if (nextCard) {
             this.displayedCardId.setState(nextCard.data.id, false)
             this.data.setState(nextCard)
             this.updateNavigationButtonsVisibility(nextCard.data.id)
             this.show()
+            setTimeout(() => {
+                this.highlightSearchTerms(nextCard.roots)
+            }, 100)
         }
     }
 
     setPreviousCardId() {
-        console.log("SET PREVIOUS CARD ID")
-        console.log("SET NEXT CARD ID")
-        console.log("CARD DATA", this.data.getState())
-        console.log("DISPLAYED CARD ID", this.displayedCardId.getState())
-        console.log("DISPLAYED CARD GROUP", this.displayedCardGroup.getState())
         const currentGroup = this.resultContext.getData('grouped')
             .find(group => group.service === this.displayedCardGroup.getState())
         const currentCardIndex = currentGroup?.items
             .findIndex(item => item.data.id === this.displayedCardId.getState())
         const previousCard = currentGroup?.items[currentCardIndex - 1]
 
-        console.log("PREVIOUS CARD", previousCard)
         if (previousCard) {
             this.displayedCardId.setState(previousCard.data.id, false)
             this.data.setState(previousCard)
             this.updateNavigationButtonsVisibility(previousCard.data.id)
             this.show()
+            setTimeout(() => {
+                this.highlightSearchTerms(previousCard.roots)
+            }, 100)
         }
+    }
+
+    highlightSearchTerms(terms) {
+        let searchTerms = this.searchContext.getData('current') || []
+        searchTerms = terms
+
+        /* Temporary fix for the search terms (unresolved issue) */
+        searchTerms = searchTerms.filter(term => {
+            if (!['i', 'I'].includes(term)) return term
+        })
+
+        let cardName = this.$('.card-name').innerHTML
+        let cardLastname = this.$('.card-lastname').innerHTML
+        let cardSummary = this.$('.card-summary').innerHTML
+        
+        searchTerms.forEach(term => {
+            const searchRegex = new RegExp(`\\b${term}\\w*\\b`, 'gi')
+            cardName = cardName.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
+            cardLastname = cardLastname.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
+            cardSummary = cardSummary.replace(searchRegex, match => `<span class="highlight">${match}</span>`)
+        })
+        
+        this.$('.card-name').innerHTML = cardName
+        this.$('.card-lastname').innerHTML = cardLastname
+        this.$('.card-summary').innerHTML = cardSummary
     }
 }
 
