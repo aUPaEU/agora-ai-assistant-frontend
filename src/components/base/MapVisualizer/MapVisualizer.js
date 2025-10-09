@@ -13,7 +13,7 @@ class MapVisualizer extends PlainComponent {
 
     template() {
         return html`
-            <img class="map" src="${PATHS.PUBLIC}/assets/svg/europe-map.svg">
+            <img class="map" src="${PATHS.PUBLIC}/assets/svg/europe-map.svg" alt="Europe map">
         `
     }
 }
