@@ -107,25 +107,36 @@ class Chat extends PlainComponent {
             }
 
             /* We pass as context the filtered elements so the assistant only talks about what the user is seeing in the moment */
-            const contextFilters = this.resultContext.getData('filters').length
+            const contextFilters = this.resultContext.getData('filters')
             const contextData = this.resultContext.getData('grouped')
-            const contextFilteredData = contextData.length > 0 && contextFilters > 0
+            const contextFilteredData = contextData.length > 0 && contextFilters.length > 0
                 ? contextData.filter(group => {
-                    return this.resultContext.getData('filters').includes(group.service)
+                    return contextFilters.some(filter => filter.service === group.service)
                 })
                 : contextData
 
-            const context = contextFilteredData.length > 0
+            console.log("Context filters:", contextFilters)
+            console.log("Context data:", contextData)
+            console.log("Context filtered data:", contextFilteredData)
+
+            const context = contextFilteredData.map(group => {
+                return [
+                    `\n> Service: ${group.service}\n`,
+                    ...group.items.map(item => {
+                        return ` >> Resource: ${JSON.stringify(item)}\n`
+                    })
+                ].join('\n')
+            })
+
+            context.length > 0
                 ? [
-                    `These resources are being displayed to the user (take them into account when answering and proposing follow-up questions):`,
-                    ...this.resultContext.getData('filters').map(group => {
-                        return `Service: ${group.service}\n` + group.items.map(item => {
-                            return ` - ${JSON.stringify(item)}\n`
-                        }).join("\n")
-                    }),
+                    `These resources are being displayed in the user screen (take them into account when answering and proposing follow-up questions):`,
+                    context.join('\n'),
                     `Take into account the user's previous messages and the context provided by these resources when formulating your response.`,
                 ].join("\n")
                 : '(No resources displayed right now.)'
+
+            console.log("Context being passed to the AI:", context)
 
             const response = await api.sendMessageV3(
                 this.configContext.getData('ai_host'),
