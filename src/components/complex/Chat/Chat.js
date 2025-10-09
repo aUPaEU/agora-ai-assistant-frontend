@@ -218,7 +218,7 @@ class Chat extends PlainComponent {
 
     storeMessageInContext(message, author) {
         if (!message || message.trim() === '') return
-        
+
         const chatHistory = this.chatContext.getData('history')
 
         if (!chatHistory) {
@@ -452,8 +452,8 @@ class Chat extends PlainComponent {
                 model_view_url: modelViewUrl,
                 roots: [],
                 score: {
-                    absolute: 0,
-                    relative: 0
+                    absolute: null,
+                    relative: null
                 },
                 service: serviceData.service,
             }

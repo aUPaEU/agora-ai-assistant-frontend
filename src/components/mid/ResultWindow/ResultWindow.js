@@ -220,8 +220,8 @@ class ResultWindow extends PlainComponent {
             featured_fields: record.featured_fields || [],
             dataset: JSON.stringify(record.data, stringifyReplacer),
             score: {
-                absolute: record.score.absolute || 1,
-                relative: record.score.relative || 1
+                absolute: record.score.absolute || null,
+                relative: record.score.relative || null
             }
         }
 

@@ -61,7 +61,7 @@ class DynamicCard extends PlainComponent {
             : null
 
         let publicScore = Math.round(Number(this.getAttribute('absolute-score')) * 10) 
-        if (isNaN(publicScore) || publicScore === 0) publicScore = '~'
+        if (isNaN(publicScore) || publicScore === 0) publicScore = null
 
         const isFeatured = findPropertyByPattern(this.data.getState(), ['featured', 'highlight', 'premium'])
 
@@ -85,11 +85,17 @@ class DynamicCard extends PlainComponent {
                             `
                             : ``
                     }
-                    <div 
-                        class="public-score" 
-                        title="This score represents the relevance of this\nitem in the search results."
-                        style="filter: hue-rotate(${(publicScore-10) * 20}deg);"
-                    >${publicScore}</div>
+                    ${
+                        publicScore !== null
+                            ? html`
+                                <div 
+                                    class="public-score" 
+                                    title="This score represents the relevance of this\nitem in the search results."
+                                    style="filter: hue-rotate(${(publicScore-10) * 20}deg);"
+                                >${publicScore}</div>
+                            `
+                            : ``
+                    }
                     ${
                         this.wrapper.classList.contains('featured') 
                             ? html`
