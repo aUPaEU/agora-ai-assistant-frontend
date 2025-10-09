@@ -13,6 +13,7 @@ class LayoutV2 extends PlainComponent {
     constructor() {
         super('agora-layout-v2', `${PATHS.LAYOUT_COMPONENTS}/v2/v2.css`)
 
+        this.resultContext = new PlainContext('result', this, false)
         this.configContext = new PlainContext('config', this, false)
     }
 
@@ -40,9 +41,16 @@ class LayoutV2 extends PlainComponent {
                 <div class="right">
 
                     <!-- Greetings and Showcase -->
-                    <div class="showcase">
-                        <agora-landing></agora-landing>
-                    </div>
+                    ${
+                        !this.resultContext.getData('data') || this.resultContext.getData('data').length === 0
+                            ? html`
+                                <div class="showcase">
+                                    <agora-landing></agora-landing>
+                                </div>
+                            `
+                            : ''
+                    }
+                    
 
                     <!-- Results -->
                     <agora-result-window></agora-result-window>
