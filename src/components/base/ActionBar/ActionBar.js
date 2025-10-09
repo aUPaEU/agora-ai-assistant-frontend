@@ -17,18 +17,18 @@ class ActionBar extends PlainComponent {
     template() {
         return html`
             <div class="action-bar-container">
-                <button class="action-button map-button" disabled title="Resource map will be available soon">
+                <button class="action-button map-button" disabled title="Resource map will be available soon" aria-label="Open resource map">
                     ${MAP}
                 </button>
-                <button class="action-button refresh-button">
+                <button class="action-button refresh-button" aria-label="Refresh results">
                     ${REFRESH}
                 </button>
 
                 <div class="action-toogle ai-searcher-toogle">
-                    <button class="action-button ai-assistant-button ${this.configContext.getData('enabled_ai') ? 'selected' : ''}">
+                    <button class="action-button ai-assistant-button ${this.configContext.getData('enabled_ai') ? 'selected' : ''}" aria-label="Switch to AI assistant">
                         ${AI_CHAT}
                     </button>
-                    <button class="action-button search-button ${this.configContext.getData('enabled_ai') ? '' : 'selected'}">
+                    <button class="action-button search-button ${this.configContext.getData('enabled_ai') ? '' : 'selected'}" aria-label="Switch to search">
                         ${SEARCH}
                     </button>
                 </div>
@@ -61,8 +61,6 @@ class ActionBar extends PlainComponent {
         const selected = toggler.querySelector('.action-button.selected')
         const unselected = toggler.querySelector('.action-button:not(.selected)')
 
-        console.log(selected, unselected)
-
         selected.classList.remove('selected')
         unselected.classList.add('selected')
 
@@ -71,15 +69,9 @@ class ActionBar extends PlainComponent {
 
     openMapWindow() {
         const mapWindow = this.parentComponent.$('agora-result-map')
-        console.log(mapWindow)
         if (mapWindow) {
             mapWindow.toogleMapWindow()
         }
-    }
-
-    openAIAssistant() {
-        // TODO: Implementar la lógica para abrir el asistente de IA
-        console.log('Opening AI Assistant...')
     }
 
     clear() {
