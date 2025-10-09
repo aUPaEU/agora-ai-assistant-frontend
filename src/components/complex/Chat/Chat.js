@@ -107,7 +107,15 @@ class Chat extends PlainComponent {
             }
 
             /* We pass as context the filtered elements so the assistant only talks about what the user is seeing in the moment */
-            const context = this.resultContext.getData('filters').length > 0 
+            const contextFilters = this.resultContext.getData('filters').length
+            const contextData = this.resultContext.getData('grouped')
+            const contextFilteredData = contextData.length > 0 && contextFilters > 0
+                ? contextData.filter(group => {
+                    return this.resultContext.getData('filters').includes(group.service)
+                })
+                : contextData
+
+            const context = contextFilteredData.length > 0
                 ? [
                     `These resources are being displayed to the user (take them into account when answering and proposing follow-up questions):`,
                     ...this.resultContext.getData('filters').map(group => {
