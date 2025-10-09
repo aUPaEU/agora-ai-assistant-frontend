@@ -1,7 +1,6 @@
 import { PlainComponent, PlainState } from "plain-reactive"
 import { html } from "../../../utils/templateTags.util"
 import { PATHS } from "../../../constants/paths.const"
-import { gsap } from "gsap"
 
 class TextButton extends PlainComponent {
     constructor() {
