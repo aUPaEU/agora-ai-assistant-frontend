@@ -106,10 +106,11 @@ class Chat extends PlainComponent {
                 messageHistory = []
             }
 
-            const context = this.resultContext.getData('grouped').length > 0 
+            /* We pass as context the filtered elements so the assistant only talks about what the user is seeing in the moment */
+            const context = this.resultContext.getData('filters').length > 0 
                 ? [
                     `These resources are being displayed to the user (take them into account when answering and proposing follow-up questions):`,
-                    ...this.resultContext.getData('grouped').map(group => {
+                    ...this.resultContext.getData('filters').map(group => {
                         return `Service: ${group.service}\n` + group.items.map(item => {
                             return ` - ${JSON.stringify(item)}\n`
                         }).join("\n")
