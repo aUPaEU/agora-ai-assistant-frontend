@@ -1,7 +1,6 @@
 import { PlainComponent, PlainState } from "plain-reactive"
 import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"
-import { gsap } from "gsap"
 
 class ChatLoader extends PlainComponent {
     constructor() {

@@ -69,7 +69,9 @@ class ChatWindow extends PlainComponent {
     }
 
     afterRender() {
-        this.$('.chat-container').scrollTop = this.$('.chat-container').scrollHeight
+        if (this.$('.chat-container') && this.$('.chat-container').scrollHeight > 0) {
+            this.$('.chat-container').scrollTop = this.$('.chat-container').scrollHeight
+        }
     }
 
     listeners() {

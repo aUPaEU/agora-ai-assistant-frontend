@@ -7,6 +7,7 @@ import { PATHS } from "../../../constants/paths.const"
 import { html } from "../../../utils/templateTags.util"
 import { throwToast, TOAST_TYPES } from "../../../utils/errorHandling.util"
 import { processJSONBuffer } from "../../../utils/parsingHelper.util"
+import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
 
 /* Services */
 import * as api from "../../../services/api.service"
@@ -25,6 +26,7 @@ class Chat extends PlainComponent {
         this.shouldResetResults = new PlainState(false, this)
 
         this.mockBotResponse = new PlainState(-1, this)
+        this.messageBuffer = new PlainState('', this)
 
         this.PROVIDERS = {
             OPENAI: 'openai',
@@ -94,42 +96,114 @@ class Chat extends PlainComponent {
             this.storeMessageInContext(message, 'user')
 
             const availableModels = this.formatAvailableModels()
-            const messageHistory = this.formatMessageHistory()
-            const resultHistory = this.formatResultHistory()
+            let messageHistory = this.formatMessageHistory()
+            const resultHistory = this.formatResultHistory() 
 
-            const response = await api.sendMessageV2(
+            if (
+                messageHistory.length === 1 && 
+                messageHistory[0].content === message
+            ) {
+                messageHistory = []
+            }
+
+            const context = this.resultContext.getData('grouped').length > 0 
+                ? [
+                    `These resources are being displayed to the user (take them into account when answering and proposing follow-up questions):`,
+                    ...this.resultContext.getData('grouped').map(group => {
+                        return `Service: ${group.service}\n` + group.items.map(item => {
+                            return ` - ${JSON.stringify(item)}\n`
+                        }).join("\n")
+                    }),
+                    `Take into account the user's previous messages and the context provided by these resources when formulating your response.`,
+                ].join("\n")
+                : '(No resources displayed right now.)'
+
+            const response = await api.sendMessageV3(
                 this.configContext.getData('ai_host'),
-                this.PROVIDERS.OPENAI,
                 message,
-                availableModels, 
-                messageHistory, 
-                resultHistory
+                messageHistory,
+                [
+                    `You are a helpful assistant working for the university alliance ${this.configContext.getData('name')}.`,
+                    `This site is the alliance Agora.`,
+                    `An Agora is a service that serves as a central hub that provides access to services and resources offered by the alliance members.`,
+                    `If the user asks for more information about the alliance, verify your response on the internet and provide accurate information.`,
+                    `If the user ask for resources or related information use your retrieve capabilities to find the most relevant information.\n`,
+                    `Use the provided context to answer the user's question as accurately as possible.`,
+                    `If you don't know the answer, just say you don't know.`,
+                    `Do not make up an answer.`,
+                    `Always keep your answers concise and to the point.\n`,
+                    `${context}`,
+                ].join("\n")
             )
 
             const reader = response.body.getReader()
             const decoder = new TextDecoder()
             let buffer = ''
 
+            let isFirstChunk = true
+
             while (true) {
                 const { done, value } = await reader.read()
                 if (done) break
 
-                const chunk = decoder.decode(value, { stream: true })
+                const chunk = decoder.decode(value, { stream: !done })
                 buffer += chunk
                 
-                buffer = processJSONBuffer(buffer, false, (json) => this.handleResponse(json))
+                let response = null    
+
+                if (chunk.includes("[$artifact]:")) {
+                    const artifact = JSON.parse(chunk.replace("[$artifact]:", "").replace(/'/g, '"'))
+                    response = {
+                        type: this.RESPONSE.RESULTS,
+                        results: artifact
+                    }
+                    this.handleResponse(response)
+                }
+                else if (chunk.includes("[$done]:")) {
+                    // Extract any message content before the [$done]: marker
+                    const beforeDone = chunk.split("[$done]:")[0]
+                    if (beforeDone) {
+                        response = {
+                            type: this.RESPONSE.MESSAGE,
+                            is_first_chunk: isFirstChunk,
+                            is_last_chunk: false,
+                            message: beforeDone
+                        }
+                        this.handleResponse(response)
+                        if (isFirstChunk) isFirstChunk = false
+                    }
+                    
+                    // Signal the last chunk
+                    response = {
+                        type: this.RESPONSE.MESSAGE,
+                        is_first_chunk: false,
+                        is_last_chunk: true,
+                        message: ''
+                    }
+                    this.handleResponse(response)
+                }
+                else {
+                    response = {
+                        type: this.RESPONSE.MESSAGE,
+                        is_first_chunk: isFirstChunk,
+                        is_last_chunk: false,
+                        message: chunk
+                    }
+                    this.handleResponse(response)
+                    if (isFirstChunk) isFirstChunk = false
+                }
             }
             
-            // Process any remaining data in buffer
-            if (buffer.trim()) {
-                processJSONBuffer(buffer, true, (json) => this.handleResponse(json))
+            // If we exit the loop without receiving [$done]:, finalize the message
+            if (!buffer.includes("[$done]:") && this.messageBuffer.getState()) {
+                console.log("Storing message from `sendMessage` finalization.", this.messageBuffer.getState())
+                this.storeMessageInContext(this.messageBuffer.getState(), 'bot')
+                this.messageBuffer.setState('', false)
             }
         }
-
         catch (error) {
             this.handleError(error)
         }
-
         finally {
             this.shouldResetResults.setState(true, false)
         }
@@ -143,6 +217,8 @@ class Chat extends PlainComponent {
     }
 
     storeMessageInContext(message, author) {
+        if (!message || message.trim() === '') return
+        
         const chatHistory = this.chatContext.getData('history')
 
         if (!chatHistory) {
@@ -183,7 +259,7 @@ class Chat extends PlainComponent {
 
         const formattedChatHistory = chatHistory.map(message => {
             return {
-                "role": message.author,
+                "role": message.author === 'user' ? 'user' : 'ai',
                 "content": message.content
             }
         })
@@ -206,7 +282,7 @@ class Chat extends PlainComponent {
                 break
 
             case this.RESPONSE.RESULTS:
-                this.handleResults(response.results)
+                this.handleResultsV2(response.results)
                 break
 
             case this.RESPONSE.PROCESS_STARTED:
@@ -231,9 +307,13 @@ class Chat extends PlainComponent {
 
         try {
             if (message.is_last_chunk) {
-                this.storeMessageInContext(message.message, 'bot')
-                return 
+                console.log(`Storing message from \`handleMessage\` final chunk.\n ${this.messageBuffer.getState()} "\n" + ${JSON.stringify(message)}`)
+                this.storeMessageInContext(this.messageBuffer.getState() + message.message, 'bot')
+                this.messageBuffer.setState('', false)
+                return
             }
+
+            this.messageBuffer.setState(this.messageBuffer.getState() + message.message, false)
     
             if (message.message) {
                 this.$('agora-chat-window').updateStreamingMessage(message.message)
@@ -245,6 +325,167 @@ class Chat extends PlainComponent {
         }
     }
 
+    async handleResultsV2(artifact) {
+        if (artifact.length == 0) return
+
+        const updatedResultContext = {
+            grouped: [],
+            data: []
+        }
+
+        if (!this.shouldResetResults.getState()) {
+            updatedResultContext.data = this.resultContext.getData('data') || []
+            updatedResultContext.grouped = this.resultContext.getData('grouped') || []
+        }
+
+        if (this.shouldResetResults.getState()) this.shouldResetResults.setState(false, false)
+
+        const availableWebsites = extractObjectsWithMatchingKey(this.serviceContext.getData('services'), 'websites')
+        const flatWebsites = availableWebsites.flatMap(website => website.websites)
+        const modelVerboseNames = {}
+
+        // Create array of promises
+        const elementPromises = artifact.map(async document => {
+            modelVerboseNames[document.model] = flatWebsites.find(
+                website => website.model === document.model
+            )?.name || null
+
+            const model = document.model
+            let serviceData = null
+            
+            this.serviceContext.getData('services').forEach(service => {
+                const serviceWebsites = service.fields?.catalogues?.websites
+                if (!serviceWebsites) return false
+
+                const serviceModels = {}
+                serviceWebsites.forEach(website => {
+                    if (!website.model) return
+                    if (website.model !== model) return
+                    
+                    const modelData = {
+                        model: website.model,
+                        model_verbose_name: website.model_verbose_name,
+                        model_website: website.website,
+                        model_view_url: website.url,
+                        model_view_id: website.view_id,
+                    }
+
+                    serviceModels[website.model] = modelData
+                })
+
+                if (model in serviceModels) {
+                    serviceData = {
+                        service: service.fields.name,
+                        models: serviceModels
+                    }
+                }
+            })
+
+            if (!serviceData) return null
+
+            // Fetch the element
+            const element = await api.fetchElementV2(
+                this.configContext.getData('host'),
+                document.model,
+                Number(document.source_id)
+            )
+
+            if (!element) return null
+
+            // This code (ugly af) is to parse many2many fields to get the 'name' attribute of each related record
+            // The reason why this is needed is because Odoo returns many2many fields as strings in Python syntax
+            // Example: "['Record 1', 'Record 2']" or "[{'id': 1, 'name': 'Record 1'}, {'id': 2, 'name': 'Record 2'}]"
+            // We need to convert them to JSON and then parse them to get the names
+            Object.entries(element.fields).forEach(([key, value]) => {
+                if (value.startsWith('[') || value.startsWith('{')) {
+                    try {
+                        // Store double-quoted strings temporarily
+                        const doubleQuotedStrings = [];
+                        
+                        const jsonString = value
+                            .replace(/\bTrue\b/g, 'true')
+                            .replace(/\bFalse\b/g, 'false')
+                            .replace(/\bNone\b/g, 'null')
+                            // Capture and store existing double-quoted strings
+                            .replace(/"((?:[^"\\]|\\.)*)"/g, (match, content) => {
+                                doubleQuotedStrings.push(content);
+                                return `<<<${doubleQuotedStrings.length - 1}>>>`;
+                            })
+                            // Convert single-quoted strings to double quotes
+                            .replace(/'((?:[^'\\]|\\.)*)'/g, (match, content) => {
+                                const escaped = content
+                                    .replace(/\\'/g, "'")
+                                    .replace(/"/g, '\\"');
+                                return `"${escaped}"`;
+                            })
+                            // Restore original double-quoted strings
+                            .replace(/<<<(\d+)>>>/g, (match, index) => {
+                                return `"${doubleQuotedStrings[index]}"`;
+                            });
+
+                        const parsed = JSON.parse(jsonString);
+                        element.fields[key] = parsed.name || value;
+                    } catch (error) {
+                        console.warn(`Could not parse field ${key} with value ${value} as JSON:`, error);
+                    }
+                }
+            })
+
+            let elementImageUrl = element.fields?.x_image || null
+            elementImageUrl && (elementImageUrl = elementImageUrl.replace(this.configContext.getData('host'), ''))
+
+            // Construct model_view_url by combining website and url, similar to handleResults
+            const modelViewUrl = element.fields?.detail_url 
+                ? serviceData.models[model].model_website + serviceData.models[model].model_view_url
+                : null
+
+            return {
+                data: {
+                    ...element.fields,
+                    id: element.id,
+                    image: elementImageUrl
+                },
+                featured: element.fields?.featured || false,
+                featured_fields: ["web_link", "url", "website"],
+                model: document.model,
+                model_verbose_name: modelVerboseNames[document.model] || null,
+                model_view_url: modelViewUrl,
+                roots: [],
+                score: {
+                    absolute: 0,
+                    relative: 0
+                },
+                service: serviceData.service,
+            }
+        })
+
+        // Wait for all promises to resolve
+        const results = (await Promise.all(elementPromises)).filter(result => result !== null)
+
+        // Add new processed results to existing data
+        updatedResultContext.data = updatedResultContext.data.concat(results)
+
+        // Group data by service
+        const services = [...new Set(updatedResultContext.data.map(result => result.service))].sort()
+
+        const groupedData = services.map(service => {
+            const items = updatedResultContext.data.filter(result => result.service === service)
+            return {
+                service: service,
+                items: items
+            }
+        })
+
+        // Update the result context with the new results
+        this.resultContext.setData({
+            grouped: groupedData,
+            data: updatedResultContext.data,
+        }, true)
+
+        this.signals.emit('results-updated', groupedData)
+    }
+
+    /* Not being used anymore */
     handleResults(results) {
         const updatedResultContext = {
             grouped: [],
@@ -309,7 +550,7 @@ class Chat extends PlainComponent {
                     "data": {
                         ...result.properties,
                         id: result.properties._source_id,
-                        image: `/web/image?model=${serviceData.models[model].model}&id=${result.properties._source_id}&field=image`,
+                        image: `/web/image?model=${serviceData.models[model].model}&id=${result.properties._source_id}&field=x_image`,
                         rag: result.rag
                     },
                     "roots": [],

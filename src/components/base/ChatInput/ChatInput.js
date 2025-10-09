@@ -12,7 +12,7 @@ class ChatInput extends PlainComponent {
         return html`
             <input type="text" placeholder="Type your message...">
             <!-- <button class="send-button">${SEND_MESSAGE}</button> -->
-            <button class="send-button">
+            <button class="send-button" aria-label="Send message">
                 ${AUPAEU_LOGO}
             </button>
         `
