@@ -9,7 +9,6 @@ import { ITEM_TYPE } from "../../../constants/itemType.const"
 import { html } from "../../../utils/templateTags.util"
 import { stringifyReplacer } from "../../../utils/parsingHelper.util"
 import { extractObjectsWithMatchingKey } from "../../../utils/objectHelper.util"
-import { translateServiceIsAvailable } from "../../../utils/translator.util"
 import { throwToast, TOAST_TYPES } from "../../../utils/errorHandling.util"
 
 /* Icons */
@@ -36,6 +35,8 @@ class Navigator extends PlainComponent {
         this.items = new PlainState(null, this)
         this.initialLoad = new PlainState(true, this)
         this.filters = new PlainState([], this)
+        this.fetchAttempts = 0
+        this.maxFetchAttempts = 3
 
         this.ensureConfig()
         this.fetchItems()
@@ -162,12 +163,19 @@ class Navigator extends PlainComponent {
         }
 
         catch (error) {
-            throwToast(
-                `There was an error while loading the services.\nProbably the service is down or is being restarted.`, 
-                TOAST_TYPES.ERROR
-            )
-            this.error.setState(error)
-            console.error(`ERROR WHEN LOADING SERVICES\n${error}\nProbably the service is down or is being restarted.`)
+            if (this.fetchAttempts < this.maxFetchAttempts) {
+                this.fetchAttempts++
+                this.fetchItems()
+            }
+
+            else {
+                throwToast(
+                    `There was an error while loading the services.\nProbably the service is down or is being restarted.`, 
+                    TOAST_TYPES.ERROR
+                )
+                this.error.setState(error)
+                console.error(`ERROR WHEN LOADING SERVICES\n${error}\nProbably the service is down or is being restarted.`)
+            }
         }
     }
 
