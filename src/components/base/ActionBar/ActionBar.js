@@ -10,7 +10,7 @@ class ActionBar extends PlainComponent {
         this.signals = new PlainSignal(this)
         this.signals.register('results-updated')
 
-        this.resultContext = new PlainContext('result', this)
+        this.resultContext = new PlainContext('result', this, false)
         this.configContext = new PlainContext('config', this)
     }
 
