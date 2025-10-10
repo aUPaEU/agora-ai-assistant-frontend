@@ -115,10 +115,6 @@ class Chat extends PlainComponent {
                 })
                 : contextData
 
-            console.log("Context filters:", contextFilters)
-            console.log("Context data:", contextData)
-            console.log("Context filtered data:", contextFilteredData)
-
             const context = contextFilteredData.map(group => {
                 return [
                     `\n> Service: ${group.service}\n`,
@@ -135,8 +131,6 @@ class Chat extends PlainComponent {
                     `Take into account the user's previous messages and the context provided by these resources when formulating your response.`,
                 ].join("\n")
                 : '(No resources displayed right now.)'
-
-            console.log("Context being passed to the AI:", context)
 
             const response = await api.sendMessageV3(
                 this.configContext.getData('ai_host'),
@@ -216,7 +210,6 @@ class Chat extends PlainComponent {
             
             // If we exit the loop without receiving [$done]:, finalize the message
             if (!buffer.includes("[$done]:") && this.messageBuffer.getState()) {
-                console.log("Storing message from `sendMessage` finalization.", this.messageBuffer.getState())
                 this.storeMessageInContext(this.messageBuffer.getState(), 'bot')
                 this.messageBuffer.setState('', false)
             }
