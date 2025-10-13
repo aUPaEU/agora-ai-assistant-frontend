@@ -75,4 +75,4 @@ export const ENV = {
     }
 }
 
-export const CONFIG = ENV.LOCAL_AI
+export const CONFIG = ENV.PRODUCTION_DEFAULT
