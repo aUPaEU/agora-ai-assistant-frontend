@@ -1,6 +1,18 @@
 # agora-ai-assistant-frontend
 This is the frontend for Agora AI Assistant, a web application that integrates with various AI services to provide intelligent assistance. The frontend is built using modern web technologies and provides a user-friendly interface for interacting with the AI assistant.
 
+## Compiling a new build
+1. Change version in `package.json`, `package-lock.json`, and `agora.config.js`
+2. Update CDN paths in `constants/paths.constant.js`
+3. Set the config to `ENV.PRODUCTION_DEFAULT` in `agora.config.js`
+4. Run `npm run build`
+5. Push the changes to the repository
+6. Draft a new release in GitHub
+  - Tag the release with the new version (e.g., `1.2.0`)
+  - Name the release with the same name as the tag (e.g., `1.2.0`)
+  - Add release notes if necessary
+7. Publish the release as a pre-release or full release as needed (recommended to publish as a pre-release first for testing) 
+
 ## Local Development
 
 ### Prerequisites
