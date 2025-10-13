@@ -166,13 +166,21 @@ class Searchbar extends PlainComponent {
     // Show spinner while searching
     this.showSpinner()
 
+    const currentQuery = this.$('.searchbar-input').value
+    
+    if (currentQuery.length === 0) {
+      this.hideSpinner()
+      return
+    }
+    
+    const sanitizedQuery = currentQuery.replace(/[^^A-Za-z0-9 ]/g, '')
+
     const queryLanguage = this.currentQueryLanguage.getState()?.value ?? 'en'
 
     /* const translatedQuery = await translate(this.$('.searchbar-input').value, navigator.language.split('-')[0]) */
     const translatedQuery = this.configContext.getData('translation_host')
-      ? await translate(this.configContext.getData('translation_host'), this.$('.searchbar-input').value, queryLanguage, 'en')
-      : this.$('.searchbar-input').value
-   
+      ? await translate(this.configContext.getData('translation_host'), sanitizedQuery, queryLanguage, 'en')
+      : sanitizedQuery
 
     // We extract all the availablel models in the Agora from the service context
     let services = this.serviceContext.getData('services')
@@ -201,7 +209,7 @@ class Searchbar extends PlainComponent {
 
     // We call the elasticsearch api to get search results
     const query = {
-      raw: this.$('.searchbar-input').value,
+      raw: sanitizedQuery,
       translated: translatedQuery
     }
 
