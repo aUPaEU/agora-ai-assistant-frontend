@@ -16,10 +16,10 @@ export const ENV = {
 
     LOCAL_AI: {
         "name": "Unite!",
-        "host": "http://localhost:8000",
+        "host": "http://localhost:8010",
         "company_id": 1,
         "enabled_ai": true,
-        "ai_host": "http://localhost:2000",
+        "ai_host": "http://localhost:2020/api",
         "translation_host": "http://localhost:5000",
         "current_version": CURRENT_VERSION
     },
@@ -62,7 +62,17 @@ export const ENV = {
         "ai_host": "http://localhost:2000",
         "translation_host": "http://localhost:5000",
         "current_version": CURRENT_VERSION
+    },
+
+    PRODUCTION_DEFAULT: {
+        "name": "Set the name in the attribute of the html element <agora-app name='Your company name'>",
+        "host": "Set the host in the attribute of the html element <agora-app host='https://yourdomain.com'>",
+        "company_id": 1,
+        "enabled_ai": false,
+        "ai_host": "Set the ai_host in the attribute of the html element <agora-app ai_host='https://yourdomain.com'>, usually should be deployed on http://localhost:2020",
+        "translation_host": "Set the translation_host in the attribute of the html element <agora-app translation_host='https://yourdomain.com/translation'>",
+        "current_version": CURRENT_VERSION
     }
 }
 
-export const CONFIG = ENV.UNITE
+export const CONFIG = ENV.LOCAL_AI
