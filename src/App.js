@@ -66,6 +66,9 @@ class App extends PlainComponent {
     }
 
     async setupConfig() {
+        console.log(`Agora (v${CONFIG.current_version})`)
+        this.configContext.clear()
+        
         const customConfig = {
             "name": this.getAttribute('name') ?? CONFIG.name,
             "host": this.getAttribute('host') ?? window.location.origin ?? CONFIG.host,
@@ -80,21 +83,17 @@ class App extends PlainComponent {
     }
 
     async checkTranslationService() {
-        console.log('Checking translation service...')
         const translationHost = this.getAttribute('translation_host') ?? CONFIG.translation_host
 
         if (!translationHost) {
-            console.log('No translation host found')
             return null
         }
 
         const isAvailable = await translateServiceIsAvailable(translationHost)
         if (!isAvailable) {
-            console.log('Translation service is not available')
             return null
         }
 
-        console.log('Translation service is available')
         return translationHost
     }
 
