@@ -62,10 +62,23 @@ class NavigatorItem extends PlainComponent {
             }
             </div>
         `
+        console.log("Item info:", info)
+        const shouldUnfold = (info) => {
+            if (Object.entries(info.sub_acceleration_services).length > 0) return true
+            
+            if (
+                Object.entries(info?.catalogues) &&
+                Object.entries(info?.catalogues).length > 0 &&
+                Object.entries(info?.catalogues?.websites) &&
+                Object.entries(info?.catalogues?.websites).length > 0
+            ) return true
+
+            return false
+        }
         const unfoldIcon = ![ITEM_TYPE.CATALOGUE, ITEM_TYPE.SHOWCASE].includes(this.type.getState())
             ? html`
                 ${
-                    Object.entries(info.sub_acceleration_services).length > 0 || Object.entries(info.catalogues).length > 0
+                    shouldUnfold(info)
                         ? html`<div class="unfold-icon">${ADD}</div>`
                         : html``
                 }
