@@ -76,6 +76,15 @@ class App extends PlainComponent {
         console.log("AI Host:", this.getAttribute('ai_host'))
         console.log("Translation Host:", this.getAttribute('translation_host'))
 
+        console.log("App is ready?\n", this)
+
+        while (!this.getAttribute('host')) {
+            console.log("Waiting for app to be ready...")
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        console.log("App is ready!")
+
         const customConfig = {
             "name": this.getAttribute('name') ?? CONFIG.name,
             "host": this.getAttribute('host') ?? window.location.origin ?? CONFIG.host,
