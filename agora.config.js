@@ -72,6 +72,16 @@ export const ENV = {
         "ai_host": "Set the ai_host in the attribute of the html element <agora-app ai_host='https://yourdomain.com'>, usually should be deployed on http://localhost:2020",
         "translation_host": "Set the translation_host in the attribute of the html element <agora-app translation_host='https://yourdomain.com/translation'>",
         "current_version": CURRENT_VERSION
+    },
+
+    LOCAL_DEFAULT: {
+        "name": "Unite!",
+        "host": "http://localhost:8010",
+        "company_id": 1,
+        "enabled_ai": true,
+        "ai_host": "http://localhost:2020/api",
+        "translation_host": "http://localhost:5000",
+        "current_version": CURRENT_VERSION
     }
 }
 
