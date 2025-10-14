@@ -68,7 +68,14 @@ class App extends PlainComponent {
     async setupConfig() {
         console.log(`Agora (v${CONFIG.current_version})`)
         this.configContext.clear()
-        
+
+        console.log("Name:", this.getAttribute('name'))
+        console.log("Host:", this.getAttribute('host'))
+        console.log("Company ID:", this.getAttribute('company_id'))
+        console.log("Enabled AI:", this.getAttribute('enabled_ai'))
+        console.log("AI Host:", this.getAttribute('ai_host'))
+        console.log("Translation Host:", this.getAttribute('translation_host'))
+
         const customConfig = {
             "name": this.getAttribute('name') ?? CONFIG.name,
             "host": this.getAttribute('host') ?? window.location.origin ?? CONFIG.host,
@@ -78,6 +85,8 @@ class App extends PlainComponent {
             "translation_host": await this.checkTranslationService(),
             "current_version": CONFIG.current_version
         }
+
+        console.log("Using config:", customConfig)
 
         this.configContext.setData(customConfig)
     }
