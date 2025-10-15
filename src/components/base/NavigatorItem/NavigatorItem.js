@@ -62,7 +62,6 @@ class NavigatorItem extends PlainComponent {
             }
             </div>
         `
-        console.log("Item info:", info)
         const shouldUnfold = (info) => {
             if (Object.entries(info.sub_acceleration_services).length > 0) return true
             
