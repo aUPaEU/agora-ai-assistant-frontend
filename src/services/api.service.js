@@ -84,11 +84,17 @@ export const fetchElementV2 = async (host, model, id, fields=null) => {
     const url = `${host}/catalogue-api/v2/${model}/${id}`
 
     try {
+        // Retrieve the AIDA API key from localStorage
+        const aidaApiKey = localStorage.getItem('aida_ak')
+        if (!aidaApiKey) {
+            throw new Error('AIDA API key not found. Please ensure you are properly authenticated.')
+        }
+
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'accept': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl9pZCI6MSwidG9rZW5fbmFtZSI6IkFzc2lzdGFudCBBUEkgS0VZIiwiY3JlYXRvcl9pZCI6NTc1MywiY3JlYXRvcl9uYW1lIjoiSm9zZSBNYXJ0aW4gQm9sZXQiLCJjcmVhdGVkX2F0IjoiMjAyNS0xMC0wOVQxNDozMzoyMy43NTk3MjQiLCJleHBpcmVzX2F0IjoiMjAyNS0xMS0wN1QxMTo0MToxOC4xNDU0MjgiLCJpc19hY3RpdmUiOnRydWUsImlzX2V4cGlyZWQiOmZhbHNlLCJtb2RlbHMiOlt7Im1vZGVsX2lkIjo3OTgsIm1vZGVsX25hbWUiOiJhbGxpYW5jZV9jYXRhbG9ndWVfYXBwLnJlc2VhcmNoaW5mcmFzdHJ1Y3R1cmVzIiwibW9kZWxfZGlzcGxheV9uYW1lIjoiUmVzZWFyY2ggSW5mcmFzdHJ1Y3R1cmVzIiwiY2F0YWxvZ3VlX2lkIjoxLCJjYXRhbG9ndWVfbmFtZSI6IlJlc2VhcmNoIEluZnJhc3RydWN0dXJlcyIsIndlYnNpdGVfaWQiOjIsIndlYnNpdGVfbmFtZSI6IlVuaXRlIEFnb3JhIiwid2Vic2l0ZV91cmwiOiJodHRwOi8vbG9jYWxob3N0OjgwMTAiLCJwYWdlX2lkIjo3NCwicGFnZV9uYW1lIjoiSW5mcmFzdHJ1Y3R1cmVzIiwicGFnZV91cmwiOiIvcmVzb3VyY2VzL2luZnJhc3RydWN0dXJlIiwiY2FuX3JlYWQiOnRydWUsImNhbl93cml0ZSI6ZmFsc2UsImNhbl9jcmVhdGUiOmZhbHNlLCJjYW5fZGVsZXRlIjpmYWxzZX0seyJtb2RlbF9pZCI6ODMzLCJtb2RlbF9uYW1lIjoiYWxsaWFuY2VfY2F0YWxvZ3VlX2FwcC5tb29jIiwibW9kZWxfZGlzcGxheV9uYW1lIjoiTU9PQ3MiLCJjYXRhbG9ndWVfaWQiOjUsImNhdGFsb2d1ZV9uYW1lIjoiQ2F0YWxvZ3VlIGZvciBTdHVkZW50cyIsIndlYnNpdGVfaWQiOjIsIndlYnNpdGVfbmFtZSI6IlVuaXRlIEFnb3JhIiwid2Vic2l0ZV91cmwiOiJodHRwOi8vbG9jYWxob3N0OjgwMTAiLCJwYWdlX2lkIjozOCwicGFnZV9uYW1lIjoiTU9PQydzIiwicGFnZV91cmwiOiIvc3R1ZGVudC1jYXRhbG9ndWUvbW9vYyIsImNhbl9yZWFkIjp0cnVlLCJjYW5fd3JpdGUiOmZhbHNlLCJjYW5fY3JlYXRlIjpmYWxzZSwiY2FuX2RlbGV0ZSI6ZmFsc2V9LHsibW9kZWxfaWQiOjgzMCwibW9kZWxfbmFtZSI6ImFsbGlhbmNlX2NhdGFsb2d1ZV9hcHAuY291cnNlIiwibW9kZWxfZGlzcGxheV9uYW1lIjoiQ291cnNlcyIsImNhdGFsb2d1ZV9pZCI6NSwiY2F0YWxvZ3VlX25hbWUiOiJDYXRhbG9ndWUgZm9yIFN0dWRlbnRzIiwid2Vic2l0ZV9pZCI6Miwid2Vic2l0ZV9uYW1lIjoiVW5pdGUgQWdvcmEiLCJ3ZWJzaXRlX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAxMCIsInBhZ2VfaWQiOjU0LCJwYWdlX25hbWUiOiJDb3Vyc2VzIiwicGFnZV91cmwiOiIvc3R1ZGVudC1jYXRhbG9ndWUvY291cnNlIiwiY2FuX3JlYWQiOnRydWUsImNhbl93cml0ZSI6ZmFsc2UsImNhbl9jcmVhdGUiOmZhbHNlLCJjYW5fZGVsZXRlIjpmYWxzZX0seyJtb2RlbF9pZCI6ODM0LCJtb2RlbF9uYW1lIjoiYWxsaWFuY2VfY2F0YWxvZ3VlX2FwcC5kb2N0b3JhbGNvdXJzZSIsIm1vZGVsX2Rpc3BsYXlfbmFtZSI6IkRvY3RvcmFsIENvdXJzZXMiLCJjYXRhbG9ndWVfaWQiOjUsImNhdGFsb2d1ZV9uYW1lIjoiQ2F0YWxvZ3VlIGZvciBTdHVkZW50cyIsIndlYnNpdGVfaWQiOjIsIndlYnNpdGVfbmFtZSI6IlVuaXRlIEFnb3JhIiwid2Vic2l0ZV91cmwiOiJodHRwOi8vbG9jYWxob3N0OjgwMTAiLCJwYWdlX2lkIjo1MCwicGFnZV9uYW1lIjoiRG9jdG9yYWwgQ291cnNlcyIsInBhZ2VfdXJsIjoiL3N0dWRlbnQtY2F0YWxvZ3VlL3VkcyIsImNhbl9yZWFkIjp0cnVlLCJjYW5fd3JpdGUiOmZhbHNlLCJjYW5fY3JlYXRlIjpmYWxzZSwiY2FuX2RlbGV0ZSI6ZmFsc2V9LHsibW9kZWxfaWQiOjgzMSwibW9kZWxfbmFtZSI6ImFsbGlhbmNlX2NhdGFsb2d1ZV9hcHAuZXh0cmFjdXJyaWN1bGFyYWN0aXZpdHkiLCJtb2RlbF9kaXNwbGF5X25hbWUiOiJFeHRyYWN1cnJpY3VsYXIgQWN0aXZpdGllcyIsImNhdGFsb2d1ZV9pZCI6NSwiY2F0YWxvZ3VlX25hbWUiOiJDYXRhbG9ndWUgZm9yIFN0dWRlbnRzIiwid2Vic2l0ZV9pZCI6Miwid2Vic2l0ZV9uYW1lIjoiVW5pdGUgQWdvcmEiLCJ3ZWJzaXRlX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAxMCIsInBhZ2VfaWQiOjUxLCJwYWdlX25hbWUiOiJFeHRyYSBDdXJyaWN1bGFyIEFjdGl2aXRpZXMiLCJwYWdlX3VybCI6Ii9zdHVkZW50LWNhdGFsb2d1ZS9leHRyYS1hY3QiLCJjYW5fcmVhZCI6dHJ1ZSwiY2FuX3dyaXRlIjpmYWxzZSwiY2FuX2NyZWF0ZSI6ZmFsc2UsImNhbl9kZWxldGUiOmZhbHNlfSx7Im1vZGVsX2lkIjo4MzIsIm1vZGVsX25hbWUiOiJhbGxpYW5jZV9jYXRhbG9ndWVfYXBwLmpvaW50cHJvZ3JhbW1lIiwibW9kZWxfZGlzcGxheV9uYW1lIjoiSm9pbnQgUHJvZ3JhbW1lcyIsImNhdGFsb2d1ZV9pZCI6NSwiY2F0YWxvZ3VlX25hbWUiOiJDYXRhbG9ndWUgZm9yIFN0dWRlbnRzIiwid2Vic2l0ZV9pZCI6Miwid2Vic2l0ZV9uYW1lIjoiVW5pdGUgQWdvcmEiLCJ3ZWJzaXRlX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAxMCIsInBhZ2VfaWQiOjM3LCJwYWdlX25hbWUiOiJKb2ludCBQcm9ncmFtbWVzIiwicGFnZV91cmwiOiIvc3R1ZGVudC1jYXRhbG9ndWUvanAiLCJjYW5fcmVhZCI6dHJ1ZSwiY2FuX3dyaXRlIjpmYWxzZSwiY2FuX2NyZWF0ZSI6ZmFsc2UsImNhbl9kZWxldGUiOmZhbHNlfSx7Im1vZGVsX2lkIjo4MjIsIm1vZGVsX25hbWUiOiJhbGxpYW5jZV9jYXRhbG9ndWVfYXBwLnJlc2VhcmNocHJvcG9zYWxzIiwibW9kZWxfZGlzcGxheV9uYW1lIjoiUmVzZWFyY2ggJiBJbm5vdmF0aW9uIFByb3Bvc2FscyIsImNhdGFsb2d1ZV9pZCI6MywiY2F0YWxvZ3VlX25hbWUiOiJSZXNlYXJjaCAmIElubm92YXRpb24gUHJvcG9zYWxzIiwid2Vic2l0ZV9pZCI6Miwid2Vic2l0ZV9uYW1lIjoiVW5pdGUgQWdvcmEiLCJ3ZWJzaXRlX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAxMCIsInBhZ2VfaWQiOjc1LCJwYWdlX25hbWUiOiJSZXNlYXJjaCBQcm9wb3NhbCIsInBhZ2VfdXJsIjoiL3Jlc2VhcmNoL3Byb3Bvc2FsIiwiY2FuX3JlYWQiOnRydWUsImNhbl93cml0ZSI6ZmFsc2UsImNhbl9jcmVhdGUiOmZhbHNlLCJjYW5fZGVsZXRlIjpmYWxzZX0seyJtb2RlbF9pZCI6ODI3LCJtb2RlbF9uYW1lIjoiYWxsaWFuY2VfY2F0YWxvZ3VlX2FwcC5pbnRlcm5zaGlwcyIsIm1vZGVsX2Rpc3BsYXlfbmFtZSI6IkludGVybnNoaXBzIiwiY2F0YWxvZ3VlX2lkIjo0LCJjYXRhbG9ndWVfbmFtZSI6IkludGVybnNoaXBzIiwid2Vic2l0ZV9pZCI6Miwid2Vic2l0ZV9uYW1lIjoiVW5pdGUgQWdvcmEiLCJ3ZWJzaXRlX3VybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAxMCIsInBhZ2VfaWQiOjU2LCJwYWdlX25hbWUiOiJJbnRlcm5zaGlwcyIsInBhZ2VfdXJsIjoiL3N0dWRlbnQtY2F0YWxvZ3VlL2ludGVybnNoaXBzIiwiY2FuX3JlYWQiOnRydWUsImNhbl93cml0ZSI6ZmFsc2UsImNhbl9jcmVhdGUiOmZhbHNlLCJjYW5fZGVsZXRlIjpmYWxzZX1dfQ.FWHr7PCP9e7Fq-N-5BMD9hB0gS0fqBNz5V6kIOQQ7js'
+                'Authorization': `Bearer ${aidaApiKey}`
             }
         })
 
@@ -286,6 +292,53 @@ export const ingest = async (host, model) => {
         if (!response.ok) {
             const errorData = await response.json()
             throw new Error(errorData.message)
+        }
+
+        const data = await response.json()
+        return data
+    }
+
+    catch (error) {
+        throw error
+    }
+}
+
+/**
+ * Fetch or create an AIDA API key
+ * If not found, creates it with read permissions for the specified models
+ * If not active, reactivates and regenerates it
+ * If expired, extends expiration and regenerates it
+ * @param {string} host - The host URL
+ * @param {string[]} availableModels - Array of model names (e.g., ['alliance_catalogue_app.mooc', 'alliance_catalogue_app.course'])
+ * @returns {Promise<Object>} The API key data with action taken
+ */
+export const getAidaApiKey = async (host, availableModels = []) => {
+    try {
+        // Build query parameters
+        const params = new URLSearchParams()
+        if (availableModels && availableModels.length > 0) {
+            params.append('models', availableModels.join(','))
+        }
+
+        const url = `${host}/catalogue-api/v2/api-key/aida${params.toString() ? `?${params.toString()}` : ''}`
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json'
+            }
+        })
+
+        if (!response.ok) {
+            if (response.status === 400) {
+                const errorData = await response.json()
+                throw new Error(errorData.error?.message || 'Bad request when fetching API key')
+            }
+            if (response.status === 500) {
+                const errorData = await response.json()
+                throw new Error(errorData.error?.message || 'Server error when fetching API key')
+            }
+            throw new Error('Something went wrong while fetching AIDA API key')
         }
 
         const data = await response.json()

@@ -236,7 +236,7 @@ class Navigator extends PlainComponent {
         this.initialLoad.setState(false, false)
     }
 
-    updateServiceContext(agora, extend=false) {
+    async updateServiceContext(agora, extend=false) {
         let services = []
 
         if (agora.fields.sub_acceleration_services?.length === undefined) {
@@ -276,6 +276,22 @@ class Navigator extends PlainComponent {
         this.serviceContext.setData({services: services}, true)
         this.serviceContext.setData({models: availableModels})
         this.serviceContext.setData({modelsByService: modelsByService}, true)
+
+        const assistantApiKey = await api.getAidaApiKey(
+            this.configContext.getData('host'),
+            availableModels
+        )
+
+        if (!assistantApiKey?.token?.jwt_token) {
+            throwToast(
+                `There was an error while retrieving the assistant API key.\nPlease, contact the administrator.`,
+                TOAST_TYPES.ERROR
+            )
+            return
+        }
+
+        // Store in localStorage instead of cookies due to JWT token size
+        localStorage.setItem('aida_ak', assistantApiKey.token.jwt_token)
     }
 
     initialDisplay() {
