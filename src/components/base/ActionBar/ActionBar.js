@@ -11,10 +11,17 @@ class ActionBar extends PlainComponent {
         this.signals.register('results-updated')
 
         this.resultContext = new PlainContext('result', this, false)
-        this.configContext = new PlainContext('config', this)
+        this.configContext = new PlainContext('config', this, true)
     }
 
     template() {
+        const aiButton = this.configContext.getData('enabled_ai') === 'true' 
+        ? html`
+            <button class="action-button ai-assistant-button" aria-label="Switch to AI assistant">
+                ${AI_CHAT}
+            </button>
+        ` : ''
+
         return html`
             <div class="action-bar-container">
                 <button class="action-button map-button" disabled title="Resource map will be available soon" aria-label="Open resource map">
@@ -25,10 +32,8 @@ class ActionBar extends PlainComponent {
                 </button>
 
                 <div class="action-toogle ai-searcher-toogle">
-                    <button class="action-button ai-assistant-button ${this.configContext.getData('enabled_ai') ? 'selected' : ''}" aria-label="Switch to AI assistant">
-                        ${AI_CHAT}
-                    </button>
-                    <button class="action-button search-button ${this.configContext.getData('enabled_ai') ? '' : 'selected'}" aria-label="Switch to search">
+                    ${aiButton}
+                    <button class="action-button search-button selected" aria-label="Switch to search">
                         ${SEARCH}
                     </button>
                 </div>
@@ -37,15 +42,20 @@ class ActionBar extends PlainComponent {
     }
 
     listeners() {
+        const mapButton = this.$('.map-button')
+        const refreshButton = this.$('.refresh-button')
+        const aiButton = this.$('.ai-assistant-button')
+        const searchButton = this.$('.search-button')
+
         // Abrir el mapa
-        this.$('.map-button').onclick = () => this.openMapWindow()
+        mapButton && mapButton.addEventListener('click', () => this.openMapWindow())
         
         // Refrescar la página
-        this.$('.refresh-button').onclick = () => this.clear()
+        refreshButton && refreshButton.addEventListener('click', () => this.clear())
 
         // Toggle the ai-searcher-toogle
-        this.$('.ai-assistant-button').onclick = () => this.toggle(this.$('.ai-searcher-toogle'))
-        this.$('.search-button').onclick = () => this.toggle(this.$('.ai-searcher-toogle'))
+        aiButton && aiButton.addEventListener('click', () => this.toggle(this.$('.ai-searcher-toogle')))
+        searchButton && searchButton.addEventListener('click', () => this.toggle(this.$('.ai-searcher-toogle')))
     }
 
     refresh() {

@@ -87,7 +87,9 @@ class App extends PlainComponent {
 
         console.log("Using config:", customConfig)
 
-        this.configContext.setData(customConfig)
+        this.configContext.setData(customConfig, true)
+        const actionBar = this.$('agora-layout-v2').$('agora-action-bar')
+        actionBar.render()
     }
 
     async checkTranslationService() {
