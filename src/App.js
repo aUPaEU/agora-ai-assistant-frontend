@@ -69,17 +69,7 @@ class App extends PlainComponent {
         console.log(`Agora (v${CONFIG.current_version})`)
         this.configContext.clear()
 
-        console.log("Name:", this.getAttribute('name'))
-        console.log("Host:", this.getAttribute('host'))
-        console.log("Company ID:", this.getAttribute('company_id'))
-        console.log("Enabled AI:", this.getAttribute('enabled_ai'))
-        console.log("AI Host:", this.getAttribute('ai_host'))
-        console.log("Translation Host:", this.getAttribute('translation_host'))
-
-        console.log("App is ready?\n", this)
-
         while (!this.getAttribute('host')) {
-            console.log("Waiting for app to be ready...")
             await new Promise(resolve => setTimeout(resolve, 100));
         }
 
