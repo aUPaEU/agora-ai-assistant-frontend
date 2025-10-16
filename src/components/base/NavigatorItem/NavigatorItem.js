@@ -92,9 +92,15 @@ class NavigatorItem extends PlainComponent {
                 ? null
                 : html`<div class="info-icon">${SIMPLE_INFO}</div>`
 
+        console.log("INFO", info.main_url)
+
+        const mainURL = ['False', 'None', '', null, undefined].includes(info.main_url)
+            ? null
+            : info.main_url
+
         return html`
             <!-- Item -->
-            <li class="item ${this.type.getState().toLowerCase().replace(' ', '-')} ${info && showcase || info && info.url ? 'has-showcase': ''}">
+            <li class="item ${this.type.getState().toLowerCase().replace(' ', '-')} ${info && showcase || info && info.url || mainURL ? 'has-showcase': ''}">
                 <!-- Item Type Icon -->
                 ${typeIcon}
 
@@ -102,7 +108,7 @@ class NavigatorItem extends PlainComponent {
                 <a 
                     class="label"
                     target="_blank" 
-                    ${info && showcase ? `href="${showcase.domain}"` : ''}
+                    ${info && mainURL ? `href="${mainURL}"` : ''}
                     ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
                     <div class="label-content">
@@ -116,7 +122,7 @@ class NavigatorItem extends PlainComponent {
                 <a 
                     class="label hover"
                     target="_blank" 
-                    ${info && showcase ? `href="${showcase.domain}"` : ''}
+                    ${info && mainURL ? `href="${mainURL}"` : ''}
                     ${info && info.url ? `href="${this.configContext.getData('host')}/${info.url}"` : ''}
                 >
                     ${name}
