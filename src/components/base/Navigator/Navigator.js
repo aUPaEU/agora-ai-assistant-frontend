@@ -277,18 +277,24 @@ class Navigator extends PlainComponent {
         this.serviceContext.setData({models: availableModels})
         this.serviceContext.setData({modelsByService: modelsByService}, true)
 
-        const assistantApiKey = await api.getAidaApiKey(
-            this.configContext.getData('host'),
-            availableModels
-        )
+        try {
+            const assistantApiKey = await api.getAidaApiKey(
+                this.configContext.getData('host'),
+                availableModels
+            )
 
-        if (!assistantApiKey?.token?.jwt_token) {
-            console.warn(`There was an error while retrieving the assistant API key.\nPlease, contact the administrator.`)
+            if (!assistantApiKey?.token?.jwt_token) {
+                console.warn(`There was an error while retrieving the assistant API key.\nPlease, contact the administrator.`)
+                return
+            }
+
+            // Store in localStorage instead of cookies due to JWT token size
+            localStorage.setItem('aida_ak', assistantApiKey.token.jwt_token)
+
+        } catch (error) {
+            console.warn(`Error retrieving assistant API key: ${error}`)
             return
         }
-
-        // Store in localStorage instead of cookies due to JWT token size
-        localStorage.setItem('aida_ak', assistantApiKey.token.jwt_token)
     }
 
     initialDisplay() {
