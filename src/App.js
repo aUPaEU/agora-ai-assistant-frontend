@@ -65,13 +65,20 @@ class App extends PlainComponent {
         this.setupConfig()
     }
 
+    async waitForInitialization() {
+        console.log("Waiting for initialization on...", this.getAttribute('host'))
+        if (!this.getAttribute('host')) {
+            console.log("Waiting for host attribute...")
+            await new Promise(resolve => setTimeout(resolve, 100));
+            this.waitForInitialization()
+        }
+    }
+
     async setupConfig() {
         console.log(`Agora (v${CONFIG.current_version})`)
         this.configContext.clear()
 
-        if (!this.getAttribute('host')) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
+        await this.waitForInitialization()
 
         console.log("App is ready!")
 
