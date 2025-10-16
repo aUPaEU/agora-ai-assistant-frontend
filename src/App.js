@@ -69,8 +69,8 @@ class App extends PlainComponent {
         console.log(`Agora (v${CONFIG.current_version})`)
         this.configContext.clear()
 
-        while (!this.getAttribute('host')) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+        if (!this.getAttribute('host')) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
         console.log("App is ready!")

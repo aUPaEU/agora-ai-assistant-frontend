@@ -283,10 +283,7 @@ class Navigator extends PlainComponent {
         )
 
         if (!assistantApiKey?.token?.jwt_token) {
-            throwToast(
-                `There was an error while retrieving the assistant API key.\nPlease, contact the administrator.`,
-                TOAST_TYPES.ERROR
-            )
+            console.warn(`There was an error while retrieving the assistant API key.\nPlease, contact the administrator.`)
             return
         }
 
