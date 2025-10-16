@@ -192,7 +192,7 @@ class ResultWindow extends PlainComponent {
     }
 
     clear() {
-        console.log('Aqui tendría que estar la lógica para añadir el update de los containers')
+        // console.log('Aqui tendría que estar la lógica para añadir el update de los containers')
         this.resultContext.setData({data: [], grouped: [], filters: []})
         this.builtResults.setState([])
         this.$('.no-results-message').style.display = 'none'

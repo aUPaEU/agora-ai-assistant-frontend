@@ -92,8 +92,6 @@ class NavigatorItem extends PlainComponent {
                 ? null
                 : html`<div class="info-icon">${SIMPLE_INFO}</div>`
 
-        console.log("INFO", info.main_url)
-
         const mainURL = ['False', 'None', '', null, undefined].includes(info.main_url)
             ? null
             : info.main_url
