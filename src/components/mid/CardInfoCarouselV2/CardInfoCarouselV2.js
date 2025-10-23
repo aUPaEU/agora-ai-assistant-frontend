@@ -38,8 +38,13 @@ class CardInfoCarouselV2 extends PlainComponent {
                 ${findPropertyByPattern(this.data.getState(), ['model_verbose_name'])}
             </a>
         `
-        const templateCardImage = findPropertyByPattern(this.data.getState()?.data, ['image'])
-            ? html`<img class="card-image" src="${this.configContext.getData('host')}${findPropertyByPattern(this.data.getState()?.data, ['image'])}">`
+
+        const imageSource = findPropertyByPattern(this.data.getState()?.data, ['image'])?.includes('http' || 'https')
+            ? findPropertyByPattern(this.data.getState()?.data, ['image'])
+            : `${this.configContext.getData('host')}${findPropertyByPattern(this.data.getState()?.data, ['image'])}`
+
+        const templateCardImage = imageSource
+            ? html`<img class="card-image" src="${imageSource}" alt="Card Image" />`
             : html`<div class="card-image default-image dynamic-background">${this.data.getState()?.data?.name}</div>`
 
         const templateAIExplanation = this.data.getState()?.data?.rag?.summary
