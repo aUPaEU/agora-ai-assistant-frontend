@@ -1,7 +1,7 @@
 // This could be fetched automatically from the server depending on an environment variable,
 // a cookie or the domain name.
 
-const CURRENT_VERSION = "1.2.7"
+const CURRENT_VERSION = "1.2.8"
 
 export const ENV = {
     LOCAL: {
