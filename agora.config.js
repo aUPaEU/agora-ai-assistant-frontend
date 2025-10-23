@@ -1,7 +1,7 @@
 // This could be fetched automatically from the server depending on an environment variable,
 // a cookie or the domain name.
 
-const CURRENT_VERSION = "1.2.6"
+const CURRENT_VERSION = "1.2.7"
 
 export const ENV = {
     LOCAL: {
@@ -91,6 +91,15 @@ export const ENV = {
         "enabled_ai": true,
         "ai_host": "Set the ai_host in the attribute of the html element <agora-app ai_host='https://yourdomain.com'>, usually should be deployed on http://localhost:2020",
         "translation_host": "Set the translation_host in the attribute of the html element <agora-app translation_host='https://yourdomain.com/translation'>",
+        "current_version": CURRENT_VERSION
+    },
+
+    AUPAEU_PRODUCTION: {
+        "name": "aUPaEU",
+        "host": "https://aupaeu.widening.eu/",
+        "enabled_ai": true,
+        "company_id": 1,
+        "ai_host": "https://aupaeu.widening.eu/aida-api",
         "current_version": CURRENT_VERSION
     }
 }
