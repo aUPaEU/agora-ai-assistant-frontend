@@ -42,8 +42,12 @@ class DynamicCard extends PlainComponent {
     build() {
         this.data.setState(JSON.parse(this.dataset.data), false)
 
+        const imageSource = findPropertyByPattern(this.data.getState(), 'image')?.includes('http' || 'https')
+            ? findPropertyByPattern(this.data.getState(), 'image')
+            : `${this.configContext.getData('host')}${findPropertyByPattern(this.data.getState(), 'image')}`
+
         const image = findPropertyByPattern(this.data.getState(), 'image')
-            ? html`<img class="card-image" src="${this.configContext.getData('host')}${findPropertyByPattern(this.data.getState(), 'image')}"/>`
+            ? html`<img class="card-image" src="${imageSource}"/>`
             : html`<div class="card-image default-image-0"></div>`
 
         const name = findPropertyByPattern(this.data.getState(), 'name')
