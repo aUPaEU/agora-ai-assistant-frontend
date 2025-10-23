@@ -247,8 +247,8 @@ export const sendMessageV3 = async (
         }
 
         if (response.body instanceof ReadableStream) {
-            console.log("STREAMING RESPONSE", response)
-            console.log("BOT RESPONSE IS STREAMING", response.body instanceof ReadableStream)
+            // console.log("STREAMING RESPONSE", response)
+            // console.log("BOT RESPONSE IS STREAMING", response.body instanceof ReadableStream)
             return response
         }
 
