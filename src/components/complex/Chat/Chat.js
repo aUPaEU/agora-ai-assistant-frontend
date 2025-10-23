@@ -28,6 +28,8 @@ class Chat extends PlainComponent {
         this.mockBotResponse = new PlainState(-1, this)
         this.messageBuffer = new PlainState('', this)
 
+        this.isFirstChunk = true
+
         this.PROVIDERS = {
             OPENAI: 'openai',
             ANTHROPIC: 'anthropic',
@@ -154,7 +156,7 @@ class Chat extends PlainComponent {
             const decoder = new TextDecoder()
             let buffer = ''
 
-            let isFirstChunk = true
+            this.isFirstChunk = true
 
             while (true) {
                 const { done, value } = await reader.read()
@@ -163,58 +165,11 @@ class Chat extends PlainComponent {
                 const chunk = decoder.decode(value, { stream: !done })
                 buffer += chunk
                 
-                let response = null    
-
-                if (chunk.includes("[$artifact]")) {
-                    const artifact = JSON.parse(chunk.replace("[$artifact]", "").replace(/'/g, '"'))
-                    response = {
-                        type: this.RESPONSE.RESULTS,
-                        results: artifact
-                    }
-                    this.handleResponse(response)
-                }
-
-                else if (chunk.includes("[$done]")) {
-                    // console.log("THE CHUNK INCLUDES THE [$done]: MARKER")
-                    // console.log("CHUNK:", chunk)
-
-                    // Extract any message content before the [$done]: marker
-                    const beforeDone = chunk.split("[$done]")[0]
-                    if (beforeDone) {
-                        response = {
-                            type: this.RESPONSE.MESSAGE,
-                            is_first_chunk: isFirstChunk,
-                            is_last_chunk: false,
-                            message: beforeDone
-                        }
-                        this.handleResponse(response)
-                        if (isFirstChunk) isFirstChunk = false
-                    }
-                    
-                    // Signal the last chunk
-                    response = {
-                        type: this.RESPONSE.MESSAGE,
-                        is_first_chunk: false,
-                        is_last_chunk: true,
-                        message: ''
-                    }
-                    this.handleResponse(response)
-                }
-
-                else {
-                    response = {
-                        type: this.RESPONSE.MESSAGE,
-                        is_first_chunk: isFirstChunk,
-                        is_last_chunk: false,
-                        message: chunk
-                    }
-                    this.handleResponse(response)
-                    if (isFirstChunk) isFirstChunk = false
-                }
+                this.handleChunk(chunk)
             }
             
             // If we exit the loop without receiving [$done]:, finalize the message
-            if (!buffer.includes("[$done]:") && this.messageBuffer.getState()) {
+            if (!buffer.includes("[$done]") && this.messageBuffer.getState()) {
                 this.storeMessageInContext(this.messageBuffer.getState(), 'bot')
                 this.messageBuffer.setState('', false)
             }
@@ -225,6 +180,69 @@ class Chat extends PlainComponent {
         finally {
             this.shouldResetResults.setState(true, false)
         }
+    }
+
+    splitChunkByTags(chunk) {
+        // Match all [$something] tags and their content
+        const regex = /(\[\$\w+\])(.*?)(?=\[\$\w+\]|$)/gs;
+        const result = [];
+
+        let match;
+        while ((match = regex.exec(chunk)) !== null) {
+            const tag = match[1];
+            let content = match[2];
+
+            // If the tag is [$done], append it to the previous entry instead of creating a new one
+            if (tag === '[$done]') {
+            if (result.length > 0) {
+                result[result.length - 1].content += ' [$done]';
+            }
+            continue;
+            }
+
+            result.push({ tag, content });
+        }
+
+        return result;
+    }
+
+    handleChunk(chunk) {
+        const processedChunk = this.splitChunkByTags(chunk)
+        
+        processedChunk.forEach(part => {
+            if (part.tag === '[$artifact]') {
+                const artifact = JSON.parse(part.content.replace(/'/g, '"'))
+                const artifactResponse = {
+                    type: this.RESPONSE.RESULTS,
+                    results: artifact
+                }
+                this.handleResponse(artifactResponse)
+            }
+
+            else if (part.tag === '[$message]') {
+                if (part.content.includes('[$done]')) {
+                    const finalMessage = part.content.split('[$done]')[0]
+                    const finalMessageResponse = {
+                        type: this.RESPONSE.MESSAGE,
+                        is_first_chunk: this.isFirstChunk,
+                        is_last_chunk: true,
+                        message: finalMessage
+                    }
+                    this.handleResponse(finalMessageResponse)
+                    if (this.isFirstChunk) this.isFirstChunk = false
+                }
+                else {
+                    const messageResponse = {
+                        type: this.RESPONSE.MESSAGE,
+                        is_first_chunk: this.isFirstChunk,
+                        is_last_chunk: false,
+                        message: part.content
+                    }
+                    this.handleResponse(messageResponse)
+                    if (this.isFirstChunk) this.isFirstChunk = false
+                }
+            }
+        })
     }
 
     setLoading(state) {
