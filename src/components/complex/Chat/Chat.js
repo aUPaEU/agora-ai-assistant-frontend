@@ -165,17 +165,21 @@ class Chat extends PlainComponent {
                 
                 let response = null    
 
-                if (chunk.includes("[$artifact]:")) {
-                    const artifact = JSON.parse(chunk.replace("[$artifact]:", "").replace(/'/g, '"'))
+                if (chunk.includes("[$artifact]")) {
+                    const artifact = JSON.parse(chunk.replace("[$artifact]", "").replace(/'/g, '"'))
                     response = {
                         type: this.RESPONSE.RESULTS,
                         results: artifact
                     }
                     this.handleResponse(response)
                 }
-                else if (chunk.includes("[$done]:")) {
+
+                else if (chunk.includes("[$done]")) {
+                    // console.log("THE CHUNK INCLUDES THE [$done]: MARKER")
+                    // console.log("CHUNK:", chunk)
+
                     // Extract any message content before the [$done]: marker
-                    const beforeDone = chunk.split("[$done]:")[0]
+                    const beforeDone = chunk.split("[$done]")[0]
                     if (beforeDone) {
                         response = {
                             type: this.RESPONSE.MESSAGE,
@@ -196,6 +200,7 @@ class Chat extends PlainComponent {
                     }
                     this.handleResponse(response)
                 }
+
                 else {
                     response = {
                         type: this.RESPONSE.MESSAGE,
@@ -320,7 +325,6 @@ class Chat extends PlainComponent {
 
         try {
             if (message.is_last_chunk) {
-                console.log(`Storing message from \`handleMessage\` final chunk.\n ${this.messageBuffer.getState()} "\n" + ${JSON.stringify(message)}`)
                 this.storeMessageInContext(this.messageBuffer.getState() + message.message, 'bot')
                 this.messageBuffer.setState('', false)
                 return
@@ -397,11 +401,20 @@ class Chat extends PlainComponent {
             if (!serviceData) return null
 
             // Fetch the element
-            const element = await api.fetchElementV2(
-                this.configContext.getData('host'),
-                document.model,
-                Number(document.source_id)
-            )
+            let element
+
+            try {
+                element = await api.fetchElementV2(
+                    this.configContext.getData('host'),
+                    document.model,
+                    Number(document.source_id)
+                )
+                
+            } catch (error) {
+                console.error("Error fetching element:", error)
+                return null
+            }
+            
 
             if (!element) return null
 
