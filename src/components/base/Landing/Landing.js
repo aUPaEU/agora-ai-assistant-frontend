@@ -82,10 +82,10 @@ class Landing extends PlainComponent {
 
         const suggestedSearchTerms = Array.from(new Set(displayedService.fields.suggested_search_terms.split(','))).map(term => term.trim())
 
-        const learnMoreButton = displayedService.fields.website && !(displayedService.fields.website instanceof Array) && displayedService.fields.website.fields.domain
+        const learnMoreButton = displayedService.fields.main_url
             ? html`<agora-text-button 
                     class="learn-more-button" 
-                    href="${displayedService.fields.website.fields.domain}"
+                    href="${displayedService.fields.main_url}"
                 >Learn more</agora-text-button>`
             : html``
 
